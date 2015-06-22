@@ -87,6 +87,10 @@ public class OBSRequest {
     public void setTargetPackage(String targetPackage) {
         this.targetPackage = targetPackage;
     }
+    
+    public String getTarget() {
+        return targetProject + "/" + targetPackage;
+    }
 
     public String getState() {
         return state;
