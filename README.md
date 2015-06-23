@@ -9,6 +9,16 @@ jOBS is a Java library for consuming the [Open Build Service](http://openbuildse
 It's written in pure Java.
 WIP.
 
+**Features**
+- Getting build status
+- Getting submit requests
+- Getting submit request diff
+- Accepting/declining submit requests
+- Getting project list
+- Getting package list for a project
+- Getting project metadata
+
+
 Basic usage
 ---------------
 
