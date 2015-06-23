@@ -3,13 +3,19 @@ A Java-based OBS Library
 
 Copyright (C) 2015 Javier Llorente <javier@opensuse.org>
 
+Introduction
+---------------
+jOBS is a Java library for consuming the [Open Build Service](https://openbuildservice.org/) REST API.
+It's written in pure Java.
+WIP.
+
 Basic usage
 ---------------
 
 **Classes**
 - The main class is OBS - it's the façade
 - OBSBuild holds the build data such as the build status
-- OBSRequest hold the submit request data
+- OBSRequest holds the submit request data
 
 ```java
 OBS obs = new OBS();
