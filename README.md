@@ -44,7 +44,7 @@ try {
 if (obs.isAuthenticated()) {
 //  Get Build Status
     try {
-        OBSBuild build = obs.getBuildStatus("KDE:Extra", "openSUSE_13.2", 
+        OBSBuild build = obs.getBuild("KDE:Extra", "openSUSE_13.2", 
                 "x86_64", "amarok");
         System.out.println("Status: " + build.getStatus());
     } catch (SAXException | IOException | ParserConfigurationException ex) {
