@@ -108,7 +108,7 @@ public class OBS {
         return is;
     }
 
-    public OBSBuild getBuildStatus(String project, String repository, 
+    public OBSBuild getBuild(String project, String repository, 
             String architecture, String buildName) throws 
             SAXException, IOException, ParserConfigurationException {
         System.out.println("Getting build status...");
