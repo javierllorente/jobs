@@ -1,4 +1,4 @@
-# jobs
+# jOBS
 A Java-based OBS Library
 
 Copyright (C) 2015 Javier Llorente <javier@opensuse.org>
