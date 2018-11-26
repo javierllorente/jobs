@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2018 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,12 +32,12 @@ import org.xml.sax.SAXException;
  * @author javier
  */
 public class OBS {
-    private final OBSAccess access;
+    private final OBSCore obsCore;
     private final OBSXmlReader xmlReader;
     private URL apiUrl;
 
     public OBS() {
-        access = OBSAccess.getInstance();
+        obsCore = OBSCore.getInstance();
         xmlReader = OBSXmlReader.getInstance();
     }
     
@@ -46,40 +46,40 @@ public class OBS {
     }
 
     public void setApiUrl(URL apiUrl) throws MalformedURLException {
-        access.setApiUrl(apiUrl);
+        obsCore.setApiUrl(apiUrl);
         this.apiUrl = apiUrl;
     }
 
     public void setUsername(String username) {
-        access.setUsername(username);
+        obsCore.setUsername(username);
     }
 
     public String getUsername() {
-        return access.getUsername();
+        return obsCore.getUsername();
     }
 
     public void setPassword(String password) {
-        access.setPassword(password);
+        obsCore.setPassword(password);
     }
 
     public String getPassword() {
-        return access.getPassword();
+        return obsCore.getPassword();
     }
     
     public int getResponseCode() {
-        return access.getResponseCode();
+        return obsCore.getResponseCode();
     }
 
     public String getResponseMessage() {
-        return access.getResponseMessage();
+        return obsCore.getResponseMessage();
     }
 
     public void authenticate() throws IOException {
-        access.authenticate();
+        obsCore.authenticate();
     }
 
     public boolean isAuthenticated() {
-        return access.isAuthenticated();
+        return obsCore.isAuthenticated();
     }
 
     private InputStream getRequest(URL url) throws IOException {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2018 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ import javax.net.ssl.HttpsURLConnection;
  *
  * @author javier
  */
-class OBSAccess {
+class OBSCore {
     private URL apiUrl;
     private String username;
     private String password;
@@ -36,17 +36,17 @@ class OBSAccess {
     private String responseMessage;
     private boolean authenticated;    
 
-    private OBSAccess() {
+    private OBSCore() {
         authenticated = false;
     }
     
-    public static OBSAccess getInstance() {
-        return OBSAccessHolder.INSTANCE;
+    public static OBSCore getInstance() {
+        return OBSCoreHolder.INSTANCE;
     }
     
-    private static class OBSAccessHolder {
+    private static class OBSCoreHolder {
 
-        private static final OBSAccess INSTANCE = new OBSAccess();
+        private static final OBSCore INSTANCE = new OBSCore();
     }
 
     URL getApiUrl() {
