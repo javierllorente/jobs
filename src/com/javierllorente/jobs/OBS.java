@@ -164,8 +164,10 @@ public class OBS {
     public ArrayList<OBSRequest> getRequests() throws IOException,
             MalformedURLException, SAXException, ParserConfigurationException {
         System.out.println("Getting requests...");
-        URL url = new URL(apiUrl + 
-                "/request?view=collection&states=new&roles=maintainer&user=" + getUsername());
+        String resource = String.format(
+                "/request?view=collection&states=new&roles=maintainer&user=%s",
+                getUsername());
+        URL url = new URL(apiUrl + resource);
         InputStream data = getRequest(url);
         return xmlReader.parseRequests(data);
     }
