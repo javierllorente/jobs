@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2016-2018 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,17 +60,17 @@ public class OBSTest {
     }
 
     /**
-     * Test of getBuild method, of class OBS.
+     * Test of getBuildStatus method, of class OBS.
      */
     @Test
-    public void testGetBuild() throws Exception {
+    public void testGetBuildStatus() throws Exception {
         System.out.println("getBuild");
         String project = "openSUSE:Factory";
         String repository = "standard";
         String architecture = "x86_64";
-        String buildName = "kernel-source";
-        OBSBuild result = obs.getBuild(project, repository, architecture, buildName);
-        assertNotNull(result);
+        String build = "kernel-source";
+        OBSStatus status = obs.getBuildStatus(project, repository, architecture, build);
+        assertNotNull(status);
     }
 
     /**
