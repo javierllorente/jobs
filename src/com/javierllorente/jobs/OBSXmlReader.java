@@ -50,12 +50,12 @@ class OBSXmlReader {
 
     private int requestNumber;
 
-    private OBSStatus parseStatus(InputStream data) throws SAXException, IOException,
+    private OBSStatus parseStatus(InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
         OBSStatus obsStatus = new OBSStatus();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-        Document document = documentBuilder.parse(data);
+        Document document = documentBuilder.parse(is);
         Element rootElement = document.getDocumentElement();
         NodeList nl = document.getElementsByTagName("*");
         
@@ -83,50 +83,50 @@ class OBSXmlReader {
         return obsStatus;
     }
 
-    OBSStatus parseDeleteProject(String project, InputStream data) throws
+    OBSStatus parseDeleteProject(String project, InputStream is) throws
             SAXException, IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(data);
+        OBSStatus status = parseStatus(is);
         status.setProject(project);
         return status;
     }
 
-    OBSStatus parseDeletePackage(String project, String pkg, InputStream data)
+    OBSStatus parseDeletePackage(String project, String pkg, InputStream is)
             throws SAXException, IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(data);
+        OBSStatus status = parseStatus(is);
         status.setProject(project);
         status.setPkg(pkg);
         return status;
     }
 
     OBSStatus parseDeleteFile(String project, String pkg, String file,
-            InputStream data) throws SAXException, IOException,
+            InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
-        OBSStatus status = parseStatus(data);
+        OBSStatus status = parseStatus(is);
         status.setProject(project);
         status.setPkg(pkg);
         status.setDetails(file);
         return status;
     }
 
-    OBSStatus parseBuildStatus(InputStream data) throws SAXException,
+    OBSStatus parseBuildStatus(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(data);
+        OBSStatus status = parseStatus(is);
         return status;
     }
     
-    OBSStatus parseChangeRequestState(InputStream data) throws SAXException,
+    OBSStatus parseChangeRequestState(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(data);
+        OBSStatus status = parseStatus(is);
         return status;
     }
 
-    ArrayList<OBSRequest> parseRequests(InputStream data) throws SAXException,
+    ArrayList<OBSRequest> parseRequests(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
 
         OBSRequest request = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-        Document document = documentBuilder.parse(data);
+        Document document = documentBuilder.parse(is);
 
         NodeList requestNodes = document.getElementsByTagName("request");
         int requestsNum = requestNodes.getLength();
@@ -213,11 +213,11 @@ class OBSXmlReader {
         return requests;
     }
 
-    ArrayList<String> parseList(InputStream data) throws ParserConfigurationException,
+    ArrayList<String> parseList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-        Document document = documentBuilder.parse(data);
+        Document document = documentBuilder.parse(is);
         ArrayList<String> list = new ArrayList<>();
 
         NodeList nodeList = document.getElementsByTagName("*");

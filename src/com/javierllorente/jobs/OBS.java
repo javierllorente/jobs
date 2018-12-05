@@ -123,8 +123,8 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s", project);
-        InputStream data = deleteRequest(new URL(apiUrl + resource));
-        OBSStatus status = xmlReader.parseDeleteProject(project, data);
+        InputStream is = deleteRequest(new URL(apiUrl + resource));
+        OBSStatus status = xmlReader.parseDeleteProject(project, is);
         return status;
     }
 
@@ -132,8 +132,8 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s/%s", project, pkg);
-        InputStream data = deleteRequest(new URL(apiUrl + resource));
-        OBSStatus status = xmlReader.parseDeletePackage(project, pkg, data);
+        InputStream is = deleteRequest(new URL(apiUrl + resource));
+        OBSStatus status = xmlReader.parseDeletePackage(project, pkg, is);
         return status;
     }
 
@@ -141,9 +141,9 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s/%s/%s", project, pkg, file);
-        InputStream data = deleteRequest(new URL(apiUrl + resource));
-        OBSStatus status = xmlReader.parseDeleteFile(project, pkg, file, data);
-        data.close();
+        InputStream is = deleteRequest(new URL(apiUrl + resource));
+        OBSStatus status = xmlReader.parseDeleteFile(project, pkg, file, is);
+        is.close();
         return status;
     }
 
@@ -155,9 +155,9 @@ public class OBS {
         String resource = String.format("/build/%s/%s/%s/%s/_status", 
                 project, repository, architecture, build);
         URL url = new URL(apiUrl + resource);
-        InputStream data = getRequest(url);
-        OBSStatus status = xmlReader.parseBuildStatus(data);
-        data.close();
+        InputStream is = getRequest(url);
+        OBSStatus status = xmlReader.parseBuildStatus(is);
+        is.close();
         return status;
     }
 
@@ -168,8 +168,8 @@ public class OBS {
                 "/request?view=collection&states=new&roles=maintainer&user=%s",
                 getUsername());
         URL url = new URL(apiUrl + resource);
-        InputStream data = getRequest(url);
-        return xmlReader.parseRequests(data);
+        InputStream is = getRequest(url);
+        return xmlReader.parseRequests(is);
     }
 
     public int getRequestNumber() {
@@ -181,37 +181,37 @@ public class OBS {
         String newState = accepted ? "accepted" : "declined";
         String resource = String.format("/request/%s?cmd=changestate&newstate=%s", id, newState);
         URL url = new URL(apiUrl + resource);
-        InputStream data = postRequest(url, comments);
-        OBSStatus status = xmlReader.parseChangeRequestState(data);
+        InputStream is = postRequest(url, comments);
+        OBSStatus status = xmlReader.parseChangeRequestState(is);
         return status;
     }
 
     public String getRequestDiff(String source) throws IOException {
         URL url = new URL(apiUrl + "/source/" + source
                 + "?unified=1&tarlimit=0&cmd=diff&filelimit=0&expand=1");
-        InputStream data = postRequest(url, "");
-        return inputStreamToString(data);
+        InputStream is = postRequest(url, "");
+        return inputStreamToString(is);
     }
 
     public ArrayList<String> getProjectList() throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source");
-        InputStream data = getRequest(url);
-        return xmlReader.parseList(data);
+        InputStream is = getRequest(url);
+        return xmlReader.parseList(is);
     }
 
     public ArrayList<String> getPackageList(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + projectName);
-        InputStream data = getRequest(url);
-        return xmlReader.parseList(data);
+        InputStream is = getRequest(url);
+        return xmlReader.parseList(is);
     }
 
     public ArrayList<String> getProjectMetadata(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + projectName + "/_meta");
-        InputStream data = getRequest(url);
-        return xmlReader.parseList(data);
+        InputStream is = getRequest(url);
+        return xmlReader.parseList(is);
     }
 
     private String inputStreamToString(InputStream is) {
