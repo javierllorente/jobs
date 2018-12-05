@@ -113,6 +113,12 @@ class OBSXmlReader {
         OBSStatus status = parseStatus(data);
         return status;
     }
+    
+    OBSStatus parseChangeRequestState(InputStream data) throws SAXException,
+            IOException, ParserConfigurationException {
+        OBSStatus status = parseStatus(data);
+        return status;
+    }
 
     ArrayList<OBSRequest> parseRequests(InputStream data) throws SAXException,
             IOException, ParserConfigurationException {
