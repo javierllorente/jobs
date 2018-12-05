@@ -125,6 +125,7 @@ public class OBS {
         String resource = String.format("/source/%s", project);
         InputStream is = deleteRequest(new URL(apiUrl + resource));
         OBSStatus status = xmlReader.parseDeleteProject(project, is);
+        is.close();
         return status;
     }
 
@@ -134,6 +135,7 @@ public class OBS {
         String resource = String.format("/source/%s/%s", project, pkg);
         InputStream is = deleteRequest(new URL(apiUrl + resource));
         OBSStatus status = xmlReader.parseDeletePackage(project, pkg, is);
+        is.close();
         return status;
     }
 
@@ -169,7 +171,9 @@ public class OBS {
                 getUsername());
         URL url = new URL(apiUrl + resource);
         InputStream is = getRequest(url);
-        return xmlReader.parseRequests(is);
+        ArrayList<OBSRequest> requests = xmlReader.parseRequests(is);
+        is.close();
+        return requests;
     }
 
     public int getRequestNumber() {
@@ -183,6 +187,7 @@ public class OBS {
         URL url = new URL(apiUrl + resource);
         InputStream is = postRequest(url, comments);
         OBSStatus status = xmlReader.parseChangeRequestState(is);
+        is.close();
         return status;
     }
 
@@ -190,28 +195,36 @@ public class OBS {
         URL url = new URL(apiUrl + "/source/" + source
                 + "?unified=1&tarlimit=0&cmd=diff&filelimit=0&expand=1");
         InputStream is = postRequest(url, "");
-        return inputStreamToString(is);
+        String str = inputStreamToString(is);
+        is.close();
+        return str;
     }
 
     public ArrayList<String> getProjectList() throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source");
         InputStream is = getRequest(url);
-        return xmlReader.parseList(is);
+        ArrayList<String> list = xmlReader.parseList(is);
+        is.close();
+        return list;
     }
 
     public ArrayList<String> getPackageList(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + projectName);
         InputStream is = getRequest(url);
-        return xmlReader.parseList(is);
+        ArrayList<String> list = xmlReader.parseList(is);
+        is.close();
+        return list;
     }
 
     public ArrayList<String> getProjectMetadata(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + projectName + "/_meta");
         InputStream is = getRequest(url);
-        return xmlReader.parseList(is);
+        ArrayList<String> list = xmlReader.parseList(is);
+        is.close();
+        return list;
     }
 
     private String inputStreamToString(InputStream is) {
