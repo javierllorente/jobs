@@ -83,6 +83,37 @@ class OBSXmlReader {
         return obsStatus;
     }
 
+    OBSStatus parseDeleteProject(String project, InputStream data) throws
+            SAXException, IOException, ParserConfigurationException {
+        OBSStatus status = parseStatus(data);
+        status.setProject(project);
+        return status;
+    }
+
+    OBSStatus parseDeletePackage(String project, String pkg, InputStream data)
+            throws SAXException, IOException, ParserConfigurationException {
+        OBSStatus status = parseStatus(data);
+        status.setProject(project);
+        status.setPkg(pkg);
+        return status;
+    }
+
+    OBSStatus parseDeleteFile(String project, String pkg, String file,
+            InputStream data) throws SAXException, IOException,
+            ParserConfigurationException {
+        OBSStatus status = parseStatus(data);
+        status.setProject(project);
+        status.setPkg(pkg);
+        status.setDetails(file);
+        return status;
+    }
+
+    OBSStatus parseBuildStatus(InputStream data) throws SAXException,
+            IOException, ParserConfigurationException {
+        OBSStatus status = parseStatus(data);
+        return status;
+    }
+
     ArrayList<OBSRequest> parseRequests(InputStream data) throws SAXException,
             IOException, ParserConfigurationException {
 
