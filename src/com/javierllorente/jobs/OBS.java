@@ -108,6 +108,45 @@ public class OBS {
         return is;
     }
 
+    private InputStream deleteRequest(URL url) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("DELETE");
+        connection.setDoOutput(true);
+        connection.addRequestProperty("User-Agent", UserAgent.FULL);
+        System.out.println("Response code: " + connection.getResponseCode());
+        System.out.println("Request method: " + connection.getRequestMethod());
+        InputStream is = (InputStream) connection.getInputStream();
+        return is;
+    }
+
+    public OBSStatus deleteProject(String project) throws
+            MalformedURLException, IOException, SAXException,
+            ParserConfigurationException {
+        String resource = String.format("/source/%s", project);
+        InputStream data = deleteRequest(new URL(apiUrl + resource));
+        OBSStatus status = xmlReader.parseDeleteProject(project, data);
+        return status;
+    }
+
+    public OBSStatus deletePackage(String project, String pkg) throws
+            MalformedURLException, IOException, SAXException,
+            ParserConfigurationException {
+        String resource = String.format("/source/%s/%s", project, pkg);
+        InputStream data = deleteRequest(new URL(apiUrl + resource));
+        OBSStatus status = xmlReader.parseDeletePackage(project, pkg, data);
+        return status;
+    }
+
+    public OBSStatus deleteFile(String project, String pkg, String file) throws
+            MalformedURLException, IOException, SAXException,
+            ParserConfigurationException {
+        String resource = String.format("/source/%s/%s/%s", project, pkg, file);
+        InputStream data = deleteRequest(new URL(apiUrl + resource));
+        OBSStatus status = xmlReader.parseDeleteFile(project, pkg, file, data);
+        data.close();
+        return status;
+    }
+
     public OBSStatus getBuildStatus(String project, String repository,
             String architecture, String build) throws
             SAXException, IOException, ParserConfigurationException {
