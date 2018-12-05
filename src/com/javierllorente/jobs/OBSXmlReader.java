@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2018 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,42 +42,45 @@ class OBSXmlReader {
     public static OBSXmlReader getInstance() {
         return OBSXmlReaderHolder.INSTANCE;
     }
-    
+
     private static class OBSXmlReaderHolder {
 
         private static final OBSXmlReader INSTANCE = new OBSXmlReader();
     }
-    
+
     private int requestNumber;
 
-    OBSResult parseBuild(InputStream data) throws SAXException,
-            IOException, ParserConfigurationException {
-
-        OBSResult result = new OBSResult();
+    private OBSStatus parseStatus(InputStream data) throws SAXException, IOException,
+            ParserConfigurationException {
+        OBSStatus obsStatus = new OBSStatus();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(data);
         Element rootElement = document.getDocumentElement();
+        NodeList nl = document.getElementsByTagName("*");
+        
+        for (int i = 0; i < nl.getLength(); i++) {
+            if ("status".equals(nl.item(i).getNodeName())) {
+                if (rootElement.hasAttributes()) {
+                    NamedNodeMap attributes = rootElement.getAttributes();
 
-        if (rootElement.hasAttributes()) {
-            // Get the node's attributes
-            NamedNodeMap attributes = rootElement.getAttributes();
-            for (int j = 0; j < attributes.getLength(); j++) {
-                Attr attribute = (Attr) (attributes.item(j));
-                if ("package".equals(attribute.getName())) {
-//                    Do nothing                    
-                } else if ("code".equals(attribute.getName())) {
-//                    Status
-                    result.setStatus(attribute.getValue());
+                    for (int j = 0; j < attributes.getLength(); j++) {
+                        Attr attribute = (Attr) attributes.item(j);
+                        if ("package".equals(attribute.getName())) {
+                            obsStatus.setPkg(attribute.getValue());
+                        } else if ("code".equals(attribute.getName())) {
+                            obsStatus.setCode(attribute.getValue());
+                        }
+                    }
                 }
+            } else if ("summary".equals(nl.item(i).getNodeName())) {
+                obsStatus.setSummary(nl.item(i).getNodeValue());
+            } else if ("details".equals(nl.item(i).getNodeName())) {
+                obsStatus.setDetails(nl.item(i).getNodeValue());
             }
         }
-        if (!rootElement.getTextContent().isEmpty()) {
-            // Details
-            String str = rootElement.getTextContent().trim();
-            result.setDetails(str);
-        }
-        return result;
+
+        return obsStatus;
     }
 
     ArrayList<OBSRequest> parseRequests(InputStream data) throws SAXException,
@@ -97,7 +100,7 @@ class OBSXmlReader {
         for (int i = 0; i < nodeList.getLength(); i++) {
 
             Node node = nodeList.item(i);
-            if (node.getNodeType()== Node.ELEMENT_NODE) {
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
 //                System.out.println(node.getNodeName());
 //		Get child nodes of collection
                 node.getChildNodes();
