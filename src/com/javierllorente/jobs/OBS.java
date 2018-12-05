@@ -40,7 +40,7 @@ public class OBS {
         obsCore = OBSCore.getInstance();
         xmlReader = OBSXmlReader.getInstance();
     }
-    
+
     public URL getApiUrl() {
         return apiUrl;
     }
@@ -65,7 +65,7 @@ public class OBS {
     public String getPassword() {
         return obsCore.getPassword();
     }
-    
+
     public int getResponseCode() {
         return obsCore.getResponseCode();
     }
@@ -108,28 +108,18 @@ public class OBS {
         return is;
     }
 
-    public OBSBuild getBuild(String project, String repository, 
-            String architecture, String buildName) throws 
+    public OBSStatus getBuildStatus(String project, String repository,
+            String architecture, String build) throws
             SAXException, IOException, ParserConfigurationException {
         System.out.println("Getting build status...");
-        OBSBuild build = new OBSBuild();
-        build.setProject(project);
-        build.setRepository(repository);
-        build.setArchitecture(architecture);
-        build.setName(buildName);
 //	URL format https://api.opensuse.org/build/KDE:Extra/openSUSE_13.2/x86_64/ktorrent/_status
-        URL url = new URL(
-                apiUrl + "/build/" +
-                project + "/" +
-                repository+ "/" +
-                architecture + "/" +
-                buildName + "/" +
-                "_status");
+        String resource = String.format("/build/%s/%s/%s/%s/_status", 
+                project, repository, architecture, build);
+        URL url = new URL(apiUrl + resource);
         InputStream data = getRequest(url);
-        OBSResult result = xmlReader.parseBuild(data);
-        build.setStatus(result.getStatus());
-        build.setDetails(result.getDetails());
-        return build;
+        OBSStatus status = xmlReader.parseBuildStatus(data);
+        data.close();
+        return status;
     }
 
     public ArrayList<OBSRequest> getRequests() throws IOException,
@@ -145,20 +135,20 @@ public class OBS {
         return xmlReader.getRequestNumber();
     }
 
-    public String acceptRequest(String id, String comments) throws IOException,
+    public OBSStatus acceptRequest(String id, String comments) throws IOException,
             SAXException, ParserConfigurationException {
         URL url = new URL(apiUrl + "/request/" + id + "?cmd=changestate&newstate=accepted");
         InputStream data = postRequest(url, comments);
-        OBSResult result = xmlReader.parseBuild(data);
-        return result.getStatus();
+        OBSStatus status = xmlReader.parseBuildStatus(data);  // FIXME
+        return status;
     }
 
-    public String declineRequest(String id, String comments) throws IOException,
+    public OBSStatus declineRequest(String id, String comments) throws IOException,
             SAXException, ParserConfigurationException {
         URL url = new URL(apiUrl + "/request/" + id + "?cmd=changestate&newstate=declined");
         InputStream data = postRequest(url, comments);
-        OBSResult result = xmlReader.parseBuild(data);
-        return result.getStatus();
+        OBSStatus status = xmlReader.parseBuildStatus(data); // FIXME
+        return status;
     }
 
     public String getRequestDiff(String source) throws IOException {
