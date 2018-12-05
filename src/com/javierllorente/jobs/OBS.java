@@ -176,19 +176,13 @@ public class OBS {
         return xmlReader.getRequestNumber();
     }
 
-    public OBSStatus acceptRequest(String id, String comments) throws IOException,
+    public OBSStatus changeRequestState(String id, String comments, boolean accepted) throws IOException,
             SAXException, ParserConfigurationException {
-        URL url = new URL(apiUrl + "/request/" + id + "?cmd=changestate&newstate=accepted");
+        String newState = accepted ? "accepted" : "declined";
+        String resource = String.format("/request/%s?cmd=changestate&newstate=%s", id, newState);
+        URL url = new URL(apiUrl + resource);
         InputStream data = postRequest(url, comments);
-        OBSStatus status = xmlReader.parseBuildStatus(data);  // FIXME
-        return status;
-    }
-
-    public OBSStatus declineRequest(String id, String comments) throws IOException,
-            SAXException, ParserConfigurationException {
-        URL url = new URL(apiUrl + "/request/" + id + "?cmd=changestate&newstate=declined");
-        InputStream data = postRequest(url, comments);
-        OBSStatus status = xmlReader.parseBuildStatus(data); // FIXME
+        OBSStatus status = xmlReader.parseChangeRequestState(data);
         return status;
     }
 
