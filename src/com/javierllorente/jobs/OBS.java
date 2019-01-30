@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2018 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2019 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,6 +35,7 @@ import org.xml.sax.SAXException;
 public class OBS {
     private final OBSCore obsCore;
     private final OBSXmlReader xmlReader;
+    private OBSXmlWriter xmlWriter;
     private URL apiUrl;
 
     public OBS() {
@@ -117,6 +119,43 @@ public class OBS {
         System.out.println("Request method: " + connection.getRequestMethod());
         InputStream is = (InputStream) connection.getInputStream();
         return is;
+    }
+
+    private InputStream putRequest(URL url, String data) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod("PUT");
+        connection.setDoOutput(true);
+        connection.addRequestProperty("User-Agent", UserAgent.FULL);
+        connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
+        try (DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
+            output.writeBytes(data);
+            output.close();
+        }
+
+        System.out.println("Response code: " + connection.getResponseCode());
+        System.out.println("Request method: " + connection.getRequestMethod());
+        InputStream is = (InputStream) connection.getInputStream();
+        return is;
+    }
+
+    public OBSStatus createProject(String project, String title, String description) throws
+            TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
+        String data = xmlWriter.createProjectMeta(project, title, description, getUsername());
+        String resource = String.format("/source/%s/_meta", project);
+        InputStream is = putRequest(new URL(apiUrl + resource), data);
+        OBSStatus status = xmlReader.parseBuildStatus(is);
+        is.close();
+        return status;
+    }
+
+    public OBSStatus createPackage(String project, String pkg, String title, String description) throws
+            TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
+        String data = xmlWriter.createPackageMeta(project, pkg, title, description, getUsername());
+        String resource = String.format("/source/%s/%s/_meta", project, pkg);
+        InputStream is = putRequest(new URL(apiUrl + resource), data);
+        OBSStatus status = xmlReader.parseBuildStatus(is);
+        is.close();
+        return status;
     }
 
     public OBSStatus deleteProject(String project) throws
