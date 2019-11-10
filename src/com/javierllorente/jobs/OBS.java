@@ -37,6 +37,12 @@ public class OBS {
     private final OBSXmlReader xmlReader;
     private OBSXmlWriter xmlWriter;
     private URL apiUrl;
+    
+    private enum RequestType {
+        Incoming,
+        Outgoing,
+        Declined
+    }
 
     public OBS() {
         obsCore = OBSCore.getInstance();
@@ -204,17 +210,55 @@ public class OBS {
         return status;
     }
 
-    public ArrayList<OBSRequest> getRequests() throws IOException,
+    private String createReqResourceStr(String states, String roles) {
+        return String.format("/request/?view=collection&states=%s&roles=%s&user=%s",
+                states, roles, getUsername());
+    }
+    
+    private ArrayList<OBSRequest> getRequests(RequestType type) throws IOException,
             MalformedURLException, SAXException, ParserConfigurationException {
+        String resource = null;
+
+        switch (type) {
+            case Incoming:
+                resource = createReqResourceStr("new", "maintainer");
+                break;
+            case Outgoing:
+                resource = createReqResourceStr("new", "creator");
+                break;
+            case Declined:
+                resource = createReqResourceStr("declined", "creator");
+                break;
+            default:
+                System.out.println("RequestType not handled!");
+                break;
+        }
+        
+        if (resource==null) {
+            throw new MalformedURLException("Resource is empty!");
+        }
+        
         System.out.println("Getting requests...");
-        String resource = String.format(
-                "/request?view=collection&states=new&roles=maintainer&user=%s",
-                getUsername());
         URL url = new URL(apiUrl + resource);
         InputStream is = getRequest(url);
         ArrayList<OBSRequest> requests = xmlReader.parseRequests(is);
         is.close();
         return requests;
+    }
+    
+    public ArrayList<OBSRequest> getIncomingRequests() throws IOException,
+            MalformedURLException, SAXException, ParserConfigurationException {
+        return getRequests(RequestType.Incoming);
+    }
+
+    public ArrayList<OBSRequest> getOutgoingRequests() throws IOException,
+            MalformedURLException, SAXException, ParserConfigurationException {
+        return getRequests(RequestType.Outgoing);
+    }
+
+    public ArrayList<OBSRequest> getDeclinedRequests() throws IOException,
+            MalformedURLException, SAXException, ParserConfigurationException {
+        return getRequests(RequestType.Declined);
     }
 
     public int getRequestNumber() {
