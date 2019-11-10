@@ -115,6 +115,7 @@ public class OBS {
         connection.setRequestMethod("DELETE");
         connection.setDoOutput(true);
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
+        connection.setRequestProperty("Accept", "xml/application");
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
         InputStream is = (InputStream) connection.getInputStream();
@@ -127,6 +128,7 @@ public class OBS {
         connection.setDoOutput(true);
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
         connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
+        connection.setRequestProperty("Accept", "application/xml");
         try (DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
             output.writeBytes(data);
             output.close();
@@ -193,7 +195,7 @@ public class OBS {
             SAXException, IOException, ParserConfigurationException {
         System.out.println("Getting build status...");
 //	URL format https://api.opensuse.org/build/KDE:Extra/openSUSE_13.2/x86_64/ktorrent/_status
-        String resource = String.format("/build/%s/%s/%s/%s/_status", 
+        String resource = String.format("/build/%s/%s/%s/%s/_status",
                 project, repository, architecture, build);
         URL url = new URL(apiUrl + resource);
         InputStream is = getRequest(url);
