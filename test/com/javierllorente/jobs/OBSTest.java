@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2018 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2016-2019 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,9 +77,9 @@ public class OBSTest {
      * Test of getRequests method, of class OBS.
      */
     @Test
-    public void testGetRequests() throws Exception {
+    public void testGetIncomingRequests() throws Exception {
         System.out.println("getRequests");
-        ArrayList<OBSRequest> result = obs.getRequests();
+        ArrayList<OBSRequest> result = obs.getIncomingRequests();
         assertNotNull(result);
     }
 
