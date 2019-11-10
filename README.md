@@ -1,7 +1,7 @@
 # jOBS
 A Java-based OBS Library
 
-Copyright (C) 2015-2018 Javier Llorente <javier@opensuse.org>
+Copyright (C) 2015-2019 Javier Llorente <javier@opensuse.org>
 
 Introduction
 ---------------
