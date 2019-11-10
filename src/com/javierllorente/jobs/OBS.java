@@ -303,7 +303,7 @@ public class OBS {
         return list;
     }
 
-    public ArrayList<String> getProjectMetadata(String projectName) throws IOException,
+    public ArrayList<String> getProjectMetaConfig(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + projectName + "/_meta");
         InputStream is = getRequest(url);

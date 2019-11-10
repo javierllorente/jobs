@@ -74,7 +74,7 @@ public class OBSTest {
     }
 
     /**
-     * Test of getRequests method, of class OBS.
+     * Test of getIncomingRequests method, of class OBS.
      */
     @Test
     public void testGetIncomingRequests() throws Exception {
@@ -106,12 +106,12 @@ public class OBSTest {
     }
 
     /**
-     * Test of getProjectMetadata method, of class OBS.
+     * Test of getProjectMetaConfig method, of class OBS.
      */
     @Test
-    public void testGetProjectMetadata() throws Exception {
-        System.out.println("getProjectMetadata");
-        ArrayList<String> result = obs.getProjectMetadata("KDE:Extra");
+    public void testGetProjectMetaConfig() throws Exception {
+        System.out.println("getProjectMetaConfig");
+        ArrayList<String> result = obs.getProjectMetaConfig("KDE:Extra");
         assertNotNull(result);
     }
     
