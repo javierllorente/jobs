@@ -209,6 +209,18 @@ public class OBS {
         is.close();
         return status;
     }
+    
+    public ArrayList<OBSResult> getAllBuildStatus(String project, String pkg) throws 
+            MalformedURLException, IOException, SAXException, ParserConfigurationException {
+//        URL format: https://api.opensuse.org/build/<project>/_result?package=<package>
+        String resource = String.format("/build/%s/_result?package=%s", project, pkg);
+        URL url = new URL(apiUrl + resource);
+        ArrayList<OBSResult> list;
+        try (InputStream is = getRequest(url)) {
+            list = xmlReader.parseResultList(is);
+        }
+        return list;
+    }
 
     private String createReqResourceStr(String states, String roles) {
         return String.format("/request/?view=collection&states=%s&roles=%s&user=%s",
