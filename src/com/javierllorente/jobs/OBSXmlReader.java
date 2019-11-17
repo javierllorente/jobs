@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2018 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2019 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,73 +49,127 @@ class OBSXmlReader {
 
     private int requestNumber;
 
-    private OBSStatus parseStatus(InputStream is) throws SAXException, IOException,
-            ParserConfigurationException {
-        OBSStatus obsStatus = new OBSStatus();
+    private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
+            SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(is);
-        Element rootElement = document.getDocumentElement();
-        NodeList nl = document.getElementsByTagName("*");
-        
-        for (int i = 0; i < nl.getLength(); i++) {
-            if ("status".equals(nl.item(i).getNodeName())) {
-                if (rootElement.hasAttributes()) {
-                    NamedNodeMap attributes = rootElement.getAttributes();
+        return document.getElementsByTagName("*");
+    }
 
+    private void parseStatus(Node node, OBSStatus status) {
+            if ("status".equals(node.getNodeName())) {
+                if (node.hasAttributes()) {
+                    NamedNodeMap attributes = node.getAttributes();
                     for (int j = 0; j < attributes.getLength(); j++) {
-                        Attr attribute = (Attr) attributes.item(j);
-                        if ("package".equals(attribute.getName())) {
-                            obsStatus.setPkg(attribute.getValue());
-                        } else if ("code".equals(attribute.getName())) {
-                            obsStatus.setCode(attribute.getValue());
+                        Attr attribute = (Attr) (attributes.item(j));
+
+                        switch (attribute.getName()) {
+                            case "package":
+                                status.setPkg(attribute.getValue());
+                                System.out.println("package: " + attribute.getValue());
+                                break;
+                            case "code":
+                                status.setCode(attribute.getValue());
+                                System.out.println("code: " + attribute.getValue());
+                                break;
                         }
                     }
                 }
-            } else if ("summary".equals(nl.item(i).getNodeName())) {
-                obsStatus.setSummary(nl.item(i).getNodeValue());
-            } else if ("details".equals(nl.item(i).getNodeName())) {
-                obsStatus.setDetails(nl.item(i).getNodeValue());
-            }
-        }
 
-        return obsStatus;
+            } else if ("summary".equals(node.getNodeName())) {
+                status.setSummary(node.getTextContent());
+                System.out.println("summary: " + node.getTextContent());
+            } else if ("details".equals(node.getNodeName())) {
+                status.setDetails(node.getTextContent());
+            }
     }
 
     OBSStatus parseDeleteProject(String project, InputStream is) throws
             SAXException, IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(is);
+        NodeList nodeList = getNodeList(is);
+        OBSStatus status = new OBSStatus();
         status.setProject(project);
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            parseStatus(node, status);                
+        }
+   
         return status;
     }
 
     OBSStatus parseDeletePackage(String project, String pkg, InputStream is)
             throws SAXException, IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(is);
+        NodeList nodeList = getNodeList(is);
+        OBSStatus status = new OBSStatus();
         status.setProject(project);
         status.setPkg(pkg);
+        
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            parseStatus(node, status);                
+        }
+
         return status;
     }
 
     OBSStatus parseDeleteFile(String project, String pkg, String file,
             InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
-        OBSStatus status = parseStatus(is);
+        NodeList nodeList = getNodeList(is);
+        OBSStatus status = new OBSStatus();
         status.setProject(project);
         status.setPkg(pkg);
         status.setDetails(file);
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            parseStatus(node, status);                
+        }
+   
         return status;
     }
 
     OBSStatus parseBuildStatus(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(is);
+        NodeList nodeList = getNodeList(is);
+        OBSStatus status = new OBSStatus();
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            parseStatus(node, status);                
+        }
+   
         return status;
     }
-    
+
     OBSStatus parseChangeRequestState(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
-        OBSStatus status = parseStatus(is);
+        NodeList nodeList = getNodeList(is);
+        OBSStatus status = new OBSStatus();
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            parseStatus(node, status);                
+        }
+   
         return status;
     }
 
@@ -243,6 +296,69 @@ class OBSXmlReader {
                     }
                 }
             }
+        }
+        return list;
+    }
+
+    ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException, 
+            ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+        Document document = documentBuilder.parse(is);
+        ArrayList<OBSResult> list = new ArrayList<>();
+        OBSResult result = null;
+        
+        NodeList nodeList = document.getElementsByTagName("*");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+
+            if ("result".equals(node.getNodeName())) {
+                result = new OBSResult();
+
+                if (node.hasAttributes()) {
+                    NamedNodeMap attributes = node.getAttributes();
+                    for (int j = 0; j < attributes.getLength(); j++) {
+                        Attr attribute = (Attr) (attributes.item(j));
+
+                        if ("result".equals(node.getNodeName())) {
+                            if (null != attribute.getName()) switch (attribute.getName()) {
+                                case "project":
+                                    result.setProject(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "repository":
+                                    result.setRepository(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "arch":
+                                    result.setArch(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "code":
+                                    result.setCode(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "state":
+                                    result.setState(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                    }
+                    list.add(result);
+                }
+            }
+
+            if (result != null) {
+                parseStatus(node, result.getStatus());
+            }
+
         }
         return list;
     }
