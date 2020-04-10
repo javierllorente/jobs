@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2016-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,8 +42,8 @@ public class OBSTest {
         obs = new OBS();
         URL apiUrl = new URL(API_URL);
         obs.setApiUrl(apiUrl);
-        obs.setUsername("yourusername");
-        obs.setPassword("yourpassword");
+        obs.setUsername("");
+        obs.setPassword("");
         obs.authenticate();
     }
     
