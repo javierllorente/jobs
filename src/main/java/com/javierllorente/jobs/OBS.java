@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.naming.AuthenticationException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -82,7 +83,7 @@ public class OBS {
         return obsCore.getResponseMessage();
     }
 
-    public void authenticate() throws IOException {
+    public void authenticate() throws IOException, AuthenticationException {
         obsCore.authenticate();
     }
 

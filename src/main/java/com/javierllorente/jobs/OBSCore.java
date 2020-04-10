@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2018 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.ProtocolException;
 import java.net.URL;
+import javax.naming.AuthenticationException;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
@@ -94,10 +95,14 @@ class OBSCore {
         }
     }
 
-    void authenticate() throws ProtocolException, IOException {
+    void authenticate() throws ProtocolException, IOException, AuthenticationException {
         System.out.println("Authenticating...");
         System.out.println("apiUrl: " + apiUrl);
         System.out.println("User-Agent: " + UserAgent.FULL);
+        
+        if (username.isEmpty() || password.isEmpty()) {
+            throw new AuthenticationException("Empty username/password");
+        }
         
         HttpsURLConnection connection;
         System.setProperty("http.maxRedirects", "4");
