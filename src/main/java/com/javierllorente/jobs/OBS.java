@@ -315,6 +315,15 @@ public class OBS {
         is.close();
         return list;
     }
+    
+    public ArrayList<String> getFileList(String project, String pkg) throws IOException, 
+            ParserConfigurationException, SAXException {
+        URL url = new URL(apiUrl + "/source/" + project + "/" + pkg);
+        InputStream is = getRequest(url);
+        ArrayList<String> list = xmlReader.parseList(is);
+        is.close();
+        return list;
+    }
 
     public ArrayList<String> getProjectMetaConfig(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
