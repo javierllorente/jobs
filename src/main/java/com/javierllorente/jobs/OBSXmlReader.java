@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2019 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ class OBSXmlReader {
         private static final OBSXmlReader INSTANCE = new OBSXmlReader();
     }
 
-    private int requestNumber;
+    private int requestCount;
 
     private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
@@ -201,7 +201,7 @@ class OBSXmlReader {
                 for (int j = 0; j < attributes.getLength(); j++) {
                     Attr attribute = (Attr) (attributes.item(j));
                     if ("matches".equals(attribute.getName())) {
-                        requestNumber = Integer.parseInt(attribute.getValue());
+                        requestCount = Integer.parseInt(attribute.getValue());
                         System.out.println("matches: " + attribute.getValue());
                     }
                 }
@@ -363,7 +363,7 @@ class OBSXmlReader {
         return list;
     }
 
-    int getRequestNumber() {
-        return requestNumber;
+    int getRequestCount() {
+        return requestCount;
     }
 }

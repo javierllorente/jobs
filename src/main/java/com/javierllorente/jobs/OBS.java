@@ -274,8 +274,8 @@ public class OBS {
         return getRequests(RequestType.Declined);
     }
 
-    public int getRequestNumber() {
-        return xmlReader.getRequestNumber();
+    public int getRequestCount() {
+        return xmlReader.getRequestCount();
     }
 
     public OBSStatus changeRequestState(String id, String comments, boolean accepted) throws IOException,
