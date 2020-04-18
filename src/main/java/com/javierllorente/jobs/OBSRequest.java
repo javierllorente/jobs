@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ public class OBSRequest {
     private String sourcePackage;
     private String targetProject;
     private String targetPackage;
+    private String sourceUpdate;
     private String state;
     private String requester;
     private String date;
@@ -90,6 +91,14 @@ public class OBSRequest {
     
     public String getTarget() {
         return targetProject + "/" + targetPackage;
+    }
+
+    public String getSourceUpdate() {
+        return sourceUpdate;
+    }
+
+    public void setSourceUpdate(String sourceUpdate) {
+        this.sourceUpdate = sourceUpdate;
     }
 
     public String getState() {
