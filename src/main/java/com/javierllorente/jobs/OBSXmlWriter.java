@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2018-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class OBSXmlWriter {
         rootElement.setAttribute("name", project);
         return rootElement;
     }
-    
+
     private Element createPackageElement(Document document,
             String pkg, String project) {
         Element rootElement = document.createElement("package");
@@ -58,22 +58,22 @@ public class OBSXmlWriter {
         rootElement.setAttribute("project", project);
         return rootElement;
     }
-    
-    private void createTextNode(Document document, Element rootElement, String tag, 
+
+    private void createTextNode(Document document, Element rootElement, String tag,
             String text) {
         Element element = document.createElement(tag);
         element.appendChild(document.createTextNode(text));
         rootElement.appendChild(element);
     }
-    
-    private void createPersonElement(Document document, Element rootElement, String userid, 
+
+    private void createPersonElement(Document document, Element rootElement, String userid,
             String role) {
         Element personElement = document.createElement("person");
         rootElement.appendChild(personElement);
         personElement.setAttribute("userid", userid);
         personElement.setAttribute("role", role);
     }
-    
+
     private void addRepository(Document document, Element rootElement, String name,
             String project, String repository, String... archs) {
         Element repositoryElement = document.createElement("repository");
@@ -84,14 +84,14 @@ public class OBSXmlWriter {
         repositoryElement.appendChild(pathElement);
         pathElement.setAttribute("project", project);
         pathElement.setAttribute("repository", repository);
-        
+
         for (String arch : archs) {
             Element archElement = document.createElement("arch");
             archElement.appendChild(document.createTextNode(arch));
             repositoryElement.appendChild(archElement);
         }
     }
-    
+
     public String createProjectMeta(String project, String title, String description,
             String userid) throws TransformerException {
         Document document = documentBuilder.newDocument();
@@ -108,28 +108,71 @@ public class OBSXmlWriter {
 
         return documentToString(document);
     }
-    
-    public String createPackageMeta(String project, String pkg, String title, 
+
+    public String createPackageMeta(String project, String pkg, String title,
             String description, String userid) throws TransformerException {
         Document document = documentBuilder.newDocument();
         Element packageElement = createPackageElement(document, pkg, project);
         createTextNode(document, packageElement, "title", title);
         createTextNode(document, packageElement, "description", description);
-        createPersonElement(document, packageElement, userid, "maintainer"); 
-        
+        createPersonElement(document, packageElement, userid, "maintainer");
+
         return documentToString(document);
-    }  
+    }
+
+    public String createRequest(OBSRequest request) throws TransformerException {
+        Document document = documentBuilder.newDocument();
+        Element rootElement = document.createElement("request");
+        document.appendChild(rootElement);
+
+        Element actionElement = createActionElement(document, rootElement,
+                request.getActionType());
+        createRequestPrjPkgElement(document, actionElement, "source",
+                request.getSourceProject(), request.getSourcePackage());
+        createRequestPrjPkgElement(document, actionElement, "target",
+                request.getTargetProject(), request.getTargetPackage());
+
+        if (request.getSourceUpdate() != null) {
+            Element element = document.createElement("options");
+            document.appendChild(element);
+            createTextNode(document, actionElement, "sourceupdate", request.getSourceUpdate());
+        }
+
+        createDescriptionElement(document, rootElement, request.getDescription());
+
+        return documentToString(document);
+    }
+
+    private Element createActionElement(Document document, Element rootElement,
+            String type) {
+        Element actionElement = document.createElement("action");
+        actionElement.setAttribute("type", type);
+        rootElement.appendChild(actionElement);
+        return actionElement;
+    }
+
+    private void createRequestPrjPkgElement(Document document, Element rootElement,
+            String type, String prj, String pkg) {
+        Element prjPkgElement = document.createElement(type);
+        prjPkgElement.setAttribute("project", prj);
+        prjPkgElement.setAttribute("package", pkg);
+        rootElement.appendChild(prjPkgElement);
+    }
+
+    private void createDescriptionElement(Document document, Element rootElement, String description) {
+        createTextNode(document, rootElement, "description", description);
+    }
 
     private String documentToString(Document document) throws TransformerException {
-            StringWriter stringWriter = new StringWriter();
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
-            return stringWriter.toString();
+        StringWriter stringWriter = new StringWriter();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
+        return stringWriter.toString();
     }
-    
+
 }
