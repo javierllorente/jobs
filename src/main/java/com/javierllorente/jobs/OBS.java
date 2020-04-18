@@ -107,13 +107,21 @@ public class OBS {
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
+        connection.setRequestProperty("Accept", "application/xml");
+        
         try (DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
             output.writeBytes(data);
+            output.close();
         }
+        
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
-        InputStream is = (InputStream) connection.getInputStream();
+        
+        InputStream is = null;
+        is = connection.getResponseCode()==200 ? (InputStream) connection.getInputStream() :
+        (InputStream) connection.getErrorStream();
+        
         return is;
     }
 
