@@ -174,6 +174,15 @@ public class OBS {
         is.close();
         return status;
     }
+    
+    public OBSRequest createRequest(String data) throws MalformedURLException, 
+            IOException, ParserConfigurationException, SAXException {
+        String resource = "/request?cmd=create";
+        InputStream is = postRequest(new URL(apiUrl + resource), data);
+        OBSRequest request = xmlReader.parseCreateRequest(is);
+        is.close();
+        return request;
+    }
 
     public OBSStatus deleteProject(String project) throws
             MalformedURLException, IOException, SAXException,
