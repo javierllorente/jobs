@@ -41,6 +41,91 @@ class OBSXmlReader {
     public static OBSXmlReader getInstance() {
         return OBSXmlReaderHolder.INSTANCE;
     }
+    
+
+    public OBSRequest parseCreateRequest(InputStream is) throws ParserConfigurationException, 
+            IOException, SAXException {
+        NodeList nodeList = getNodeList(is);
+        OBSRequest request = new OBSRequest();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            parseRequest(node, request);
+        }
+        return request;
+        
+    }
+
+    private void parseRequest(Node node, OBSRequest request) {
+        if (node.hasAttributes()) {
+            NamedNodeMap attributes = node.getAttributes();
+            for (int j = 0; j < attributes.getLength(); j++) {
+                Attr attribute = (Attr) (attributes.item(j));
+
+                switch (node.getNodeName()) {
+                    case "request":
+                        if (attribute.getValue().equals("id")) {
+                            request.setId(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+                        
+                    case "action":
+                        if (attribute.getValue().equals("type")) {
+                            request.setActionType(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+                        
+                    case "source":
+                        if (attribute.getValue().equals("project")) {
+                            request.setSourceProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        } else if (attribute.getValue().equals("package")) {
+                            request.setSourceProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+                        
+                    case "target":
+                        if (attribute.getValue().equals("project")) {
+                            request.setTargetProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        } else if (attribute.getValue().equals("package")) {
+                            request.setTargetProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+
+                    case "state":
+                        switch (attribute.getValue()) {
+                            case "name":
+                                request.setState(attribute.getValue());
+                                System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                break;
+                            case "who":
+                                request.setRequester(attribute.getValue());
+                                System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                break;
+                            case "when":
+                                request.setDate(attribute.getValue());
+                                System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+
+                    case "description":
+                        request.setDescription(node.getTextContent());
+                        System.out.println(node.getNodeName() + ": " + node.getTextContent());
+                        break;
+                }
+            }
+        }
+    }
 
     private static class OBSXmlReaderHolder {
 
