@@ -19,6 +19,7 @@ package com.javierllorente.jobs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -444,6 +445,42 @@ class OBSXmlReader {
                 parseStatus(node, result.getStatus());
             }
 
+        }
+        return list;
+    }
+    
+    List<OBSFile> parseFileList(InputStream is) throws ParserConfigurationException,
+            SAXException, IOException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+        Document document = documentBuilder.parse(is);
+        List<OBSFile> list = new ArrayList<>();
+
+        NodeList nodeList = document.getElementsByTagName("*");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            if (node.getNodeName().equals("entry") && node.hasAttributes()) {
+                OBSFile file = new OBSFile();
+                NamedNodeMap attributes = node.getAttributes();
+                for (int j = 0; j < attributes.getLength(); j++) {
+                    Attr attribute = (Attr) (attributes.item(j));
+                    switch (attribute.getName()) {
+                        case "name":
+                            file.setName(attribute.getValue());
+                            break;
+                        case "size":
+                            file.setSize(attribute.getValue());
+                            break;
+                        case "mtime":
+                            file.setLastModified(attribute.getValue());
+                            break;
+                    }
+                }
+                list.add(file);
+            }
         }
         return list;
     }
