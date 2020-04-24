@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import javax.naming.AuthenticationException;
 import javax.net.ssl.HttpsURLConnection;
@@ -333,11 +334,11 @@ public class OBS {
         return list;
     }
     
-    public ArrayList<String> getFileList(String project, String pkg) throws IOException, 
+    public List<OBSFile> getFileList(String project, String pkg) throws IOException, 
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + project + "/" + pkg);
         InputStream is = getRequest(url);
-        ArrayList<String> list = xmlReader.parseList(is);
+        List<OBSFile> list = xmlReader.parseFileList(is);
         is.close();
         return list;
     }
