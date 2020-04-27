@@ -23,7 +23,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import javax.naming.AuthenticationException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.ParserConfigurationException;
@@ -311,7 +310,7 @@ public class OBS {
         URL url = new URL(apiUrl + "/source/" + source
                 + "?unified=1&tarlimit=0&cmd=diff&filelimit=0&expand=1");
         InputStream is = postRequest(url, "");
-        String str = inputStreamToString(is);
+        String str = Utils.inputStreamToString(is);
         is.close();
         return str;
     }
@@ -350,14 +349,5 @@ public class OBS {
         ArrayList<String> list = xmlReader.parseList(is);
         is.close();
         return list;
-    }
-
-    private String inputStreamToString(InputStream is) {
-        String str;
-        try (Scanner scanner = new Scanner(is)) {
-            scanner.useDelimiter("\\A");
-            str = scanner.hasNext() ? scanner.next() : "";
-        }
-        return str;
     }
 }
