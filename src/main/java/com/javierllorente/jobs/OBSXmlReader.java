@@ -128,6 +128,24 @@ class OBSXmlReader {
         }
     }
 
+    OBSStatus parseBranchPackage(String prj, String pkg, InputStream is) throws 
+            ParserConfigurationException, SAXException, IOException {
+        NodeList nodeList = getNodeList(is);
+        OBSStatus status = new OBSStatus();
+        status.setProject(prj);
+        status.setPkg(pkg);
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+            parseStatus(node, status);                
+        }
+   
+        return status;
+    }
+
     private static class OBSXmlReaderHolder {
 
         private static final OBSXmlReader INSTANCE = new OBSXmlReader();

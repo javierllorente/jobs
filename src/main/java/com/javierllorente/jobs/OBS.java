@@ -154,6 +154,16 @@ public class OBS {
         InputStream is = (InputStream) connection.getInputStream();
         return is;
     }
+    
+    public OBSStatus branchPackage(String prj, String pkg) throws
+            MalformedURLException, IOException, ParserConfigurationException,
+            SAXException {
+        String resource = String.format("/source/%s/%s?cmd=branch", prj, pkg);
+        InputStream is = postRequest(new URL(apiUrl + resource), "");
+        OBSStatus status = xmlReader.parseBranchPackage(prj, pkg, is);
+        is.close();
+        return status;
+    }
 
     public OBSStatus createProject(String project, String title, String description) throws
             TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
