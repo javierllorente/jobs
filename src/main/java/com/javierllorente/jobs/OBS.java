@@ -351,13 +351,13 @@ public class OBS {
         is.close();
         return list;
     }
-
-    public ArrayList<String> getProjectMetaConfig(String projectName) throws IOException,
+   
+    public OBSPrjMetaConfig getProjectMetaConfig(String prj) throws IOException,
             ParserConfigurationException, SAXException {
-        URL url = new URL(apiUrl + "/source/" + projectName + "/_meta");
+        URL url = new URL(apiUrl + String.format("source/%s/_meta", prj));
         InputStream is = getRequest(url);
-        ArrayList<String> list = xmlReader.parseList(is);
+        OBSPrjMetaConfig prjMetaConfig = xmlReader.parsePrjMetaConfig(is);
         is.close();
-        return list;
+        return prjMetaConfig;
     }
 }
