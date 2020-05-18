@@ -18,6 +18,7 @@ package com.javierllorente.jobs;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -537,6 +538,35 @@ class OBSXmlReader {
 
         }
         return prjMetaConfig;
+    }
+
+    OBSPkgMetaConfig parsePkgMetaConfig(InputStream is) throws
+            ParserConfigurationException, SAXException, IOException {
+        NodeList nodeList = getNodeList(is);
+        OBSPkgMetaConfig pkgMetaConfig = new OBSPkgMetaConfig();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+
+            if (node.getNodeName().equals("package")) {
+                if (node.hasAttributes()) {
+                    String name = getAttributeValue(node, "name");
+                    pkgMetaConfig.setName(name);
+                    String project = getAttributeValue(node, "project");
+                    pkgMetaConfig.setProject(project);                    
+                }
+            }
+
+            parseMetaConfig(node, pkgMetaConfig);
+
+            if (node.getNodeName().equals("url")) {
+                pkgMetaConfig.setUrl(new URL(node.getTextContent()));
+            }
+        }
+        return pkgMetaConfig;
     }
 
     ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException, 
