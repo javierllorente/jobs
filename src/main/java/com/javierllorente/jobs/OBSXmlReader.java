@@ -19,7 +19,9 @@ package com.javierllorente.jobs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -145,7 +147,7 @@ class OBSXmlReader {
    
         return status;
     }
-
+    
     private static class OBSXmlReaderHolder {
 
         private static final OBSXmlReader INSTANCE = new OBSXmlReader();
@@ -187,6 +189,112 @@ class OBSXmlReader {
             } else if ("details".equals(node.getNodeName())) {
                 status.setDetails(node.getTextContent());
             }
+    }
+    
+    private String getAttributeValue(Node node, String item) {
+        Node childNode = node.getAttributes().getNamedItem(item);
+        if (childNode == null) {
+            throw new NullPointerException("Attribute " + item + " not found!");
+        }
+        return childNode.getNodeValue();
+    }
+    
+    private Map<String, Boolean> parseRepositoryFlags(Node node) {
+        Map<String, Boolean> flagHash = new HashMap<>();
+        
+        NodeList nodeList = node.getChildNodes();
+          for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+            if (childNode.hasAttributes()) {
+                NamedNodeMap attributes = childNode.getAttributes();
+                for (int j = 0; j < attributes.getLength(); j++) {
+                    Attr attribute = (Attr) (attributes.item(j));
+
+                    switch (childNode.getNodeName()) {
+                        case "enable":
+                            if (attributes.getNamedItem("repository") == null) {
+                                flagHash.put("all", true);
+                            } else {
+                                flagHash.put(attribute.getValue(), true);
+                            }
+                            break;
+                        case "disable":
+                            if (attributes.getNamedItem("repository") == null) {
+                                flagHash.put("all", false);
+                            } else {
+                                flagHash.put(attribute.getValue(), false);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        return flagHash;
+    }
+    
+    private void parseMetaConfig(Node node, OBSMetaConfig metaConfig) throws 
+            ParserConfigurationException, SAXException, IOException {
+          
+            switch (node.getNodeName()) {
+                case "title":
+                    metaConfig.setTitle(node.getTextContent());
+                    break;
+                case "description":
+                    metaConfig.setDescription(node.getTextContent());
+                    break;
+                case "person":            
+                    if (node.hasAttributes()) {
+                        String userId = getAttributeValue(node, "userid");
+                        String role = getAttributeValue(node, "role");
+                        metaConfig.putPerson(userId, role);
+                    }
+                    break;
+                case "group":
+                    if (node.hasAttributes()) {
+                        String groupId = getAttributeValue(node, "groupid");
+                        String role = getAttributeValue(node, "role");
+                        metaConfig.putGroup(groupId, role);
+                    }
+                    break;
+                case "build":
+                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                    break;                    
+                case "publish":
+                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                    break;
+                case "useforbuild":
+                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                    break;
+                case "debuginfo":
+                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                    break;
+            }
+            
+    }
+    
+    private OBSRepository parseRepository(Node node) {
+        OBSRepository repository = new OBSRepository();
+        if (node.hasAttributes()) {
+            String name = getAttributeValue(node, "name");
+            repository.setName(name);
+        }
+
+        NodeList childNodeList = node.getChildNodes();
+        for (int k = 0; k < childNodeList.getLength(); k++) {
+            Node childNode = childNodeList.item(k);
+            if (childNode.getNodeName().equals("path")) {
+                if (childNode.hasAttributes()) {
+                    String project = getAttributeValue(childNode, "project");
+                    repository.setProject(project);
+                    String repo = getAttributeValue(childNode, "repository");
+                    repository.setRepository(repo);
+                }
+            } else if (childNode.getNodeName().equals("arch")) {
+                repository.addArch(childNode.getTextContent());
+            }
+        }
+        
+        return repository;
     }
 
     OBSStatus parseDeleteProject(String project, InputStream is) throws
@@ -402,6 +510,33 @@ class OBSXmlReader {
             }
         }
         return list;
+    }
+    
+    OBSPrjMetaConfig parsePrjMetaConfig(InputStream is) throws
+            ParserConfigurationException, SAXException, IOException {
+        NodeList nodeList = getNodeList(is);
+        OBSPrjMetaConfig prjMetaConfig = new OBSPrjMetaConfig();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                node.getChildNodes();
+            }
+
+            if (node.getNodeName().equals("project")) {
+                if (node.hasAttributes()) {
+                    String name = getAttributeValue(node, "name");
+                    prjMetaConfig.setName(name);
+                }
+            } else if (node.getNodeName().equals("repository")) {                    
+                OBSRepository repository = parseRepository(node);
+                prjMetaConfig.addRepository(repository);
+            }            
+
+            parseMetaConfig(node, prjMetaConfig);
+
+        }
+        return prjMetaConfig;
     }
 
     ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException, 
