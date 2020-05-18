@@ -360,4 +360,13 @@ public class OBS {
         is.close();
         return prjMetaConfig;
     }
+    
+    public OBSPkgMetaConfig getPackageMetaConfig(String prj, String pkg) 
+            throws IOException, ParserConfigurationException, SAXException {
+        URL url = new URL(apiUrl + String.format("source/%s/%s/_meta", prj, pkg));
+        InputStream is = getRequest(url);
+        OBSPkgMetaConfig pkgMetaConfig = xmlReader.parsePkgMetaConfig(is);
+        is.close();
+        return pkgMetaConfig;
+    }
 }
