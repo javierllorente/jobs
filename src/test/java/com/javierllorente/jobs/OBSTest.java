@@ -111,7 +111,7 @@ public class OBSTest {
     @Test
     public void testGetProjectMetaConfig() throws Exception {
         System.out.println("getProjectMetaConfig");
-        ArrayList<String> result = obs.getProjectMetaConfig("KDE:Extra");
+        OBSPrjMetaConfig result = obs.getProjectMetaConfig("KDE:Extra");
         assertNotNull(result);
     }
     
