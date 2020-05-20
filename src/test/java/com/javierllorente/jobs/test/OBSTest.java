@@ -14,8 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.javierllorente.jobs;
+package com.javierllorente.jobs.test;
 
+import com.javierllorente.jobs.OBS;
+import com.javierllorente.jobs.OBSPrjMetaConfig;
+import com.javierllorente.jobs.OBSRequest;
+import com.javierllorente.jobs.OBSStatus;
 import java.net.URL;
 import java.util.ArrayList;
 import org.junit.After;
