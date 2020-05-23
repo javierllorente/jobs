@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  *
  * @author javier
  */
-class OBSXmlReader {
+public class OBSXmlReader {
     private int requestCount;
 
     private OBSXmlReader() {
@@ -52,7 +52,7 @@ class OBSXmlReader {
         return OBSXmlReaderHolder.INSTANCE;
     }
 
-    public OBSRequest parseCreateRequest(InputStream is) throws ParserConfigurationException, 
+    public OBSRequest parseCreateRequest(InputStream is) throws ParserConfigurationException,
             IOException, SAXException {
         NodeList nodeList = getNodeList(is);
         OBSRequest request = new OBSRequest();
@@ -64,24 +64,24 @@ class OBSXmlReader {
             parseRequest(node, request);
         }
         return request;
-        
+
     }
 
-    public OBSStatus parseBranchPackage(String prj, String pkg, InputStream is) throws 
+    public OBSStatus parseBranchPackage(String prj, String pkg, InputStream is) throws
             ParserConfigurationException, SAXException, IOException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
         status.setProject(prj);
         status.setPkg(pkg);
-        
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 node.getChildNodes();
             }
-            parseStatus(node, status);                
+            parseStatus(node, status);
         }
-   
+
         return status;
     }
 
@@ -90,15 +90,15 @@ class OBSXmlReader {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
         status.setProject(project);
-        
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 node.getChildNodes();
             }
-            parseStatus(node, status);                
+            parseStatus(node, status);
         }
-   
+
         return status;
     }
 
@@ -108,14 +108,13 @@ class OBSXmlReader {
         OBSStatus status = new OBSStatus();
         status.setProject(project);
         status.setPkg(pkg);
-        
-        
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 node.getChildNodes();
             }
-            parseStatus(node, status);                
+            parseStatus(node, status);
         }
 
         return status;
@@ -129,15 +128,15 @@ class OBSXmlReader {
         status.setProject(project);
         status.setPkg(pkg);
         status.setDetails(file);
-        
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 node.getChildNodes();
             }
-            parseStatus(node, status);                
+            parseStatus(node, status);
         }
-   
+
         return status;
     }
 
@@ -145,15 +144,15 @@ class OBSXmlReader {
             IOException, ParserConfigurationException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
-        
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 node.getChildNodes();
             }
-            parseStatus(node, status);                
+            parseStatus(node, status);
         }
-   
+
         return status;
     }
 
@@ -161,15 +160,15 @@ class OBSXmlReader {
             IOException, ParserConfigurationException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
-        
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 node.getChildNodes();
             }
-            parseStatus(node, status);                
+            parseStatus(node, status);
         }
-   
+
         return status;
     }
 
@@ -265,7 +264,7 @@ class OBSXmlReader {
         }
         return requests;
     }
-    
+
     public int getRequestCount() {
         return requestCount;
     }
@@ -303,7 +302,7 @@ class OBSXmlReader {
         }
         return list;
     }
-    
+
     public OBSPrjMetaConfig parsePrjMetaConfig(InputStream is) throws
             ParserConfigurationException, SAXException, IOException {
         NodeList nodeList = getNodeList(is);
@@ -320,10 +319,10 @@ class OBSXmlReader {
                     String name = getAttributeValue(node, "name");
                     prjMetaConfig.setName(name);
                 }
-            } else if (node.getNodeName().equals("repository")) {                    
+            } else if (node.getNodeName().equals("repository")) {
                 OBSRepository repository = parseRepository(node);
                 prjMetaConfig.addRepository(repository);
-            }            
+            }
 
             parseMetaConfig(node, prjMetaConfig);
 
@@ -347,7 +346,7 @@ class OBSXmlReader {
                     String name = getAttributeValue(node, "name");
                     pkgMetaConfig.setName(name);
                     String project = getAttributeValue(node, "project");
-                    pkgMetaConfig.setProject(project);                    
+                    pkgMetaConfig.setProject(project);
                 }
             }
 
@@ -360,14 +359,14 @@ class OBSXmlReader {
         return pkgMetaConfig;
     }
 
-    public ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException, 
+    public ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(is);
         ArrayList<OBSResult> list = new ArrayList<>();
         OBSResult result = null;
-        
+
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
@@ -384,29 +383,31 @@ class OBSXmlReader {
                         Attr attribute = (Attr) (attributes.item(j));
 
                         if ("result".equals(node.getNodeName())) {
-                            if (null != attribute.getName()) switch (attribute.getName()) {
-                                case "project":
-                                    result.setProject(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                    break;
-                                case "repository":
-                                    result.setRepository(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                    break;
-                                case "arch":
-                                    result.setArch(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                    break;
-                                case "code":
-                                    result.setCode(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                    break;
-                                case "state":
-                                    result.setState(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                    break;
-                                default:
-                                    break;
+                            if (null != attribute.getName()) {
+                                switch (attribute.getName()) {
+                                    case "project":
+                                        result.setProject(attribute.getValue());
+                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                        break;
+                                    case "repository":
+                                        result.setRepository(attribute.getValue());
+                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                        break;
+                                    case "arch":
+                                        result.setArch(attribute.getValue());
+                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                        break;
+                                    case "code":
+                                        result.setCode(attribute.getValue());
+                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                        break;
+                                    case "state":
+                                        result.setState(attribute.getValue());
+                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
                         }
 
@@ -422,7 +423,7 @@ class OBSXmlReader {
         }
         return list;
     }
-    
+
     public List<OBSFile> parseFileList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
