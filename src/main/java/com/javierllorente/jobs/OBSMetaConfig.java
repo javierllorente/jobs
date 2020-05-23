@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author javier
  */
-class OBSMetaConfig {
+public class OBSMetaConfig {
     private String name;
     private String title;
     private String description;
