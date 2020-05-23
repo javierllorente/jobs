@@ -131,7 +131,7 @@ class OBSXmlReader {
         }
     }
 
-    OBSStatus parseBranchPackage(String prj, String pkg, InputStream is) throws 
+    public OBSStatus parseBranchPackage(String prj, String pkg, InputStream is) throws 
             ParserConfigurationException, SAXException, IOException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
@@ -298,7 +298,7 @@ class OBSXmlReader {
         return repository;
     }
 
-    OBSStatus parseDeleteProject(String project, InputStream is) throws
+    public OBSStatus parseDeleteProject(String project, InputStream is) throws
             SAXException, IOException, ParserConfigurationException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
@@ -315,7 +315,7 @@ class OBSXmlReader {
         return status;
     }
 
-    OBSStatus parseDeletePackage(String project, String pkg, InputStream is)
+    public OBSStatus parseDeletePackage(String project, String pkg, InputStream is)
             throws SAXException, IOException, ParserConfigurationException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
@@ -334,7 +334,7 @@ class OBSXmlReader {
         return status;
     }
 
-    OBSStatus parseDeleteFile(String project, String pkg, String file,
+    public OBSStatus parseDeleteFile(String project, String pkg, String file,
             InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
         NodeList nodeList = getNodeList(is);
@@ -354,7 +354,7 @@ class OBSXmlReader {
         return status;
     }
 
-    OBSStatus parseBuildStatus(InputStream is) throws SAXException,
+    public OBSStatus parseBuildStatus(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
@@ -370,7 +370,7 @@ class OBSXmlReader {
         return status;
     }
 
-    OBSStatus parseChangeRequestState(InputStream is) throws SAXException,
+    public OBSStatus parseChangeRequestState(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
         NodeList nodeList = getNodeList(is);
         OBSStatus status = new OBSStatus();
@@ -386,7 +386,7 @@ class OBSXmlReader {
         return status;
     }
 
-    ArrayList<OBSRequest> parseRequests(InputStream is) throws SAXException,
+    public ArrayList<OBSRequest> parseRequests(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
 
         OBSRequest request = null;
@@ -479,7 +479,7 @@ class OBSXmlReader {
         return requests;
     }
 
-    ArrayList<String> parseList(InputStream is) throws ParserConfigurationException,
+    public ArrayList<String> parseList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
@@ -513,7 +513,7 @@ class OBSXmlReader {
         return list;
     }
     
-    OBSPrjMetaConfig parsePrjMetaConfig(InputStream is) throws
+    public OBSPrjMetaConfig parsePrjMetaConfig(InputStream is) throws
             ParserConfigurationException, SAXException, IOException {
         NodeList nodeList = getNodeList(is);
         OBSPrjMetaConfig prjMetaConfig = new OBSPrjMetaConfig();
@@ -540,7 +540,7 @@ class OBSXmlReader {
         return prjMetaConfig;
     }
 
-    OBSPkgMetaConfig parsePkgMetaConfig(InputStream is) throws
+    public OBSPkgMetaConfig parsePkgMetaConfig(InputStream is) throws
             ParserConfigurationException, SAXException, IOException {
         NodeList nodeList = getNodeList(is);
         OBSPkgMetaConfig pkgMetaConfig = new OBSPkgMetaConfig();
@@ -569,7 +569,7 @@ class OBSXmlReader {
         return pkgMetaConfig;
     }
 
-    ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException, 
+    public ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException, 
             ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
@@ -632,7 +632,7 @@ class OBSXmlReader {
         return list;
     }
     
-    List<OBSFile> parseFileList(InputStream is) throws ParserConfigurationException,
+    public List<OBSFile> parseFileList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
@@ -668,7 +668,7 @@ class OBSXmlReader {
         return list;
     }
 
-    int getRequestCount() {
+    public int getRequestCount() {
         return requestCount;
     }
 }
