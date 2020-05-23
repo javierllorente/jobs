@@ -38,14 +38,19 @@ import org.xml.sax.SAXException;
  * @author javier
  */
 class OBSXmlReader {
+    private int requestCount;
 
     private OBSXmlReader() {
+    }
+
+    private static class OBSXmlReaderHolder {
+
+        private static final OBSXmlReader INSTANCE = new OBSXmlReader();
     }
 
     public static OBSXmlReader getInstance() {
         return OBSXmlReaderHolder.INSTANCE;
     }
-    
 
     public OBSRequest parseCreateRequest(InputStream is) throws ParserConfigurationException, 
             IOException, SAXException {
@@ -60,75 +65,6 @@ class OBSXmlReader {
         }
         return request;
         
-    }
-
-    private void parseRequest(Node node, OBSRequest request) {
-        if (node.hasAttributes()) {
-            NamedNodeMap attributes = node.getAttributes();
-            for (int j = 0; j < attributes.getLength(); j++) {
-                Attr attribute = (Attr) (attributes.item(j));
-
-                switch (node.getNodeName()) {
-                    case "request":
-                        if (attribute.getValue().equals("id")) {
-                            request.setId(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-                        
-                    case "action":
-                        if (attribute.getValue().equals("type")) {
-                            request.setActionType(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-                        
-                    case "source":
-                        if (attribute.getValue().equals("project")) {
-                            request.setSourceProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        } else if (attribute.getValue().equals("package")) {
-                            request.setSourceProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-                        
-                    case "target":
-                        if (attribute.getValue().equals("project")) {
-                            request.setTargetProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        } else if (attribute.getValue().equals("package")) {
-                            request.setTargetProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-
-                    case "state":
-                        switch (attribute.getValue()) {
-                            case "name":
-                                request.setState(attribute.getValue());
-                                System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                break;
-                            case "who":
-                                request.setRequester(attribute.getValue());
-                                System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                break;
-                            case "when":
-                                request.setDate(attribute.getValue());
-                                System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-
-                    case "description":
-                        request.setDescription(node.getTextContent());
-                        System.out.println(node.getNodeName() + ": " + node.getTextContent());
-                        break;
-                }
-            }
-        }
     }
 
     public OBSStatus parseBranchPackage(String prj, String pkg, InputStream is) throws 
@@ -147,155 +83,6 @@ class OBSXmlReader {
         }
    
         return status;
-    }
-    
-    private static class OBSXmlReaderHolder {
-
-        private static final OBSXmlReader INSTANCE = new OBSXmlReader();
-    }
-
-    private int requestCount;
-
-    private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
-            SAXException, IOException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-        Document document = documentBuilder.parse(is);
-        return document.getElementsByTagName("*");
-    }
-
-    private void parseStatus(Node node, OBSStatus status) {
-            if ("status".equals(node.getNodeName())) {
-                if (node.hasAttributes()) {
-                    NamedNodeMap attributes = node.getAttributes();
-                    for (int j = 0; j < attributes.getLength(); j++) {
-                        Attr attribute = (Attr) (attributes.item(j));
-
-                        switch (attribute.getName()) {
-                            case "package":
-                                status.setPkg(attribute.getValue());
-                                System.out.println("package: " + attribute.getValue());
-                                break;
-                            case "code":
-                                status.setCode(attribute.getValue());
-                                System.out.println("code: " + attribute.getValue());
-                                break;
-                        }
-                    }
-                }
-
-            } else if ("summary".equals(node.getNodeName())) {
-                status.setSummary(node.getTextContent());
-                System.out.println("summary: " + node.getTextContent());
-            } else if ("details".equals(node.getNodeName())) {
-                status.setDetails(node.getTextContent());
-            }
-    }
-    
-    private String getAttributeValue(Node node, String item) {
-        Node childNode = node.getAttributes().getNamedItem(item);
-        if (childNode == null) {
-            throw new NullPointerException("Attribute " + item + " not found!");
-        }
-        return childNode.getNodeValue();
-    }
-    
-    private Map<String, Boolean> parseRepositoryFlags(Node node) {
-        Map<String, Boolean> flagHash = new HashMap<>();
-        
-        NodeList nodeList = node.getChildNodes();
-          for (int i = 0; i < nodeList.getLength(); i++) {
-            Node childNode = nodeList.item(i);
-            if (childNode.hasAttributes()) {
-                NamedNodeMap attributes = childNode.getAttributes();
-                for (int j = 0; j < attributes.getLength(); j++) {
-                    Attr attribute = (Attr) (attributes.item(j));
-
-                    switch (childNode.getNodeName()) {
-                        case "enable":
-                            if (attributes.getNamedItem("repository") == null) {
-                                flagHash.put("all", true);
-                            } else {
-                                flagHash.put(attribute.getValue(), true);
-                            }
-                            break;
-                        case "disable":
-                            if (attributes.getNamedItem("repository") == null) {
-                                flagHash.put("all", false);
-                            } else {
-                                flagHash.put(attribute.getValue(), false);
-                            }
-                            break;
-                    }
-                }
-            }
-        }
-        return flagHash;
-    }
-    
-    private void parseMetaConfig(Node node, OBSMetaConfig metaConfig) throws 
-            ParserConfigurationException, SAXException, IOException {
-          
-            switch (node.getNodeName()) {
-                case "title":
-                    metaConfig.setTitle(node.getTextContent());
-                    break;
-                case "description":
-                    metaConfig.setDescription(node.getTextContent());
-                    break;
-                case "person":            
-                    if (node.hasAttributes()) {
-                        String userId = getAttributeValue(node, "userid");
-                        String role = getAttributeValue(node, "role");
-                        metaConfig.putPerson(userId, role);
-                    }
-                    break;
-                case "group":
-                    if (node.hasAttributes()) {
-                        String groupId = getAttributeValue(node, "groupid");
-                        String role = getAttributeValue(node, "role");
-                        metaConfig.putGroup(groupId, role);
-                    }
-                    break;
-                case "build":
-                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
-                    break;                    
-                case "publish":
-                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
-                    break;
-                case "useforbuild":
-                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
-                    break;
-                case "debuginfo":
-                    metaConfig.setBuildFlag(parseRepositoryFlags(node));
-                    break;
-            }
-            
-    }
-    
-    private OBSRepository parseRepository(Node node) {
-        OBSRepository repository = new OBSRepository();
-        if (node.hasAttributes()) {
-            String name = getAttributeValue(node, "name");
-            repository.setName(name);
-        }
-
-        NodeList childNodeList = node.getChildNodes();
-        for (int k = 0; k < childNodeList.getLength(); k++) {
-            Node childNode = childNodeList.item(k);
-            if (childNode.getNodeName().equals("path")) {
-                if (childNode.hasAttributes()) {
-                    String project = getAttributeValue(childNode, "project");
-                    repository.setProject(project);
-                    String repo = getAttributeValue(childNode, "repository");
-                    repository.setRepository(repo);
-                }
-            } else if (childNode.getNodeName().equals("arch")) {
-                repository.addArch(childNode.getTextContent());
-            }
-        }
-        
-        return repository;
     }
 
     public OBSStatus parseDeleteProject(String project, InputStream is) throws
@@ -477,6 +264,10 @@ class OBSXmlReader {
             }
         }
         return requests;
+    }
+    
+    public int getRequestCount() {
+        return requestCount;
     }
 
     public ArrayList<String> parseList(InputStream is) throws ParserConfigurationException,
@@ -668,7 +459,214 @@ class OBSXmlReader {
         return list;
     }
 
-    public int getRequestCount() {
-        return requestCount;
+    private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
+            SAXException, IOException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+        Document document = documentBuilder.parse(is);
+        return document.getElementsByTagName("*");
+    }
+
+    private void parseStatus(Node node, OBSStatus status) {
+        if ("status".equals(node.getNodeName())) {
+            if (node.hasAttributes()) {
+                NamedNodeMap attributes = node.getAttributes();
+                for (int j = 0; j < attributes.getLength(); j++) {
+                    Attr attribute = (Attr) (attributes.item(j));
+
+                    switch (attribute.getName()) {
+                        case "package":
+                            status.setPkg(attribute.getValue());
+                            System.out.println("package: " + attribute.getValue());
+                            break;
+                        case "code":
+                            status.setCode(attribute.getValue());
+                            System.out.println("code: " + attribute.getValue());
+                            break;
+                    }
+                }
+            }
+
+        } else if ("summary".equals(node.getNodeName())) {
+            status.setSummary(node.getTextContent());
+            System.out.println("summary: " + node.getTextContent());
+        } else if ("details".equals(node.getNodeName())) {
+            status.setDetails(node.getTextContent());
+        }
+    }
+
+    private void parseRequest(Node node, OBSRequest request) {
+        if (node.hasAttributes()) {
+            NamedNodeMap attributes = node.getAttributes();
+            for (int j = 0; j < attributes.getLength(); j++) {
+                Attr attribute = (Attr) (attributes.item(j));
+
+                switch (node.getNodeName()) {
+                    case "request":
+                        if (attribute.getValue().equals("id")) {
+                            request.setId(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+
+                    case "action":
+                        if (attribute.getValue().equals("type")) {
+                            request.setActionType(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+
+                    case "source":
+                        if (attribute.getValue().equals("project")) {
+                            request.setSourceProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        } else if (attribute.getValue().equals("package")) {
+                            request.setSourceProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+
+                    case "target":
+                        if (attribute.getValue().equals("project")) {
+                            request.setTargetProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        } else if (attribute.getValue().equals("package")) {
+                            request.setTargetProject(attribute.getValue());
+                            System.out.println(attribute.getName() + ": " + attribute.getValue());
+                        }
+                        break;
+
+                    case "state":
+                        switch (attribute.getValue()) {
+                            case "name":
+                                request.setState(attribute.getValue());
+                                System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                break;
+                            case "who":
+                                request.setRequester(attribute.getValue());
+                                System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                break;
+                            case "when":
+                                request.setDate(attribute.getValue());
+                                System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+
+                    case "description":
+                        request.setDescription(node.getTextContent());
+                        System.out.println(node.getNodeName() + ": " + node.getTextContent());
+                        break;
+                }
+            }
+        }
+    }
+
+    private String getAttributeValue(Node node, String item) {
+        Node childNode = node.getAttributes().getNamedItem(item);
+        if (childNode == null) {
+            throw new NullPointerException("Attribute " + item + " not found!");
+        }
+        return childNode.getNodeValue();
+    }
+
+    private Map<String, Boolean> parseRepositoryFlags(Node node) {
+        Map<String, Boolean> flagHash = new HashMap<>();
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+            if (childNode.hasAttributes()) {
+                NamedNodeMap attributes = childNode.getAttributes();
+                for (int j = 0; j < attributes.getLength(); j++) {
+                    Attr attribute = (Attr) (attributes.item(j));
+
+                    switch (childNode.getNodeName()) {
+                        case "enable":
+                            if (attributes.getNamedItem("repository") == null) {
+                                flagHash.put("all", true);
+                            } else {
+                                flagHash.put(attribute.getValue(), true);
+                            }
+                            break;
+                        case "disable":
+                            if (attributes.getNamedItem("repository") == null) {
+                                flagHash.put("all", false);
+                            } else {
+                                flagHash.put(attribute.getValue(), false);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+        return flagHash;
+    }
+
+    private void parseMetaConfig(Node node, OBSMetaConfig metaConfig) throws
+            ParserConfigurationException, SAXException, IOException {
+
+        switch (node.getNodeName()) {
+            case "title":
+                metaConfig.setTitle(node.getTextContent());
+                break;
+            case "description":
+                metaConfig.setDescription(node.getTextContent());
+                break;
+            case "person":
+                if (node.hasAttributes()) {
+                    String userId = getAttributeValue(node, "userid");
+                    String role = getAttributeValue(node, "role");
+                    metaConfig.putPerson(userId, role);
+                }
+                break;
+            case "group":
+                if (node.hasAttributes()) {
+                    String groupId = getAttributeValue(node, "groupid");
+                    String role = getAttributeValue(node, "role");
+                    metaConfig.putGroup(groupId, role);
+                }
+                break;
+            case "build":
+                metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                break;
+            case "publish":
+                metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                break;
+            case "useforbuild":
+                metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                break;
+            case "debuginfo":
+                metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                break;
+        }
+
+    }
+
+    private OBSRepository parseRepository(Node node) {
+        OBSRepository repository = new OBSRepository();
+        if (node.hasAttributes()) {
+            String name = getAttributeValue(node, "name");
+            repository.setName(name);
+        }
+
+        NodeList childNodeList = node.getChildNodes();
+        for (int k = 0; k < childNodeList.getLength(); k++) {
+            Node childNode = childNodeList.item(k);
+            if (childNode.getNodeName().equals("path")) {
+                if (childNode.hasAttributes()) {
+                    String project = getAttributeValue(childNode, "project");
+                    repository.setProject(project);
+                    String repo = getAttributeValue(childNode, "repository");
+                    repository.setRepository(repo);
+                }
+            } else if (childNode.getNodeName().equals("arch")) {
+                repository.addArch(childNode.getTextContent());
+            }
+        }
+
+        return repository;
     }
 }
