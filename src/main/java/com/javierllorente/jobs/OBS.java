@@ -16,6 +16,8 @@
  */
 package com.javierllorente.jobs;
 
+import com.javierllorente.jobs.xml.OBSXmlReader;
+import com.javierllorente.jobs.xml.OBSXmlWriter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

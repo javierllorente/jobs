@@ -14,8 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.javierllorente.jobs;
+package com.javierllorente.jobs.xml;
 
+import com.javierllorente.jobs.OBSFile;
+import com.javierllorente.jobs.OBSMetaConfig;
+import com.javierllorente.jobs.OBSPkgMetaConfig;
+import com.javierllorente.jobs.OBSPrjMetaConfig;
+import com.javierllorente.jobs.OBSRepository;
+import com.javierllorente.jobs.OBSRequest;
+import com.javierllorente.jobs.OBSResult;
+import com.javierllorente.jobs.OBSStatus;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
