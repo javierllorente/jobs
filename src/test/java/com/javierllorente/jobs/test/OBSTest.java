@@ -21,7 +21,7 @@ import com.javierllorente.jobs.OBSPrjMetaConfig;
 import com.javierllorente.jobs.OBSRequest;
 import com.javierllorente.jobs.OBSStatus;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -83,7 +83,7 @@ public class OBSTest {
     @Test
     public void testGetIncomingRequests() throws Exception {
         System.out.println("getRequests");
-        ArrayList<OBSRequest> result = obs.getIncomingRequests();
+        List<OBSRequest> result = obs.getIncomingRequests();
         assertNotNull(result);
     }
 
@@ -93,7 +93,7 @@ public class OBSTest {
     @Test
     public void testGetProjectList() throws Exception {
         System.out.println("getProjectList");
-        ArrayList<String> result = obs.getProjectList();
+        List<String> result = obs.getProjectList();
         assertNotNull(result);
     }
 
@@ -104,7 +104,7 @@ public class OBSTest {
     public void testGetPackageList() throws Exception {
         System.out.println("getPackageList");
         String projectName = "KDE:Extra";
-        ArrayList<String> result = obs.getPackageList(projectName);
+        List<String> result = obs.getPackageList(projectName);
         assertNotNull(result);
 
     }

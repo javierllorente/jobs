@@ -172,7 +172,7 @@ public class OBSXmlReader {
         return status;
     }
 
-    public ArrayList<OBSRequest> parseRequests(InputStream is) throws SAXException,
+    public List<OBSRequest> parseRequests(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
 
         OBSRequest request = null;
@@ -183,7 +183,7 @@ public class OBSXmlReader {
         NodeList requestNodes = document.getElementsByTagName("request");
         int requestsNum = requestNodes.getLength();
         System.out.println("Requests: " + requestsNum);
-        ArrayList<OBSRequest> requests = new ArrayList<>();
+        List<OBSRequest> requests = new ArrayList<>();
 
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -269,12 +269,12 @@ public class OBSXmlReader {
         return requestCount;
     }
 
-    public ArrayList<String> parseList(InputStream is) throws ParserConfigurationException,
+    public List<String> parseList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(is);
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -359,12 +359,12 @@ public class OBSXmlReader {
         return pkgMetaConfig;
     }
 
-    public ArrayList<OBSResult> parseResultList(InputStream is) throws SAXException, IOException,
+    public List<OBSResult> parseResultList(InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(is);
-        ArrayList<OBSResult> list = new ArrayList<>();
+        List<OBSResult> list = new ArrayList<>();
         OBSResult result = null;
 
         NodeList nodeList = document.getElementsByTagName("*");

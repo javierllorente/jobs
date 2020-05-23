@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import javax.naming.AuthenticationException;
 import javax.net.ssl.HttpsURLConnection;
@@ -238,12 +237,12 @@ public class OBS {
         return status;
     }
     
-    public ArrayList<OBSResult> getAllBuildStatus(String project, String pkg) throws 
+    public List<OBSResult> getAllBuildStatus(String project, String pkg) throws 
             MalformedURLException, IOException, SAXException, ParserConfigurationException {
 //        URL format: https://api.opensuse.org/build/<project>/_result?package=<package>
         String resource = String.format("/build/%s/_result?package=%s", project, pkg);
         URL url = new URL(apiUrl + resource);
-        ArrayList<OBSResult> list;
+        List<OBSResult> list;
         try (InputStream is = getRequest(url)) {
             list = xmlReader.parseResultList(is);
         }
@@ -255,7 +254,7 @@ public class OBS {
                 states, roles, getUsername());
     }
     
-    private ArrayList<OBSRequest> getRequests(RequestType type) throws IOException,
+    private List<OBSRequest> getRequests(RequestType type) throws IOException,
             MalformedURLException, SAXException, ParserConfigurationException {
         String resource = null;
 
@@ -281,22 +280,22 @@ public class OBS {
         System.out.println("Getting requests...");
         URL url = new URL(apiUrl + resource);
         InputStream is = getRequest(url);
-        ArrayList<OBSRequest> requests = xmlReader.parseRequests(is);
+        List<OBSRequest> requests = xmlReader.parseRequests(is);
         is.close();
         return requests;
     }
     
-    public ArrayList<OBSRequest> getIncomingRequests() throws IOException,
+    public List<OBSRequest> getIncomingRequests() throws IOException,
             MalformedURLException, SAXException, ParserConfigurationException {
         return getRequests(RequestType.Incoming);
     }
 
-    public ArrayList<OBSRequest> getOutgoingRequests() throws IOException,
+    public List<OBSRequest> getOutgoingRequests() throws IOException,
             MalformedURLException, SAXException, ParserConfigurationException {
         return getRequests(RequestType.Outgoing);
     }
 
-    public ArrayList<OBSRequest> getDeclinedRequests() throws IOException,
+    public List<OBSRequest> getDeclinedRequests() throws IOException,
             MalformedURLException, SAXException, ParserConfigurationException {
         return getRequests(RequestType.Declined);
     }
@@ -325,20 +324,20 @@ public class OBS {
         return str;
     }
 
-    public ArrayList<String> getProjectList() throws IOException,
+    public List<String> getProjectList() throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source");
         InputStream is = getRequest(url);
-        ArrayList<String> list = xmlReader.parseList(is);
+        List<String> list = xmlReader.parseList(is);
         is.close();
         return list;
     }
 
-    public ArrayList<String> getPackageList(String projectName) throws IOException,
+    public List<String> getPackageList(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + projectName);
         InputStream is = getRequest(url);
-        ArrayList<String> list = xmlReader.parseList(is);
+        List<String> list = xmlReader.parseList(is);
         is.close();
         return list;
     }
