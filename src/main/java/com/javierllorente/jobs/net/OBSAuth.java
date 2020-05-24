@@ -30,7 +30,7 @@ import javax.net.ssl.HttpsURLConnection;
  *
  * @author javier
  */
-class OBSAuth {
+public class OBSAuth {
     private URL apiUrl;
     private String username;
     private String password;
@@ -51,27 +51,27 @@ class OBSAuth {
         private static final OBSAuth INSTANCE = new OBSAuth();
     }
 
-    URL getApiUrl() {
+    public URL getApiUrl() {
         return apiUrl;
     }
 
-    void setApiUrl(URL apiUrl) throws MalformedURLException {
+    public void setApiUrl(URL apiUrl) throws MalformedURLException {
         this.apiUrl = apiUrl;
     }
 
-    void setUsername(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return password;
     }
     
@@ -83,7 +83,7 @@ class OBSAuth {
         return responseMessage;
     }
 
-    boolean isAuthenticated() {
+    public boolean isAuthenticated() {
         return authenticated;
     }
 
@@ -96,7 +96,7 @@ class OBSAuth {
         }
     }
 
-    void authenticate() throws ProtocolException, IOException, AuthenticationException {
+    public void authenticate() throws ProtocolException, IOException, AuthenticationException {
         System.out.println("Authenticating...");
         System.out.println("apiUrl: " + apiUrl);
         System.out.println("User-Agent: " + UserAgent.FULL);
