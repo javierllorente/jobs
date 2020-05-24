@@ -35,7 +35,7 @@ import org.xml.sax.SAXException;
  */
 public class OBS {
 
-    private final OBSCore obsCore;
+    private final OBSAuth obsAuth;
     private final OBSHttp obsHttp;
     private final OBSXmlReader xmlReader;
     private URL apiUrl;
@@ -47,7 +47,7 @@ public class OBS {
     }
 
     public OBS() {
-        obsCore = OBSCore.getInstance();
+        obsAuth = OBSAuth.getInstance();
         obsHttp = OBSHttp.getInstance();
         xmlReader = OBSXmlReader.getInstance();
     }
@@ -57,40 +57,40 @@ public class OBS {
     }
 
     public void setApiUrl(URL apiUrl) throws MalformedURLException {
-        obsCore.setApiUrl(apiUrl);
+        obsAuth.setApiUrl(apiUrl);
         this.apiUrl = apiUrl;
     }
 
     public void setUsername(String username) {
-        obsCore.setUsername(username);
+        obsAuth.setUsername(username);
     }
 
     public String getUsername() {
-        return obsCore.getUsername();
+        return obsAuth.getUsername();
     }
 
     public void setPassword(String password) {
-        obsCore.setPassword(password);
+        obsAuth.setPassword(password);
     }
 
     public String getPassword() {
-        return obsCore.getPassword();
+        return obsAuth.getPassword();
     }
 
     public int getResponseCode() {
-        return obsCore.getResponseCode();
+        return obsAuth.getResponseCode();
     }
 
     public String getResponseMessage() {
-        return obsCore.getResponseMessage();
+        return obsAuth.getResponseMessage();
     }
 
     public void authenticate() throws IOException, AuthenticationException {
-        obsCore.authenticate();
+        obsAuth.authenticate();
     }
 
     public boolean isAuthenticated() {
-        return obsCore.isAuthenticated();
+        return obsAuth.isAuthenticated();
     }
 
     

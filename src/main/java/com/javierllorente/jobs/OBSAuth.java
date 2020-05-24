@@ -30,7 +30,7 @@ import javax.net.ssl.HttpsURLConnection;
  *
  * @author javier
  */
-class OBSCore {
+class OBSAuth {
     private URL apiUrl;
     private String username;
     private String password;
@@ -38,17 +38,17 @@ class OBSCore {
     private String responseMessage;
     private boolean authenticated;    
 
-    private OBSCore() {
+    private OBSAuth() {
         authenticated = false;
     }
     
-    public static OBSCore getInstance() {
-        return OBSCoreHolder.INSTANCE;
+    public static OBSAuth getInstance() {
+        return OBSAuthHolder.INSTANCE;
     }
     
-    private static class OBSCoreHolder {
+    private static class OBSAuthHolder {
 
-        private static final OBSCore INSTANCE = new OBSCore();
+        private static final OBSAuth INSTANCE = new OBSAuth();
     }
 
     URL getApiUrl() {
