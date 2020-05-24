@@ -175,7 +175,7 @@ public class OBS {
         String resource = String.format("/build/%s/%s/%s/%s/_status",
                 project, repository, architecture, build);
         URL url = new URL(apiUrl + resource);
-        InputStream is = obsHttp.getRequest(url);
+        InputStream is = obsHttp.get(url);
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;
@@ -187,7 +187,7 @@ public class OBS {
         String resource = String.format("/build/%s/_result?package=%s", project, pkg);
         URL url = new URL(apiUrl + resource);
         List<OBSResult> list;
-        try (InputStream is = obsHttp.getRequest(url)) {
+        try (InputStream is = obsHttp.get(url)) {
             list = xmlReader.parseResultList(is);
         }
         return list;
@@ -223,7 +223,7 @@ public class OBS {
         
         System.out.println("Getting requests...");
         URL url = new URL(apiUrl + resource);
-        InputStream is = obsHttp.getRequest(url);
+        InputStream is = obsHttp.get(url);
         List<OBSRequest> requests = xmlReader.parseRequests(is);
         is.close();
         return requests;
@@ -271,7 +271,7 @@ public class OBS {
     public List<String> getProjectList() throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source");
-        InputStream is = obsHttp.getRequest(url);
+        InputStream is = obsHttp.get(url);
         List<String> list = xmlReader.parseList(is);
         is.close();
         return list;
@@ -280,7 +280,7 @@ public class OBS {
     public List<String> getPackageList(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + projectName);
-        InputStream is = obsHttp.getRequest(url);
+        InputStream is = obsHttp.get(url);
         List<String> list = xmlReader.parseList(is);
         is.close();
         return list;
@@ -289,7 +289,7 @@ public class OBS {
     public List<OBSFile> getFileList(String project, String pkg) throws IOException, 
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + "/source/" + project + "/" + pkg);
-        InputStream is = obsHttp.getRequest(url);
+        InputStream is = obsHttp.get(url);
         List<OBSFile> list = xmlReader.parseFileList(is);
         is.close();
         return list;
@@ -298,7 +298,7 @@ public class OBS {
     public OBSPrjMetaConfig getProjectMetaConfig(String prj) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + String.format("source/%s/_meta", prj));
-        InputStream is = obsHttp.getRequest(url);
+        InputStream is = obsHttp.get(url);
         OBSPrjMetaConfig prjMetaConfig = xmlReader.parsePrjMetaConfig(is);
         is.close();
         return prjMetaConfig;
@@ -307,7 +307,7 @@ public class OBS {
     public OBSPkgMetaConfig getPackageMetaConfig(String prj, String pkg) 
             throws IOException, ParserConfigurationException, SAXException {
         URL url = new URL(apiUrl + String.format("source/%s/%s/_meta", prj, pkg));
-        InputStream is = obsHttp.getRequest(url);
+        InputStream is = obsHttp.get(url);
         OBSPkgMetaConfig pkgMetaConfig = xmlReader.parsePkgMetaConfig(is);
         is.close();
         return pkgMetaConfig;

@@ -40,7 +40,7 @@ public class OBSHttp {
         return OBSHttpHolder.INSTANCE;
     }
 
-    public InputStream getRequest(URL url) throws IOException {
+    public InputStream get(URL url) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
