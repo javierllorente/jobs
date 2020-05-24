@@ -55,7 +55,7 @@ public class OBS {
 
     public OBS() {
         obsAuth = OBSAuth.getInstance();
-        obsHttp = OBSHttp.getInstance();
+        obsHttp = new OBSHttp();
         xmlReader = OBSXmlReader.getInstance();
     }
 

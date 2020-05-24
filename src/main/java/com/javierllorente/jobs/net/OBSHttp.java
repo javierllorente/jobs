@@ -29,15 +29,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class OBSHttp {
 
-    private OBSHttp() {
-    }
-    
-    private static class OBSHttpHolder {
-        private static final OBSHttp INSTANCE = new OBSHttp();
-    }
-
-    public static OBSHttp getInstance() {
-        return OBSHttpHolder.INSTANCE;
+    public OBSHttp() {
     }
 
     public InputStream get(URL url) throws IOException {
