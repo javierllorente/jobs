@@ -16,6 +16,7 @@
  */
 package com.javierllorente.jobs;
 
+import com.javierllorente.jobs.config.UserAgent;
 import java.io.IOException;
 import java.net.Authenticator;
 import java.net.MalformedURLException;
