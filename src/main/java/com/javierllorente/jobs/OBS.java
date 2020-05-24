@@ -187,8 +187,9 @@ public class OBS {
         return status;
     }
     
-    public OBSRequest createRequest(String data) throws MalformedURLException, 
-            IOException, ParserConfigurationException, SAXException {
+    public OBSRequest createRequest(OBSRequest newRequest) throws MalformedURLException, 
+            IOException, ParserConfigurationException, SAXException, TransformerException {
+        String data = xmlWriter.createRequest(newRequest);
         String resource = "/request?cmd=create";
         InputStream is = postRequest(new URL(apiUrl + resource), data);
         OBSRequest request = xmlReader.parseCreateRequest(is);
