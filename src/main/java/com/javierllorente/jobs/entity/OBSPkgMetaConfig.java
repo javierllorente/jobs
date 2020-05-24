@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,18 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.javierllorente.jobs;
+package com.javierllorente.jobs.entity;
+
+import java.net.URL;
 
 /**
  *
  * @author javier
  */
-public class OBSObject {
-    
+public class OBSPkgMetaConfig extends OBSMetaConfig {
     private String project;
-    private String pkg;
+    private URL url;
 
-    public OBSObject() {
+    public OBSPkgMetaConfig() {
     }
 
     public String getProject() {
@@ -36,11 +37,12 @@ public class OBSObject {
         this.project = project;
     }
 
-    public String getPkg() {
-        return pkg;
+    public URL getUrl() {
+        return url;
     }
 
-    public void setPkg(String pkg) {
-        this.pkg = pkg;
+    public void setUrl(URL url) {
+        this.url = url;
     }
+    
 }

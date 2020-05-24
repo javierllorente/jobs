@@ -17,9 +17,9 @@
 package com.javierllorente.jobs.test;
 
 import com.javierllorente.jobs.OBS;
-import com.javierllorente.jobs.OBSPrjMetaConfig;
-import com.javierllorente.jobs.OBSRequest;
-import com.javierllorente.jobs.OBSStatus;
+import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
+import com.javierllorente.jobs.entity.OBSRequest;
+import com.javierllorente.jobs.entity.OBSStatus;
 import java.net.URL;
 import java.util.List;
 import org.junit.After;

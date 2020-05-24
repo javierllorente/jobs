@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,32 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.javierllorente.jobs;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.javierllorente.jobs.entity;
 
 /**
  *
  * @author javier
  */
-public class OBSRepository {
+public class OBSBuild {
     private String name;
     private String project;
     private String repository;
-    private List<String> archs;
-
-    public OBSRepository() {
-        archs = new ArrayList<>();
-    }
-
-    public OBSRepository(String name, String project, String repository, 
-            List<String> archs) {
-        this.name = name;
-        this.project = project;
-        this.repository = repository;
-        this.archs = archs;
-    }
+    private String architecture;
+    private String status;
+    private String details;
 
     public String getName() {
         return name;
@@ -65,15 +52,27 @@ public class OBSRepository {
         this.repository = repository;
     }
 
-    public List<String> getArchs() {
-        return archs;
+    public String getArchitecture() {
+        return architecture;
     }
 
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
+    public void setArchitecture(String architecture) {
+        this.architecture = architecture;
     }
     
-    public void addArch(String arch) {
-        archs.add(arch);
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

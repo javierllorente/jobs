@@ -16,7 +16,7 @@
  */
 package com.javierllorente.jobs.xml;
 
-import com.javierllorente.jobs.OBSRequest;
+import com.javierllorente.jobs.entity.OBSRequest;
 import java.io.StringWriter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;

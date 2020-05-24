@@ -14,35 +14,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.javierllorente.jobs;
+package com.javierllorente.jobs.entity;
 
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author javier
  */
-public class OBSPkgMetaConfig extends OBSMetaConfig {
-    private String project;
-    private URL url;
+public class OBSPrjMetaConfig extends OBSMetaConfig {
+    private List<OBSRepository> repositories;
 
-    public OBSPkgMetaConfig() {
+    public OBSPrjMetaConfig() {
+        repositories = new ArrayList<>();
     }
 
-    public String getProject() {
-        return project;
+    public List<OBSRepository> getRepositories() {
+        return repositories;
     }
 
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public URL getUrl() {
-        return url;
-    }
-
-    public void setUrl(URL url) {
-        this.url = url;
+    public void setRepositories(List<OBSRepository> repositories) {
+        this.repositories = repositories;
     }
     
+    public void addRepository(OBSRepository repository) {
+        repositories.add(repository);
+    }
 }

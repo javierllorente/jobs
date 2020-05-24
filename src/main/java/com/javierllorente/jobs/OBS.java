@@ -16,6 +16,12 @@
  */
 package com.javierllorente.jobs;
 
+import com.javierllorente.jobs.entity.OBSFile;
+import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
+import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
+import com.javierllorente.jobs.entity.OBSRequest;
+import com.javierllorente.jobs.entity.OBSResult;
+import com.javierllorente.jobs.entity.OBSStatus;
 import com.javierllorente.jobs.net.OBSAuth;
 import com.javierllorente.jobs.net.OBSHttp;
 import com.javierllorente.jobs.util.Utils;

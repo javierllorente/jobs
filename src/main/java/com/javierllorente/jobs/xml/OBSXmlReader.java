@@ -16,14 +16,14 @@
  */
 package com.javierllorente.jobs.xml;
 
-import com.javierllorente.jobs.OBSFile;
-import com.javierllorente.jobs.OBSMetaConfig;
-import com.javierllorente.jobs.OBSPkgMetaConfig;
-import com.javierllorente.jobs.OBSPrjMetaConfig;
-import com.javierllorente.jobs.OBSRepository;
-import com.javierllorente.jobs.OBSRequest;
-import com.javierllorente.jobs.OBSResult;
-import com.javierllorente.jobs.OBSStatus;
+import com.javierllorente.jobs.entity.OBSFile;
+import com.javierllorente.jobs.entity.OBSMetaConfig;
+import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
+import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
+import com.javierllorente.jobs.entity.OBSRepository;
+import com.javierllorente.jobs.entity.OBSRequest;
+import com.javierllorente.jobs.entity.OBSResult;
+import com.javierllorente.jobs.entity.OBSStatus;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

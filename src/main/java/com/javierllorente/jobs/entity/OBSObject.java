@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2018-2020 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,41 +14,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.javierllorente.jobs;
+package com.javierllorente.jobs.entity;
 
 /**
  *
  * @author javier
  */
-public class OBSFile {
-    private String name;
-    private String size;
-    private String lastModified;
+public class OBSObject {
+    
+    private String project;
+    private String pkg;
 
-    public OBSFile() {
+    public OBSObject() {
     }
 
-    public String getName() {
-        return name;
+    public String getProject() {
+        return project;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProject(String project) {
+        this.project = project;
     }
 
-    public String getSize() {
-        return size;
+    public String getPkg() {
+        return pkg;
     }
 
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(String lastModified) {
-        this.lastModified = lastModified;
+    public void setPkg(String pkg) {
+        this.pkg = pkg;
     }
 }

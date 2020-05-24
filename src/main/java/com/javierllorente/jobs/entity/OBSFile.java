@@ -14,31 +14,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.javierllorente.jobs;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.javierllorente.jobs.entity;
 
 /**
  *
  * @author javier
  */
-public class OBSPrjMetaConfig extends OBSMetaConfig {
-    private List<OBSRepository> repositories;
+public class OBSFile {
+    private String name;
+    private String size;
+    private String lastModified;
 
-    public OBSPrjMetaConfig() {
-        repositories = new ArrayList<>();
+    public OBSFile() {
     }
 
-    public List<OBSRepository> getRepositories() {
-        return repositories;
+    public String getName() {
+        return name;
     }
 
-    public void setRepositories(List<OBSRepository> repositories) {
-        this.repositories = repositories;
+    public void setName(String name) {
+        this.name = name;
     }
-    
-    public void addRepository(OBSRepository repository) {
-        repositories.add(repository);
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
     }
 }
