@@ -36,9 +36,9 @@ import org.xml.sax.SAXException;
  * @author javier
  */
 public class OBS {
+
     private final OBSCore obsCore;
     private final OBSXmlReader xmlReader;
-    private OBSXmlWriter xmlWriter;
     private URL apiUrl;
     
     private enum RequestType {
@@ -169,6 +169,7 @@ public class OBS {
 
     public OBSStatus createProject(String project, String title, String description) throws
             TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
+        OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createProjectMeta(project, title, description, getUsername());
         String resource = String.format("/source/%s/_meta", project);
         InputStream is = putRequest(new URL(apiUrl + resource), data);
@@ -179,6 +180,7 @@ public class OBS {
 
     public OBSStatus createPackage(String project, String pkg, String title, String description) throws
             TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
+        OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createPackageMeta(project, pkg, title, description, getUsername());
         String resource = String.format("/source/%s/%s/_meta", project, pkg);
         InputStream is = putRequest(new URL(apiUrl + resource), data);
@@ -189,6 +191,7 @@ public class OBS {
     
     public OBSRequest createRequest(OBSRequest newRequest) throws MalformedURLException, 
             IOException, ParserConfigurationException, SAXException, TransformerException {
+        OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createRequest(newRequest);
         String resource = "/request?cmd=create";
         InputStream is = postRequest(new URL(apiUrl + resource), data);
