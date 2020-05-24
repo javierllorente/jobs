@@ -49,16 +49,7 @@ public class OBSXmlReader {
 
     private int requestCount;
 
-    private OBSXmlReader() {
-    }
-
-    private static class OBSXmlReaderHolder {
-
-        private static final OBSXmlReader INSTANCE = new OBSXmlReader();
-    }
-
-    public static OBSXmlReader getInstance() {
-        return OBSXmlReaderHolder.INSTANCE;
+    public OBSXmlReader() {
     }
 
     public OBSRequest parseCreateRequest(InputStream is) throws ParserConfigurationException,
