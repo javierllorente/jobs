@@ -58,6 +58,11 @@ public class OBS {
         obsHttp = new OBSHttp();
         xmlReader = new OBSXmlReader();
     }
+    
+    public OBS(URL apiUrl) throws MalformedURLException {
+        this();
+        obsAuth.setApiUrl(apiUrl);
+    }
 
     public URL getApiUrl() {
         return obsAuth.getApiUrl();
