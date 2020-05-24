@@ -46,6 +46,7 @@ import org.xml.sax.SAXException;
  * @author javier
  */
 public class OBSXmlReader {
+
     private int requestCount;
 
     private OBSXmlReader() {
@@ -182,93 +183,28 @@ public class OBSXmlReader {
 
     public List<OBSRequest> parseRequests(InputStream is) throws SAXException,
             IOException, ParserConfigurationException {
-
-        OBSRequest request = null;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-        Document document = documentBuilder.parse(is);
-
-        NodeList requestNodes = document.getElementsByTagName("request");
-        int requestsNum = requestNodes.getLength();
-        System.out.println("Requests: " + requestsNum);
+        
+        OBSRequest request = null;        
         List<OBSRequest> requests = new ArrayList<>();
+        NodeList nodeList = getNodeList(is);
 
-        NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
-
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-//                System.out.println(node.getNodeName());
-//		Get child nodes of collection
-                node.getChildNodes();
-            }
-            if ("collection".equals(node.getNodeName())) {
-                System.out.println("Collection found!");
-                NamedNodeMap attributes = node.getAttributes();
-                for (int j = 0; j < attributes.getLength(); j++) {
-                    Attr attribute = (Attr) (attributes.item(j));
-                    if ("matches".equals(attribute.getName())) {
-                        requestCount = Integer.parseInt(attribute.getValue());
-                        System.out.println("matches: " + attribute.getValue());
-                    }
-                }
-            } else if ("request".equals(node.getNodeName())) {
-                System.out.println("Request");
-                request = new OBSRequest();
-            }
-            if (node.hasAttributes()) {
-                NamedNodeMap attributes = node.getAttributes();
-                for (int j = 0; j < attributes.getLength(); j++) {
-                    Attr attribute = (Attr) (attributes.item(j));
-//                    Get the attribute's name and value
-//                  System.out.println(attribute.getName() + ": " + attribute.getValue());
 
-                    if ("id".equals(attribute.getName())) {
-                        request.setId(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("type".equals(attribute.getName())) {
-                        request.setActionType(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("source".equals(node.getNodeName()) && "project".equals(attribute.getName())) {
-                        request.setSourceProject(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("source".equals(node.getNodeName()) && "package".equals(attribute.getName())) {
-                        request.setSourcePackage(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("target".equals(node.getNodeName()) && "project".equals(attribute.getName())) {
-                        request.setTargetProject(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("target".equals(node.getNodeName()) && "package".equals(attribute.getName())) {
-                        request.setTargetPackage(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("state".equals(node.getNodeName()) && "name".equals(attribute.getName())) {
-                        request.setState(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("state".equals(node.getNodeName()) && "who".equals(attribute.getName())) {
-                        request.setRequester(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                    if ("state".equals(node.getNodeName()) && "when".equals(attribute.getName())) {
-                        request.setDate(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                }
+            switch (node.getNodeName()) {
+                case "collection":
+                    String matches = getAttributeValue(node, "matches");
+                    requestCount = Integer.parseInt(matches);
+                    System.out.println("matches: " + matches);
+                    break;
+                case "request":
+                    request = new OBSRequest();
+                    requests.add(request);
+                    break;
             }
-            if ("description".equals(node.getNodeName())) {
-                String str = node.getTextContent().trim();
-                if (str.length() > 0) {
-                    // Text Element
-                    System.out.println("Description: " + str);
-                }
-                requests.add(request);
-            }
+            
+            parseRequest(node, request);
+            
         }
         return requests;
     }
@@ -506,71 +442,61 @@ public class OBSXmlReader {
 
     private void parseRequest(Node node, OBSRequest request) {
         if (node.hasAttributes()) {
-            NamedNodeMap attributes = node.getAttributes();
-            for (int j = 0; j < attributes.getLength(); j++) {
-                Attr attribute = (Attr) (attributes.item(j));
 
-                switch (node.getNodeName()) {
-                    case "request":
-                        if (attribute.getValue().equals("id")) {
-                            request.setId(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-
-                    case "action":
-                        if (attribute.getValue().equals("type")) {
-                            request.setActionType(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-
-                    case "source":
-                        if (attribute.getValue().equals("project")) {
-                            request.setSourceProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        } else if (attribute.getValue().equals("package")) {
-                            request.setSourceProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-
-                    case "target":
-                        if (attribute.getValue().equals("project")) {
-                            request.setTargetProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        } else if (attribute.getValue().equals("package")) {
-                            request.setTargetProject(attribute.getValue());
-                            System.out.println(attribute.getName() + ": " + attribute.getValue());
-                        }
-                        break;
-
-                    case "state":
-                        switch (attribute.getValue()) {
-                            case "name":
-                                request.setState(attribute.getValue());
-                                System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                break;
-                            case "who":
-                                request.setRequester(attribute.getValue());
-                                System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                break;
-                            case "when":
-                                request.setDate(attribute.getValue());
-                                System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                break;
-                            default:
-                                break;
-                        }
-                        break;
-
-                    case "description":
-                        request.setDescription(node.getTextContent());
-                        System.out.println(node.getNodeName() + ": " + node.getTextContent());
-                        break;
-                }
+            switch (node.getNodeName()) {
+                case "request":
+                    System.out.println("Request");
+                    String id = getAttributeValue(node, "id");
+                    request.setId(id);
+                    System.out.println("id: " + request.getId());
+                    break;
+                case "action":
+                    String actionType = getAttributeValue(node, "type");
+                    request.setActionType(actionType);
+                    break;
+                case "source":
+                    String sourceProject = getAttributeValue(node, "project");
+                    String sourcePackage = getAttributeValue(node, "package");
+                    request.setSourceProject(sourceProject);
+                    request.setSourcePackage(sourcePackage);
+                    System.out.println("source project: " + request.getSourceProject());
+                    break;
+                case "target":
+                    String targetProject = getAttributeValue(node, "project");
+                    String targetPackage = getAttributeValue(node, "package");
+                    request.setTargetProject(targetProject);
+                    request.setTargetPackage(targetPackage);
+                    System.out.println("target project: " + request.getSourceProject());
+                    break;
+                case "state":
+                    String state = getAttributeValue(node, "name");
+                    String requester = getAttributeValue(node, "who");
+                    String date = getAttributeValue(node, "when");
+                    request.setState(state);
+                    request.setRequester(requester);
+                    request.setDate(date);
+                    break;
             }
+
+        } else {
+
+            switch (node.getNodeName()) {
+                case "sourceupdate":
+                    String sourceUpdate = node.getTextContent();
+                    request.setSourceUpdate(sourceUpdate);
+                    System.out.println("Source update: " + request.getSourceUpdate());
+                    break;
+                case "description":
+                    if (node.getParentNode().getNodeName().equals("request")) {
+                        String description = node.getTextContent();
+                        request.setDescription(description);
+                        System.out.println("Description: " + request.getDescription());
+                    }
+                    break;
+            }
+
         }
+
     }
 
     private String getAttributeValue(Node node, String item) {
