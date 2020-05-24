@@ -109,7 +109,7 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createProjectMeta(project, title, description, getUsername());
         String resource = String.format("/source/%s/_meta", project);
-        InputStream is = obsHttp.putRequest(new URL(apiUrl + resource), data);
+        InputStream is = obsHttp.put(new URL(apiUrl + resource), data);
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;
@@ -120,7 +120,7 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createPackageMeta(project, pkg, title, description, getUsername());
         String resource = String.format("/source/%s/%s/_meta", project, pkg);
-        InputStream is = obsHttp.putRequest(new URL(apiUrl + resource), data);
+        InputStream is = obsHttp.put(new URL(apiUrl + resource), data);
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;

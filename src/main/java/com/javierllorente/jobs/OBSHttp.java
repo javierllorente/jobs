@@ -81,7 +81,7 @@ public class OBSHttp {
         return is;
     }
 
-    public InputStream putRequest(URL url, String data) throws IOException {
+    public InputStream put(URL url, String data) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
