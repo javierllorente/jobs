@@ -141,7 +141,7 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s", project);
-        InputStream is = obsHttp.deleteRequest(new URL(apiUrl + resource));
+        InputStream is = obsHttp.delete(new URL(apiUrl + resource));
         OBSStatus status = xmlReader.parseDeleteProject(project, is);
         is.close();
         return status;
@@ -151,7 +151,7 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s/%s", project, pkg);
-        InputStream is = obsHttp.deleteRequest(new URL(apiUrl + resource));
+        InputStream is = obsHttp.delete(new URL(apiUrl + resource));
         OBSStatus status = xmlReader.parseDeletePackage(project, pkg, is);
         is.close();
         return status;
@@ -161,7 +161,7 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s/%s/%s", project, pkg, file);
-        InputStream is = obsHttp.deleteRequest(new URL(apiUrl + resource));
+        InputStream is = obsHttp.delete(new URL(apiUrl + resource));
         OBSStatus status = xmlReader.parseDeleteFile(project, pkg, file, is);
         is.close();
         return status;

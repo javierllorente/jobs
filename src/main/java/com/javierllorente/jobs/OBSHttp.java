@@ -51,7 +51,7 @@ public class OBSHttp {
         return is;
     }
 
-    public InputStream deleteRequest(URL url) throws IOException {
+    public InputStream delete(URL url) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("DELETE");
         connection.setDoOutput(true);
