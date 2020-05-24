@@ -98,7 +98,7 @@ public class OBS {
             MalformedURLException, IOException, ParserConfigurationException,
             SAXException {
         String resource = String.format("/source/%s/%s?cmd=branch", prj, pkg);
-        InputStream is = obsHttp.postRequest(new URL(apiUrl + resource), "");
+        InputStream is = obsHttp.post(new URL(apiUrl + resource), "");
         OBSStatus status = xmlReader.parseBranchPackage(prj, pkg, is);
         is.close();
         return status;
@@ -131,7 +131,7 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createRequest(newRequest);
         String resource = "/request?cmd=create";
-        InputStream is = obsHttp.postRequest(new URL(apiUrl + resource), data);
+        InputStream is = obsHttp.post(new URL(apiUrl + resource), data);
         OBSRequest request = xmlReader.parseCreateRequest(is);
         is.close();
         return request;
@@ -253,7 +253,7 @@ public class OBS {
         String newState = accepted ? "accepted" : "declined";
         String resource = String.format("/request/%s?cmd=changestate&newstate=%s", id, newState);
         URL url = new URL(apiUrl + resource);
-        InputStream is = obsHttp.postRequest(url, comments);
+        InputStream is = obsHttp.post(url, comments);
         OBSStatus status = xmlReader.parseChangeRequestState(is);
         is.close();
         return status;
@@ -262,7 +262,7 @@ public class OBS {
     public String getRequestDiff(String source) throws IOException {
         URL url = new URL(apiUrl + "/source/" + source
                 + "?unified=1&tarlimit=0&cmd=diff&filelimit=0&expand=1");
-        InputStream is = obsHttp.postRequest(url, "");
+        InputStream is = obsHttp.post(url, "");
         String str = Utils.inputStreamToString(is);
         is.close();
         return str;

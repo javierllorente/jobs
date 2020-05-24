@@ -63,7 +63,7 @@ public class OBSHttp {
         return is;
     }
 
-    public InputStream postRequest(URL url, String data) throws IOException {
+    public InputStream post(URL url, String data) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
