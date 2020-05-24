@@ -16,6 +16,8 @@
  */
 package com.javierllorente.jobs;
 
+import com.javierllorente.jobs.net.OBSAuth;
+import com.javierllorente.jobs.net.OBSHttp;
 import com.javierllorente.jobs.util.Utils;
 import com.javierllorente.jobs.xml.OBSXmlReader;
 import com.javierllorente.jobs.xml.OBSXmlWriter;
