@@ -279,11 +279,12 @@ public class OBS {
         return str;
     }
 
-    public List<String> getProjectList() throws IOException,
+    public List<String> getProjectList(boolean includeHomePrjs) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + "/source");
         InputStream is = obsHttp.get(url);
-        List<String> list = xmlReader.parseList(is);
+        String userHome = includeHomePrjs ? "" : "home:" + obsAuth.getUsername();
+        List<String> list = xmlReader.parseProjectList(userHome, is);
         is.close();
         return list;
     }

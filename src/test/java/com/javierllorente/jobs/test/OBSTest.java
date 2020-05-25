@@ -93,7 +93,7 @@ public class OBSTest {
     @Test
     public void testGetProjectList() throws Exception {
         System.out.println("getProjectList");
-        List<String> result = obs.getProjectList();
+        List<String> result = obs.getProjectList(true);
         assertNotNull(result);
     }
 

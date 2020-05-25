@@ -233,7 +233,32 @@ public class OBSXmlReader {
                         System.out.println(attribute.getName() + ": " + attribute.getValue());
                     }
                 }
+            }              
             }
+        return list;
+    }
+    
+    public List<String> parseProjectList(String userHome, InputStream is) throws ParserConfigurationException,
+            SAXException, IOException {
+        List<String> list = new ArrayList<>();
+        NodeList nodeList = getNodeList(is);
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+                    
+            if (node.getNodeName().equals("entry")) {
+                String entry = getAttributeValue(node, "name");
+                if (!userHome.isEmpty()) {
+                    if (entry.startsWith(userHome)) {
+                        list.add(entry);
+                    } else if (!entry.startsWith("home")) {
+                        list.add(entry);
+                    }
+                } else {
+                    list.add(entry);
+                }                
+            }
+            
         }
         return list;
     }
