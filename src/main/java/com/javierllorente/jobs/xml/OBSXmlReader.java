@@ -17,6 +17,7 @@
 package com.javierllorente.jobs.xml;
 
 import com.javierllorente.jobs.entity.OBSFile;
+import com.javierllorente.jobs.entity.OBSLink;
 import com.javierllorente.jobs.entity.OBSMetaConfig;
 import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
 import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
@@ -418,6 +419,26 @@ public class OBSXmlReader {
             }
         }
         return list;
+    }
+    
+    public OBSLink parseLink(InputStream is) throws ParserConfigurationException,
+            SAXException, IOException {
+        NodeList nodeList = getNodeList(is);
+        OBSLink link = null;
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeName().equals("link")) {
+                link = new OBSLink();
+                if (node.hasAttributes()) {
+                    String prj = getAttributeValue(node, "project");
+                    link.setProject(prj);
+                    String pkg = getAttributeValue(node, "package");
+                    link.setPkg(pkg);
+                }
+            }
+        }
+        return link;
     }
 
     private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
