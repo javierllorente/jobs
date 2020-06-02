@@ -16,8 +16,12 @@
  */
 package com.javierllorente.jobs.xml;
 
+import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
 import com.javierllorente.jobs.entity.OBSRequest;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -67,12 +71,25 @@ public class OBSXmlWriter {
         rootElement.appendChild(element);
     }
 
-    private void createPersonElement(Document document, Element rootElement, String userid,
-            String role) {
-        Element personElement = document.createElement("person");
-        rootElement.appendChild(personElement);
-        personElement.setAttribute("userid", userid);
-        personElement.setAttribute("role", role);
+    private void createUserRoles(Document document, Element rootElement, 
+            Map<String, List<String>> userRoles, String type) {
+        if (!userRoles.isEmpty()) {
+            String tag = type.equals("userid") ? "person" : "group";
+            List<String> users = new ArrayList<>(userRoles.keySet());
+            String userAdded = null;
+            for (String user : users) {
+                List<String> roles = userRoles.get(user);
+                if (!user.equals(userAdded)) {
+                    for (String role : roles) {
+                        Element personElement = document.createElement(tag);
+                        personElement.setAttribute(type, user);
+                        personElement.setAttribute("role", role);                        
+                        rootElement.appendChild(personElement);
+                    }
+                    userAdded = user;
+                }
+            }
+        }
     }
 
     private void addRepository(Document document, Element rootElement, String name,
@@ -100,7 +117,7 @@ public class OBSXmlWriter {
         Element projectElement = createProjectElement(document, project);
         createTextNode(document, projectElement, "title", title);
         createTextNode(document, projectElement, "description", description);
-        createPersonElement(document, projectElement, userid, "maintainer");
+        createUserRoles(document, projectElement, userid, "maintainer");
 
         addRepository(document, projectElement, "openSUSE_Current", "openSUSE_Current",
                 "standard", "x86_64");
@@ -110,13 +127,25 @@ public class OBSXmlWriter {
         return documentToString(document);
     }
 
-    public String createPackageMeta(String project, String pkg, String title,
-            String description, String userid) throws TransformerException {
+    public String createPackageMeta(OBSPkgMetaConfig pkgMetaConfig) 
+            throws TransformerException {
         Document document = documentBuilder.newDocument();
-        Element packageElement = createPackageElement(document, pkg, project);
-        createTextNode(document, packageElement, "title", title);
-        createTextNode(document, packageElement, "description", description);
-        createPersonElement(document, packageElement, userid, "maintainer");
+        Element packageElement = createPackageElement(document, 
+                pkgMetaConfig.getName(), pkgMetaConfig.getProject());
+        
+        createTextNode(document, packageElement, "title", pkgMetaConfig.getTitle());
+        createTextNode(document, packageElement, "description", 
+                pkgMetaConfig.getDescription());        
+        
+        createUserRoles(document, packageElement, pkgMetaConfig.getPersons(), "userid");
+        createUserRoles(document, packageElement, pkgMetaConfig.getGroups(), "groupid");
+        
+        createRepositoryFlags(document, pkgMetaConfig.getBuildFlag(), "build");
+        createRepositoryFlags(document, pkgMetaConfig.getDebugInfoFlag(), "debuginfo");
+        createRepositoryFlags(document, pkgMetaConfig.getPublishFlag(), "publish");
+        createRepositoryFlags(document, pkgMetaConfig.getUseForBuildFlag(), "useforbuild");
+        
+        createTextNode(document, packageElement, "url", pkgMetaConfig.getUrl().toString());
 
         return documentToString(document);
     }
@@ -142,6 +171,27 @@ public class OBSXmlWriter {
         createDescriptionElement(document, rootElement, request.getDescription());
 
         return documentToString(document);
+    }
+    
+    private void createRepositoryFlags(Document document, Map<String, Boolean> flag, 
+            String type) {
+        
+        if (!flag.isEmpty()) {
+            Element rootElement = document.createElement(type);
+            
+            for (String repository : flag.keySet()) {
+                boolean enabled = flag.get(repository);
+                String enabledStr = enabled ? "enable" : "disable";
+                
+                Element enableElement = document.createElement(enabledStr);
+                rootElement.appendChild(enableElement);
+                
+                if (!repository.equals("all")) {
+                    rootElement.setAttribute("repository", repository);
+                }
+            }
+            document.appendChild(rootElement);            
+        }
     }
 
     private Element createActionElement(Document document, Element rootElement,
