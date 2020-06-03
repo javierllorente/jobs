@@ -17,6 +17,8 @@
 package com.javierllorente.jobs.xml;
 
 import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
+import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
+import com.javierllorente.jobs.entity.OBSRepository;
 import com.javierllorente.jobs.entity.OBSRequest;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -92,37 +94,24 @@ public class OBSXmlWriter {
         }
     }
 
-    private void addRepository(Document document, Element rootElement, String name,
-            String project, String repository, String... archs) {
-        Element repositoryElement = document.createElement("repository");
-        rootElement.appendChild(repositoryElement);
-        repositoryElement.setAttribute("name", name);
-
-        Element pathElement = document.createElement("path");
-        repositoryElement.appendChild(pathElement);
-        pathElement.setAttribute("project", project);
-        pathElement.setAttribute("repository", repository);
-
-        for (String arch : archs) {
-            Element archElement = document.createElement("arch");
-            archElement.appendChild(document.createTextNode(arch));
-            repositoryElement.appendChild(archElement);
-        }
-    }
-
-    public String createProjectMeta(String project, String title, String description,
-            String userid) throws TransformerException {
+    public String createProjectMeta(OBSPrjMetaConfig prjMetaConfig) throws TransformerException {
         Document document = documentBuilder.newDocument();
 
-        Element projectElement = createProjectElement(document, project);
-        createTextNode(document, projectElement, "title", title);
-        createTextNode(document, projectElement, "description", description);
-        createUserRoles(document, projectElement, userid, "maintainer");
-
-        addRepository(document, projectElement, "openSUSE_Current", "openSUSE_Current",
-                "standard", "x86_64");
-        addRepository(document, projectElement, "openSUSE_Tumbleweed", "openSUSE:Factory",
-                "snapshot", "x86_64");
+        Element projectElement = createProjectElement(document, prjMetaConfig.getName());
+        createTextNode(document, projectElement, "title", prjMetaConfig.getTitle());
+        createTextNode(document, projectElement, "description", prjMetaConfig.getDescription());
+        
+        createUserRoles(document, projectElement, prjMetaConfig.getPersons(), "userid");
+        createUserRoles(document, projectElement, prjMetaConfig.getGroups(), "groupid");
+        
+        createRepositoryFlags(document, prjMetaConfig.getBuildFlag(), "build");
+        createRepositoryFlags(document, prjMetaConfig.getDebugInfoFlag(), "debuginfo");
+        createRepositoryFlags(document, prjMetaConfig.getPublishFlag(), "publish");
+        createRepositoryFlags(document, prjMetaConfig.getUseForBuildFlag(), "useforbuild");
+        
+        prjMetaConfig.getRepositories().forEach((repository) -> {
+            createRepositoryElement(document, projectElement, repository);
+        });
 
         return documentToString(document);
     }
@@ -191,6 +180,24 @@ public class OBSXmlWriter {
                 }
             }
             document.appendChild(rootElement);            
+        }
+    }
+    
+    private void createRepositoryElement(Document document, Element rootElement, 
+            OBSRepository repository) {
+        Element repositoryElement = document.createElement("repository");
+        rootElement.appendChild(repositoryElement);
+        repositoryElement.setAttribute("name", repository.getName());
+
+        Element pathElement = document.createElement("path");
+        repositoryElement.appendChild(pathElement);
+        pathElement.setAttribute("project", repository.getProject());
+        pathElement.setAttribute("repository", repository.getRepository());
+
+        for (String arch : repository.getArchs()) {
+            Element archElement = document.createElement("arch");
+            archElement.appendChild(document.createTextNode(arch));
+            repositoryElement.appendChild(archElement);
         }
     }
 
