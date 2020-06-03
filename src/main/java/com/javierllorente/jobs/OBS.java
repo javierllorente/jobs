@@ -104,7 +104,6 @@ public class OBS {
     public boolean isAuthenticated() {
         return obsAuth.isAuthenticated();
     }
-
     
     public OBSStatus branchPackage(String prj, String pkg) throws
             MalformedURLException, IOException, ParserConfigurationException,
@@ -116,22 +115,22 @@ public class OBS {
         return status;
     }
 
-    public OBSStatus createProject(String project, String title, String description) throws
+    public OBSStatus createProject(OBSPrjMetaConfig prjMetaConfig) throws
             TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
-        String data = xmlWriter.createProjectMeta(project, title, description, getUsername());
-        String resource = String.format("/source/%s/_meta", project);
+        String data = xmlWriter.createProjectMeta(prjMetaConfig);
+        String resource = String.format("/source/%s/_meta", prjMetaConfig.getName());
         InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;
     }
 
-    public OBSStatus createPackage(String project, String pkg, String title, String description) throws
+    public OBSStatus createPackage(OBSPkgMetaConfig pkgMetaConfig) throws
             TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
-        String data = xmlWriter.createPackageMeta(project, pkg, title, description, getUsername());
-        String resource = String.format("/source/%s/%s/_meta", project, pkg);
+        String data = xmlWriter.createPackageMeta(pkgMetaConfig);
+        String resource = String.format("/source/%s/%s/_meta", pkgMetaConfig.getProject(), pkgMetaConfig.getName());
         InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
