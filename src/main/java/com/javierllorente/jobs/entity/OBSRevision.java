@@ -32,7 +32,6 @@ public class OBSRevision extends OBSObject {
     String file;
 
     public OBSRevision() {
-        time = new Date();
     }    
 
     public int getRev() {
