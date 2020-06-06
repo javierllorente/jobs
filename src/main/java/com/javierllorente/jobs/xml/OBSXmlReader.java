@@ -24,11 +24,13 @@ import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
 import com.javierllorente.jobs.entity.OBSRepository;
 import com.javierllorente.jobs.entity.OBSRequest;
 import com.javierllorente.jobs.entity.OBSResult;
+import com.javierllorente.jobs.entity.OBSRevision;
 import com.javierllorente.jobs.entity.OBSStatus;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -440,6 +442,22 @@ public class OBSXmlReader {
         }
         return link;
     }
+    
+    public OBSRevision parseLinkPackage(InputStream is) throws ParserConfigurationException, 
+            SAXException, IOException {
+        NodeList nodeList = getNodeList(is);
+        OBSRevision revision = null;
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeName().equals("revision")) {
+                revision = new OBSRevision();
+            }
+            parseRevision(node, revision);
+        }
+        
+        return revision; 
+    }
 
     private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
@@ -641,4 +659,31 @@ public class OBSXmlReader {
 
         return repository;
     }
+
+    private void parseRevision(Node node, OBSRevision revision) throws
+            ParserConfigurationException, SAXException, IOException {
+
+        switch (node.getNodeName()) {
+            case "revision":
+                if (node.hasAttributes()) {
+                    String rev = getAttributeValue(node, "rev");
+                    revision.setRev(Integer.parseInt(rev));
+                }
+                break;
+            case "version":
+                revision.setVersion(node.getTextContent());
+                break;
+            case "time":
+                revision.setTime(new Date(Long.parseLong(node.getTextContent())*1000));
+                break;
+            case "user":
+                revision.setUser(node.getTextContent());
+                break;
+            case "comment":
+                revision.setComment(node.getTextContent());
+                break;
+        }
+
+    }
+    
 }
