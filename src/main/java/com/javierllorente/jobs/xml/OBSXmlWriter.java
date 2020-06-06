@@ -104,10 +104,10 @@ public class OBSXmlWriter {
         createUserRoles(document, projectElement, prjMetaConfig.getPersons(), "userid");
         createUserRoles(document, projectElement, prjMetaConfig.getGroups(), "groupid");
         
-        createRepositoryFlags(document, prjMetaConfig.getBuildFlag(), "build");
-        createRepositoryFlags(document, prjMetaConfig.getDebugInfoFlag(), "debuginfo");
-        createRepositoryFlags(document, prjMetaConfig.getPublishFlag(), "publish");
-        createRepositoryFlags(document, prjMetaConfig.getUseForBuildFlag(), "useforbuild");
+        createRepositoryFlags(document, projectElement, prjMetaConfig.getBuildFlag(), "build");
+        createRepositoryFlags(document, projectElement, prjMetaConfig.getDebugInfoFlag(), "debuginfo");
+        createRepositoryFlags(document, projectElement, prjMetaConfig.getPublishFlag(), "publish");
+        createRepositoryFlags(document, projectElement, prjMetaConfig.getUseForBuildFlag(), "useforbuild");
         
         prjMetaConfig.getRepositories().forEach((repository) -> {
             createRepositoryElement(document, projectElement, repository);
@@ -129,10 +129,10 @@ public class OBSXmlWriter {
         createUserRoles(document, packageElement, pkgMetaConfig.getPersons(), "userid");
         createUserRoles(document, packageElement, pkgMetaConfig.getGroups(), "groupid");
         
-        createRepositoryFlags(document, pkgMetaConfig.getBuildFlag(), "build");
-        createRepositoryFlags(document, pkgMetaConfig.getDebugInfoFlag(), "debuginfo");
-        createRepositoryFlags(document, pkgMetaConfig.getPublishFlag(), "publish");
-        createRepositoryFlags(document, pkgMetaConfig.getUseForBuildFlag(), "useforbuild");
+        createRepositoryFlags(document, packageElement, pkgMetaConfig.getBuildFlag(), "build");
+        createRepositoryFlags(document, packageElement, pkgMetaConfig.getDebugInfoFlag(), "debuginfo");
+        createRepositoryFlags(document, packageElement, pkgMetaConfig.getPublishFlag(), "publish");
+        createRepositoryFlags(document, packageElement, pkgMetaConfig.getUseForBuildFlag(), "useforbuild");
         
         createTextNode(document, packageElement, "url", pkgMetaConfig.getUrl().toString());
 
@@ -162,24 +162,24 @@ public class OBSXmlWriter {
         return documentToString(document);
     }
     
-    private void createRepositoryFlags(Document document, Map<String, Boolean> flag, 
-            String type) {
+    private void createRepositoryFlags(Document document, Element rootElement, 
+            Map<String, Boolean> flag, String type) {
         
-        if (!flag.isEmpty()) {
-            Element rootElement = document.createElement(type);
+        if (flag != null && !flag.isEmpty()) {
+            Element flagElement = document.createElement(type);
             
             for (String repository : flag.keySet()) {
                 boolean enabled = flag.get(repository);
                 String enabledStr = enabled ? "enable" : "disable";
                 
                 Element enableElement = document.createElement(enabledStr);
-                rootElement.appendChild(enableElement);
+                flagElement.appendChild(enableElement);
                 
                 if (!repository.equals("all")) {
-                    rootElement.setAttribute("repository", repository);
+                    enableElement.setAttribute("repository", repository);
                 }
             }
-            document.appendChild(rootElement);            
+            rootElement.appendChild(flagElement);            
         }
     }
     
@@ -232,5 +232,5 @@ public class OBSXmlWriter {
         transformer.transform(new DOMSource(document), new StreamResult(stringWriter));
         return stringWriter.toString();
     }
-
+    
 }
