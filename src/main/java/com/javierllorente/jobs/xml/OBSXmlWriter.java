@@ -33,6 +33,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -159,6 +160,36 @@ public class OBSXmlWriter {
 
         createDescriptionElement(document, rootElement, request.getDescription());
 
+        return documentToString(document);
+    }
+    
+    public String createLink(String prj, String pkg) throws TransformerException {
+        Document document = documentBuilder.newDocument();
+        Element rootElement = document.createElement("link");
+        document.appendChild(rootElement);
+        rootElement.setAttribute("project", prj);
+        rootElement.setAttribute("package", pkg);
+        
+        Element patchesElement = document.createElement("patches");       
+        Comment comment1 = document.createComment("<branch /> for a full copy, "
+                + "default case");
+        Comment comment2 = document.createComment("<apply name=\"patch\" /> "
+                + "apply a patch on the source directory");
+        Comment comment3 = document.createComment("<topadd>%define "
+                + "build_with_feature_x 1</topadd> add a line on the top "
+                + "(spec file only)");
+        Comment comment4 = document.createComment("<add name=\"file.patch\" /> "
+                + "add a patch to be applied after %setup (spec file only)");
+        Comment comment5 = document.createComment("<delete name=\"filename\" /> "
+                + "delete a file");        
+        patchesElement.appendChild(comment1);
+        patchesElement.appendChild(comment2);
+        patchesElement.appendChild(comment3);
+        patchesElement.appendChild(comment4);
+        patchesElement.appendChild(comment5);
+        
+        rootElement.appendChild(patchesElement);
+    
         return documentToString(document);
     }
     
