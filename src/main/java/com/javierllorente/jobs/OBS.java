@@ -22,6 +22,7 @@ import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
 import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
 import com.javierllorente.jobs.entity.OBSRequest;
 import com.javierllorente.jobs.entity.OBSResult;
+import com.javierllorente.jobs.entity.OBSRevision;
 import com.javierllorente.jobs.entity.OBSStatus;
 import com.javierllorente.jobs.net.OBSAuth;
 import com.javierllorente.jobs.net.OBSHttp;
@@ -113,6 +114,26 @@ public class OBS {
         OBSStatus status = xmlReader.parseBranchPackage(prj, pkg, is);
         is.close();
         return status;
+    }
+    
+    public OBSRevision linkPackage(String srcProject, String srcPackage, String dstProject) 
+            throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        OBSRevision revision = null;
+        OBSPkgMetaConfig pkgMetaConfig = getPackageMetaConfig(srcProject, srcPackage);
+        pkgMetaConfig.setProject(dstProject);        
+        String dstPackage = srcPackage;
+        
+        OBSStatus status = createPackage(pkgMetaConfig);
+        if (status.getCode().equals("ok")) {
+            OBSXmlWriter xmlWriter = new OBSXmlWriter();
+            String data = xmlWriter.createLink(srcProject, dstPackage);
+            String resource = String.format("/source/%s/%s/_link", dstProject, dstPackage);
+            InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
+            revision = xmlReader.parseLinkPackage(is);
+            is.close();
+        }
+        
+        return revision;
     }
 
     public OBSStatus createProject(OBSPrjMetaConfig prjMetaConfig) throws
