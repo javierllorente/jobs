@@ -623,13 +623,13 @@ public class OBSXmlReader {
                 metaConfig.setBuildFlag(parseRepositoryFlags(node));
                 break;
             case "publish":
-                metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                metaConfig.setPublishFlag(parseRepositoryFlags(node));
                 break;
             case "useforbuild":
-                metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                metaConfig.setUseForBuildFlag(parseRepositoryFlags(node));
                 break;
             case "debuginfo":
-                metaConfig.setBuildFlag(parseRepositoryFlags(node));
+                metaConfig.setDebugInfoFlag(parseRepositoryFlags(node));
                 break;
         }
 
