@@ -16,6 +16,7 @@
  */
 package com.javierllorente.jobs.xml;
 
+import com.javierllorente.jobs.entity.OBSPerson;
 import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
 import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
 import com.javierllorente.jobs.entity.OBSRepository;
@@ -190,6 +191,28 @@ public class OBSXmlWriter {
         
         rootElement.appendChild(patchesElement);
     
+        return documentToString(document);
+    }
+    
+    public String createPerson(OBSPerson person) throws TransformerException {
+        Document document = documentBuilder.newDocument();
+        Element rootElement = document.createElement("person");
+        document.appendChild(rootElement);
+        
+        createTextNode(document, rootElement, "login", person.getLogin());
+        createTextNode(document, rootElement, "email", person.getEmail());
+        createTextNode(document, rootElement, "realname", person.getRealName());
+        createTextNode(document, rootElement, "state", person.getState());
+        
+        Element watchListElement = document.createElement("watchlist");
+        rootElement.appendChild(watchListElement);
+        
+        for (String item : person.getWatchList()) {
+            Element projectElement = document.createElement("project");
+            projectElement.setAttribute("name", item);
+            watchListElement.appendChild(projectElement);            
+        }
+        
         return documentToString(document);
     }
     
