@@ -24,12 +24,12 @@ import java.util.Date;
  */
 public class OBSRevision extends OBSObject {
     
-    int rev;
-    String version;
-    Date time;
-    String user;
-    String comment;
-    String file;
+    private int rev;
+    private String version;
+    private Date time;
+    private String user;
+    private String comment;
+    private String file;
 
     public OBSRevision() {
     }    
