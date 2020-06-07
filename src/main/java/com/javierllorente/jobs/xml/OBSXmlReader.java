@@ -443,20 +443,39 @@ public class OBSXmlReader {
         return link;
     }
     
-    public OBSRevision parseLinkPackage(InputStream is) throws ParserConfigurationException, 
-            SAXException, IOException {
+    public OBSRevision parseRevision(InputStream is) throws
+            ParserConfigurationException, SAXException, IOException {
+
         NodeList nodeList = getNodeList(is);
         OBSRevision revision = null;
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeName().equals("revision")) {
-                revision = new OBSRevision();
+
+            switch (node.getNodeName()) {
+                case "revision":
+                    revision = new OBSRevision();
+                    if (node.hasAttributes()) {
+                        String rev = getAttributeValue(node, "rev");
+                        revision.setRev(Integer.parseInt(rev));
+                    }
+                    break;
+                case "version":
+                    revision.setVersion(node.getTextContent());
+                    break;
+                case "time":
+                    revision.setTime(new Date(Long.parseLong(node.getTextContent()) * 1000));
+                    break;
+                case "user":
+                    revision.setUser(node.getTextContent());
+                    break;
+                case "comment":
+                    revision.setComment(node.getTextContent());
+                    break;
             }
-            parseRevision(node, revision);
         }
-        
-        return revision; 
+
+        return revision;
     }
 
     private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
@@ -658,32 +677,6 @@ public class OBSXmlReader {
         }
 
         return repository;
-    }
-
-    private void parseRevision(Node node, OBSRevision revision) throws
-            ParserConfigurationException, SAXException, IOException {
-
-        switch (node.getNodeName()) {
-            case "revision":
-                if (node.hasAttributes()) {
-                    String rev = getAttributeValue(node, "rev");
-                    revision.setRev(Integer.parseInt(rev));
-                }
-                break;
-            case "version":
-                revision.setVersion(node.getTextContent());
-                break;
-            case "time":
-                revision.setTime(new Date(Long.parseLong(node.getTextContent())*1000));
-                break;
-            case "user":
-                revision.setUser(node.getTextContent());
-                break;
-            case "comment":
-                revision.setComment(node.getTextContent());
-                break;
-        }
-
     }
     
 }
