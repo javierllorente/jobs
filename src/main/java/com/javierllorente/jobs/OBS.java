@@ -382,4 +382,16 @@ public class OBS {
         return person;
     }
     
+    public OBSStatus updatePerson(OBSPerson person) throws 
+            ParserConfigurationException, TransformerException, 
+            MalformedURLException, IOException, SAXException {
+        OBSXmlWriter xmlWriter = new OBSXmlWriter();
+        String data = xmlWriter.createPerson(person);
+        String resource = String.format("/person/%s", obsAuth.getUsername());
+        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
+        OBSStatus status = xmlReader.parseBuildStatus(is);
+        is.close();
+        return status;
+    }
+    
 }
