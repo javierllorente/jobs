@@ -129,13 +129,13 @@ public class OBS {
             String data = xmlWriter.createLink(srcProject, dstPackage);
             String resource = String.format("/source/%s/%s/_link", dstProject, dstPackage);
             InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
-            revision = xmlReader.parseLinkPackage(is);
+            revision = xmlReader.parseRevision(is);
             is.close();
         }
         
         return revision;
     }
-
+    
     public OBSStatus createProject(OBSPrjMetaConfig prjMetaConfig) throws
             TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
