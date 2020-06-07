@@ -18,6 +18,7 @@ package com.javierllorente.jobs;
 
 import com.javierllorente.jobs.entity.OBSFile;
 import com.javierllorente.jobs.entity.OBSLink;
+import com.javierllorente.jobs.entity.OBSPerson;
 import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
 import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
 import com.javierllorente.jobs.entity.OBSRequest;
@@ -370,4 +371,15 @@ public class OBS {
         is.close();
         return link;
     }
+    
+    public OBSPerson getPerson() throws MalformedURLException, IOException, 
+            ParserConfigurationException, SAXException {
+        String resource = String.format("/person/%s", obsAuth.getUsername());
+        URL url = new URL(obsAuth.getApiUrl() + resource);
+        InputStream is = obsHttp.get(url);
+        OBSPerson person = xmlReader.parsePerson(is);
+        is.close();
+        return person;
+    }
+    
 }
