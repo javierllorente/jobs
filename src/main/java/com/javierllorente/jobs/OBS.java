@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 import javax.naming.AuthenticationException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -136,6 +137,20 @@ public class OBS {
         return revision;
     }
     
+    public OBSRevision copyPackage(String srcProject, String srcPackage, 
+            String dstProject, String dstPackage, String comments) 
+            throws IOException, ParserConfigurationException, SAXException, TransformerException {        
+        String resource = String.format("/source/%s/%s?cmd=copy&oproject=%s&opackage=%s&comment=%s",
+                dstProject, dstPackage, srcProject, srcPackage, URLEncoder.encode(comments, "UTF-8"));
+        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), "");
+        OBSRevision revision = xmlReader.parseRevision(is);
+        revision.setProject(dstProject);
+        revision.setPkg(dstPackage);
+        is.close();
+
+        return revision;
+    }
+
     public OBSStatus createProject(OBSPrjMetaConfig prjMetaConfig) throws
             TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
