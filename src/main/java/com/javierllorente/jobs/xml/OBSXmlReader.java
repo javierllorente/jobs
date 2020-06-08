@@ -16,6 +16,7 @@
  */
 package com.javierllorente.jobs.xml;
 
+import com.javierllorente.jobs.entity.OBSDistribution;
 import com.javierllorente.jobs.entity.OBSFile;
 import com.javierllorente.jobs.entity.OBSLink;
 import com.javierllorente.jobs.entity.OBSMetaConfig;
@@ -321,6 +322,53 @@ public class OBSXmlReader {
             }
         }
         return pkgMetaConfig;
+    }
+    
+    public List<OBSDistribution> parseDistributions(InputStream is) throws 
+            ParserConfigurationException, SAXException, IOException {
+        NodeList nodeList = getNodeList(is);
+        List<OBSDistribution> distributions = new ArrayList<>();
+        OBSDistribution distribution = null;
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            switch (node.getNodeName()) {
+                case "distribution":
+                    distribution = new OBSDistribution();
+                    distributions.add(distribution);
+                    if (node.hasAttributes()) {
+                        distribution.setVendor(getAttributeValue(node, "vendor"));
+                        distribution.setVersion(getAttributeValue(node, "version"));
+                        distribution.setId(getAttributeValue(node, "id"));
+                    }
+                    break;
+                case "name":
+                    distribution.setName(node.getTextContent());
+                    break;
+                case "project":
+                    distribution.setProject(node.getTextContent());
+                    break;
+                case "reponame":
+                    distribution.setRepoName(node.getTextContent());
+                    break;
+                case "repository":
+                    distribution.setRepository(node.getTextContent());
+                    break;
+                case "link":
+                    distribution.setLink(new URL(node.getTextContent()));
+                    break;
+                case "icon":
+                    if (node.hasAttributes()) {
+                        distribution.addIcon(new URL(getAttributeValue(node, "url")));
+                    }
+                    break;
+                case "architecture":
+                    distribution.addArch(node.getTextContent());
+                    break;
+            }
+        }
+
+        return distributions;        
     }
 
     public List<OBSResult> parseResultList(InputStream is) throws SAXException, IOException,
