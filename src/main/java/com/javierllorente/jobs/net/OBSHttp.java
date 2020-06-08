@@ -36,7 +36,7 @@ public class OBSHttp {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Accept", "xml/application");
+        connection.setRequestProperty("Accept", "application/xml");
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
         InputStream is = (InputStream) connection.getInputStream();
@@ -48,7 +48,7 @@ public class OBSHttp {
         connection.setRequestMethod("DELETE");
         connection.setDoOutput(true);
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Accept", "xml/application");
+        connection.setRequestProperty("Accept", "application/xml");
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
         InputStream is = (InputStream) connection.getInputStream();
