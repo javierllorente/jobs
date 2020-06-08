@@ -16,6 +16,7 @@
  */
 package com.javierllorente.jobs;
 
+import com.javierllorente.jobs.entity.OBSDistribution;
 import com.javierllorente.jobs.entity.OBSFile;
 import com.javierllorente.jobs.entity.OBSLink;
 import com.javierllorente.jobs.entity.OBSPerson;
@@ -360,6 +361,14 @@ public class OBS {
         OBSPkgMetaConfig pkgMetaConfig = xmlReader.parsePkgMetaConfig(is);
         is.close();
         return pkgMetaConfig;
+    }
+    
+    public List<OBSDistribution> getDistributions() 
+            throws IOException, ParserConfigurationException, SAXException {
+        InputStream is = obsHttp.get(new URL(obsAuth.getApiUrl() + "/distributions"));
+        List<OBSDistribution> distributions = xmlReader.parseDistributions(is);
+        is.close();
+        return distributions;
     }
     
     public OBSLink getLink(String prj, String pkg) throws MalformedURLException, 
