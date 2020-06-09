@@ -16,8 +16,10 @@
  */
 package com.javierllorente.jobs.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -28,12 +30,13 @@ public class Utils {
     private Utils() {
     }    
 
-    public static String inputStreamToString(InputStream is) {
-        String str;
-        try (Scanner scanner = new Scanner(is)) {
-            scanner.useDelimiter("\\A");
-            str = scanner.hasNext() ? scanner.next() : "";
+    public static String inputStreamToString(InputStream is) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = is.read(buffer)) != -1) {
+            baos.write(buffer, 0, length);
         }
-        return str;
+        return baos.toString(StandardCharsets.UTF_8.name());        
     }
 }
