@@ -131,7 +131,7 @@ public class OBS {
             OBSXmlWriter xmlWriter = new OBSXmlWriter();
             String data = xmlWriter.createLink(srcProject, dstPackage);
             String resource = String.format("/source/%s/%s/_link", dstProject, dstPackage);
-            InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
+            InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
             revision = xmlReader.parseRevision(is);
             is.close();
         }
@@ -158,7 +158,7 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createProjectMeta(prjMetaConfig);
         String resource = String.format("/source/%s/_meta", prjMetaConfig.getName());
-        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
+        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;
@@ -169,7 +169,7 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createPackageMeta(pkgMetaConfig);
         String resource = String.format("/source/%s/%s/_meta", pkgMetaConfig.getProject(), pkgMetaConfig.getName());
-        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
+        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;
@@ -185,7 +185,7 @@ public class OBS {
         is.close();
         return request;
     }
-
+    
     public OBSStatus deleteProject(String project) throws
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
@@ -397,7 +397,7 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createPerson(person);
         String resource = String.format("/person/%s", obsAuth.getUsername());
-        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data);
+        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;
