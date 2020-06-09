@@ -31,11 +31,13 @@ import com.javierllorente.jobs.net.OBSHttp;
 import com.javierllorente.jobs.util.Utils;
 import com.javierllorente.jobs.xml.OBSXmlReader;
 import com.javierllorente.jobs.xml.OBSXmlWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.List;
 import javax.naming.AuthenticationException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -186,6 +188,16 @@ public class OBS {
         return request;
     }
     
+    public OBSRevision uploadFile(String prj, String pkg, File file)
+            throws MalformedURLException, IOException, ParserConfigurationException,
+            SAXException {
+        String resource = String.format("/source/%s/%s/%s", prj, pkg, file.getName());
+        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), 
+                Files.readAllBytes(file.toPath()));
+        OBSRevision revision = xmlReader.parseRevision(is);
+        return revision;
+    }
+
     public OBSStatus deleteProject(String project) throws
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
