@@ -136,7 +136,9 @@ public class OBSXmlWriter {
         createRepositoryFlags(document, packageElement, pkgMetaConfig.getPublishFlag(), "publish");
         createRepositoryFlags(document, packageElement, pkgMetaConfig.getUseForBuildFlag(), "useforbuild");
         
-        createTextNode(document, packageElement, "url", pkgMetaConfig.getUrl().toString());
+        if (pkgMetaConfig.getUrl() != null) {
+            createTextNode(document, packageElement, "url", pkgMetaConfig.getUrl().toString());
+        }
 
         return documentToString(document);
     }
