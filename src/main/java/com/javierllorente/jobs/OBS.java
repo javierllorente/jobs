@@ -207,6 +207,17 @@ public class OBS {
         is.close();
         return data;
     }
+    
+    public String getBuildLog(String prj, String repository, String arch, String pkg) 
+            throws IOException, ParserConfigurationException, SAXException {
+        String resource = String.format("/build/%s/%s/%s/%s/_log",
+                prj, repository, arch, pkg);
+        URL url = new URL(obsAuth.getApiUrl() + resource);
+        InputStream is = obsHttp.get(url);
+        String buildLog = Utils.inputStreamToString(is);
+        is.close();
+        return buildLog;
+    }
 
     public OBSStatus deleteProject(String project) throws
             MalformedURLException, IOException, SAXException,
