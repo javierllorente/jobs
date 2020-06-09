@@ -73,15 +73,14 @@ public class OBSHttp {
         return is;
     }
 
-    public InputStream put(URL url, String data) throws IOException {
+    public InputStream put(URL url, byte[] data) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
         connection.setRequestProperty("Accept", "application/xml");
         try (final DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
-            output.writeBytes(data);
+            output.write(data);
             output.close();
         }
         System.out.println("Response code: " + connection.getResponseCode());
