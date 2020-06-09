@@ -197,6 +197,16 @@ public class OBS {
         OBSRevision revision = xmlReader.parseRevision(is);
         return revision;
     }
+    
+    public byte[] downloadFile(String prj, String pkg, String fileName) throws IOException,
+            ParserConfigurationException, SAXException {
+        URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/%s", 
+                prj, pkg, fileName));
+        InputStream is = obsHttp.get(url);
+        byte[] data = is.readAllBytes();
+        is.close();
+        return data;
+    }
 
     public OBSStatus deleteProject(String project) throws
             MalformedURLException, IOException, SAXException,
