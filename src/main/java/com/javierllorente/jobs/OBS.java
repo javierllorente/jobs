@@ -16,6 +16,7 @@
  */
 package com.javierllorente.jobs;
 
+import com.javierllorente.jobs.entity.OBSAbout;
 import com.javierllorente.jobs.entity.OBSDistribution;
 import com.javierllorente.jobs.entity.OBSFile;
 import com.javierllorente.jobs.entity.OBSLink;
@@ -434,6 +435,15 @@ public class OBS {
         OBSStatus status = xmlReader.parseBuildStatus(is);
         is.close();
         return status;
+    }
+    
+    public OBSAbout getAbout() throws MalformedURLException, IOException, 
+            ParserConfigurationException, SAXException {
+        URL url = new URL(obsAuth.getApiUrl() + "/about");
+        InputStream is = obsHttp.get(url);
+        OBSAbout about = xmlReader.parseAbout(is);
+        is.close();
+        return about;
     }
     
 }
