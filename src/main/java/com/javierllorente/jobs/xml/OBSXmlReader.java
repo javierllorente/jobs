@@ -16,6 +16,7 @@
  */
 package com.javierllorente.jobs.xml;
 
+import com.javierllorente.jobs.entity.OBSAbout;
 import com.javierllorente.jobs.entity.OBSDistribution;
 import com.javierllorente.jobs.entity.OBSFile;
 import com.javierllorente.jobs.entity.OBSLink;
@@ -560,6 +561,36 @@ public class OBSXmlReader {
         }
 
         return person;
+    }
+    
+    public OBSAbout parseAbout(InputStream is) throws ParserConfigurationException,
+            SAXException, IOException {
+        NodeList nodeList = getNodeList(is);
+        OBSAbout about = null;
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            switch (node.getNodeName()) {
+                case "about":
+                    about = new OBSAbout();
+                    break;
+                case "title":
+                    about.setTitle(node.getTextContent());
+                    break;
+                case "description":
+                    about.setDescription(node.getTextContent());
+                    break;
+                case "revision":
+                    about.setRevision(node.getTextContent());
+                    break;
+                case "last_deployment":
+                    about.setLastDeployment(node.getTextContent());
+                    break;
+            }
+        }
+
+        return about;
     }
 
     private NodeList getNodeList(InputStream is) throws ParserConfigurationException,
