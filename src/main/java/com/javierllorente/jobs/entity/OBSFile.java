@@ -16,6 +16,8 @@
  */
 package com.javierllorente.jobs.entity;
 
+import java.util.Date;
+
 /**
  *
  * @author javier
@@ -23,7 +25,7 @@ package com.javierllorente.jobs.entity;
 public class OBSFile {
     private String name;
     private String size;
-    private String lastModified;
+    private Date lastModified;
 
     public OBSFile() {
     }
@@ -44,11 +46,11 @@ public class OBSFile {
         this.size = size;
     }
 
-    public String getLastModified() {
+    public Date getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(String lastModified) {
+    public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
     }
 }
