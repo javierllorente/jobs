@@ -463,7 +463,7 @@ public class OBSXmlReader {
                             file.setSize(attribute.getValue());
                             break;
                         case "mtime":
-                            file.setLastModified(attribute.getValue());
+                            file.setLastModified(new Date(Long.parseLong(attribute.getValue()) * 1000));                            
                             break;
                     }
                 }
