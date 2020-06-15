@@ -38,7 +38,7 @@ public class OBSHttp {
         setupConnection(connection);
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
-        InputStream is = (InputStream) connection.getInputStream();
+        InputStream is = getInputStream(connection);
         return is;
     }
 
@@ -49,7 +49,7 @@ public class OBSHttp {
         setupConnection(connection);
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
-        InputStream is = (InputStream) connection.getInputStream();
+        InputStream is = getInputStream(connection);
         return is;
     }
 
@@ -65,8 +65,7 @@ public class OBSHttp {
         }
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
-        InputStream is = null;
-        is = connection.getResponseCode() == 200 ? (InputStream) connection.getInputStream() : (InputStream) connection.getErrorStream();
+        InputStream is = getInputStream(connection);
         return is;
     }
 
@@ -81,7 +80,7 @@ public class OBSHttp {
         }
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
-        InputStream is = (InputStream) connection.getInputStream();
+        InputStream is = getInputStream(connection);
         return is;
     }
     
@@ -90,6 +89,12 @@ public class OBSHttp {
         connection.setRequestProperty("Accept", "application/xml");
         connection.setConnectTimeout(20000);
         connection.setReadTimeout(20000);
+    }
+    
+    private InputStream getInputStream(HttpsURLConnection connection) throws IOException {
+        return (connection.getResponseCode() == HttpsURLConnection.HTTP_OK)
+                ? connection.getInputStream()
+                : connection.getErrorStream();
     }
     
 }
