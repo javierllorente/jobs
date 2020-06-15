@@ -88,6 +88,8 @@ public class OBSHttp {
     private void setupConnection(HttpsURLConnection connection) {
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
         connection.setRequestProperty("Accept", "application/xml");
+        connection.setConnectTimeout(20000);
+        connection.setReadTimeout(20000);
     }
     
 }
