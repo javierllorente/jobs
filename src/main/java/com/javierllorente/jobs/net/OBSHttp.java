@@ -35,8 +35,7 @@ public class OBSHttp {
     public InputStream get(URL url) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-        connection.addRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Accept", "application/xml");
+        setupConnection(connection);
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
         InputStream is = (InputStream) connection.getInputStream();
@@ -47,8 +46,7 @@ public class OBSHttp {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("DELETE");
         connection.setDoOutput(true);
-        connection.addRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Accept", "application/xml");
+        setupConnection(connection);
         System.out.println("Response code: " + connection.getResponseCode());
         System.out.println("Request method: " + connection.getRequestMethod());
         InputStream is = (InputStream) connection.getInputStream();
@@ -59,9 +57,8 @@ public class OBSHttp {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
-        connection.addRequestProperty("User-Agent", UserAgent.FULL);
+        setupConnection(connection);
         connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
-        connection.setRequestProperty("Accept", "application/xml");
         try (final DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
             output.writeBytes(data);
             output.close();
@@ -77,8 +74,7 @@ public class OBSHttp {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("PUT");
         connection.setDoOutput(true);
-        connection.addRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Accept", "application/xml");
+        setupConnection(connection);
         try (final DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
             output.write(data);
             output.close();
@@ -87,6 +83,11 @@ public class OBSHttp {
         System.out.println("Request method: " + connection.getRequestMethod());
         InputStream is = (InputStream) connection.getInputStream();
         return is;
-    }    
+    }
+    
+    private void setupConnection(HttpsURLConnection connection) {
+        connection.addRequestProperty("User-Agent", UserAgent.FULL);
+        connection.setRequestProperty("Accept", "application/xml");
+    }
     
 }
