@@ -83,7 +83,6 @@ public class OBSHttp {
         try (final DataOutputStream output
                 = new DataOutputStream(connection.getOutputStream())) {
             output.write(data);
-            output.close();
         }
     }
     
