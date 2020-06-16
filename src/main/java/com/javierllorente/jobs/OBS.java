@@ -116,7 +116,7 @@ public class OBS {
             MalformedURLException, IOException, ParserConfigurationException,
             SAXException {
         String resource = String.format("/source/%s/%s?cmd=branch", prj, pkg);
-        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), "");
+        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), "".getBytes());
         OBSStatus status = xmlReader.parseBranchPackage(prj, pkg, is);
         is.close();
         return status;
@@ -147,7 +147,7 @@ public class OBS {
             throws IOException, ParserConfigurationException, SAXException, TransformerException {        
         String resource = String.format("/source/%s/%s?cmd=copy&oproject=%s&opackage=%s&comment=%s",
                 dstProject, dstPackage, srcProject, srcPackage, URLEncoder.encode(comments, "UTF-8"));
-        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), "");
+        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), "".getBytes());
         OBSRevision revision = xmlReader.parseRevision(is);
         revision.setProject(dstProject);
         revision.setPkg(dstPackage);
@@ -181,9 +181,9 @@ public class OBS {
     public OBSRequest createRequest(OBSRequest newRequest) throws MalformedURLException, 
             IOException, ParserConfigurationException, SAXException, TransformerException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
-        String data = xmlWriter.createRequest(newRequest);
+        String requestXml = xmlWriter.createRequest(newRequest);
         String resource = "/request?cmd=create";
-        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), data);
+        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), requestXml.getBytes());
         OBSRequest request = xmlReader.parseCreateRequest(is);
         is.close();
         return request;
@@ -336,7 +336,7 @@ public class OBS {
         String newState = accepted ? "accepted" : "declined";
         String resource = String.format("/request/%s?cmd=changestate&newstate=%s", id, newState);
         URL url = new URL(obsAuth.getApiUrl() + resource);
-        InputStream is = obsHttp.post(url, comments);
+        InputStream is = obsHttp.post(url, comments.getBytes());
         OBSStatus status = xmlReader.parseChangeRequestState(is);
         is.close();
         return status;
@@ -345,7 +345,7 @@ public class OBS {
     public String getRequestDiff(String source) throws IOException {
         URL url = new URL(obsAuth.getApiUrl() + "/source/" + source
                 + "?unified=1&tarlimit=0&cmd=diff&filelimit=0&expand=1");
-        InputStream is = obsHttp.post(url, "");
+        InputStream is = obsHttp.post(url, "".getBytes());
         String str = Utils.inputStreamToString(is);
         is.close();
         return str;
