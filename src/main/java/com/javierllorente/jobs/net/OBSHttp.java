@@ -21,6 +21,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
 /**
@@ -29,6 +30,8 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class OBSHttp {
 
+    private static final Logger logger = Logger.getLogger(OBSHttp.class.getName());
+        
     public OBSHttp() {
     }
 
@@ -36,8 +39,7 @@ public class OBSHttp {
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         setupConnection(connection);
-        System.out.println("Response code: " + connection.getResponseCode());
-        System.out.println("Request method: " + connection.getRequestMethod());
+        logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
     }
@@ -47,8 +49,7 @@ public class OBSHttp {
         connection.setRequestMethod("DELETE");
         connection.setDoOutput(true);
         setupConnection(connection);
-        System.out.println("Response code: " + connection.getResponseCode());
-        System.out.println("Request method: " + connection.getRequestMethod());
+        logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
     }
@@ -63,8 +64,7 @@ public class OBSHttp {
             output.writeBytes(data);
             output.close();
         }
-        System.out.println("Response code: " + connection.getResponseCode());
-        System.out.println("Request method: " + connection.getRequestMethod());
+        logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
     }
@@ -78,8 +78,7 @@ public class OBSHttp {
             output.write(data);
             output.close();
         }
-        System.out.println("Response code: " + connection.getResponseCode());
-        System.out.println("Request method: " + connection.getRequestMethod());
+        logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
     }
@@ -89,6 +88,12 @@ public class OBSHttp {
         connection.setRequestProperty("Accept", "application/xml");
         connection.setConnectTimeout(20000);
         connection.setReadTimeout(20000);
+    }
+    
+    private String getConnectionInfo(HttpsURLConnection connection) throws IOException {
+        return "URL: " + connection.getURL().toString() + 
+                ", method: " + connection.getRequestMethod() + 
+                ", response: " + connection.getResponseCode();
     }
     
     private InputStream getInputStream(HttpsURLConnection connection) throws IOException {
