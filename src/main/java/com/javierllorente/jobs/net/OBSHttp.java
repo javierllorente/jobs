@@ -49,13 +49,10 @@ public class OBSHttp {
         return is;
     }
 
-    public InputStream post(URL url, String data) throws IOException {
+    public InputStream post(URL url, byte[] data) throws IOException {
         HttpsURLConnection connection = httpRequest(url, "POST");
         connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
-        try (final DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
-            output.writeBytes(data);
-            output.close();
-        }
+        writeData(connection, data);
         logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
@@ -63,10 +60,7 @@ public class OBSHttp {
 
     public InputStream put(URL url, byte[] data) throws IOException {
         HttpsURLConnection connection = httpRequest(url, "PUT");
-        try (final DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
-            output.write(data);
-            output.close();
-        }
+        writeData(connection, data);
         logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
@@ -83,6 +77,14 @@ public class OBSHttp {
         connection.setConnectTimeout(20000);
         connection.setReadTimeout(20000);
         return connection;
+    }
+    
+    private void writeData(HttpsURLConnection connection, byte[] data) throws IOException {
+        try (final DataOutputStream output
+                = new DataOutputStream(connection.getOutputStream())) {
+            output.write(data);
+            output.close();
+        }
     }
     
     private String getConnectionInfo(HttpsURLConnection connection) throws IOException {
