@@ -36,29 +36,21 @@ public class OBSHttp {
     }
 
     public InputStream get(URL url) throws IOException {
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        setupConnection(connection);
+        HttpsURLConnection connection = httpRequest(url, "GET");
         logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
-    }
+    }    
 
     public InputStream delete(URL url) throws IOException {
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("DELETE");
-        connection.setDoOutput(true);
-        setupConnection(connection);
+        HttpsURLConnection connection = httpRequest(url, "DELETE");
         logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
         return is;
     }
 
     public InputStream post(URL url, String data) throws IOException {
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        setupConnection(connection);
+        HttpsURLConnection connection = httpRequest(url, "POST");
         connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
         try (final DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
             output.writeBytes(data);
@@ -70,10 +62,7 @@ public class OBSHttp {
     }
 
     public InputStream put(URL url, byte[] data) throws IOException {
-        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setRequestMethod("PUT");
-        connection.setDoOutput(true);
-        setupConnection(connection);
+        HttpsURLConnection connection = httpRequest(url, "PUT");
         try (final DataOutputStream output = new DataOutputStream(connection.getOutputStream())) {
             output.write(data);
             output.close();
@@ -83,11 +72,17 @@ public class OBSHttp {
         return is;
     }
     
-    private void setupConnection(HttpsURLConnection connection) {
+    private HttpsURLConnection httpRequest(URL url, String method) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setRequestMethod(method);
+        if (method.equals("POST") || method.equals("PUT")) {
+            connection.setDoOutput(true);
+        }
         connection.setRequestProperty("User-Agent", UserAgent.FULL);
         connection.setRequestProperty("Accept", "application/xml");
         connection.setConnectTimeout(20000);
         connection.setReadTimeout(20000);
+        return connection;
     }
     
     private String getConnectionInfo(HttpsURLConnection connection) throws IOException {
