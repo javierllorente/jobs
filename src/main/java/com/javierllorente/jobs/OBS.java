@@ -124,8 +124,9 @@ public class OBS {
         return status;
     }
     
-    public OBSRevision linkPackage(String srcProject, String srcPackage, String dstProject) 
-            throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    public OBSRevision linkPackage(String srcProject, String srcPackage, 
+            String dstProject) throws IOException, ParserConfigurationException, 
+            SAXException, TransformerException {
         OBSRevision revision = null;
         OBSPkgMetaConfig pkgMetaConfig = getPackageMetaConfig(srcProject, srcPackage);
         pkgMetaConfig.setProject(dstProject);        
@@ -135,7 +136,8 @@ public class OBS {
         if (status.getCode().equals("ok")) {
             OBSXmlWriter xmlWriter = new OBSXmlWriter();
             String data = xmlWriter.createLink(srcProject, dstPackage);
-            String resource = String.format("/source/%s/%s/_link", dstProject, dstPackage);
+            String resource = String.format("/source/%s/%s/_link", 
+                    dstProject, dstPackage);
             try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), 
                     data.getBytes())) {
                 revision = xmlReader.parseRevision(is);
@@ -145,13 +147,16 @@ public class OBS {
         return revision;
     }
     
-    public OBSRevision copyPackage(String srcProject, String srcPackage, 
-            String dstProject, String dstPackage, String comments) 
-            throws IOException, ParserConfigurationException, SAXException, TransformerException {        
-        String resource = String.format("/source/%s/%s?cmd=copy&oproject=%s&opackage=%s&comment=%s",
-                dstProject, dstPackage, srcProject, srcPackage, URLEncoder.encode(comments, "UTF-8"));
+    public OBSRevision copyPackage(String srcProject, String srcPackage,
+            String dstProject, String dstPackage, String comments) throws
+            IOException, ParserConfigurationException, SAXException,
+            TransformerException {
+        String resource
+                = String.format("/source/%s/%s?cmd=copy&oproject=%s&opackage=%s&comment=%s",
+                        dstProject, dstPackage, srcProject, srcPackage,
+                        URLEncoder.encode(comments, "UTF-8"));
         OBSRevision revision;
-        try (InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), 
+        try (InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource),
                 "".getBytes())) {
             revision = xmlReader.parseRevision(is);
             revision.setProject(dstProject);
@@ -162,7 +167,8 @@ public class OBS {
     }
 
     public OBSStatus createProject(OBSPrjMetaConfig prjMetaConfig) throws
-            TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
+            TransformerException, MalformedURLException, IOException, SAXException, 
+            ParserConfigurationException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createProjectMeta(prjMetaConfig);
         String resource = String.format("/source/%s/_meta", prjMetaConfig.getName());
@@ -175,20 +181,23 @@ public class OBS {
     }
 
     public OBSStatus createPackage(OBSPkgMetaConfig pkgMetaConfig) throws
-            TransformerException, MalformedURLException, IOException, SAXException, ParserConfigurationException {
+            TransformerException, MalformedURLException, IOException, SAXException,
+            ParserConfigurationException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createPackageMeta(pkgMetaConfig);
-        String resource = String.format("/source/%s/%s/_meta", pkgMetaConfig.getProject(), pkgMetaConfig.getName());
+        String resource = String.format("/source/%s/%s/_meta", 
+                pkgMetaConfig.getProject(), pkgMetaConfig.getName());
         OBSStatus status;
-        try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), 
+        try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource),
                 data.getBytes())) {
             status = xmlReader.parseBuildStatus(is);
         }
         return status;
     }
     
-    public OBSRequest createRequest(OBSRequest newRequest) throws MalformedURLException, 
-            IOException, ParserConfigurationException, SAXException, TransformerException {
+    public OBSRequest createRequest(OBSRequest newRequest) throws 
+            MalformedURLException, IOException, ParserConfigurationException, 
+            SAXException, TransformerException {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String requestXml = xmlWriter.createRequest(newRequest);
         String resource = "/request?cmd=create";
@@ -210,8 +219,8 @@ public class OBS {
         return revision;
     }
     
-    public byte[] downloadFile(String prj, String pkg, String fileName) throws IOException,
-            ParserConfigurationException, SAXException {
+    public byte[] downloadFile(String prj, String pkg, String fileName) throws 
+            IOException, ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/%s", 
                 prj, pkg, fileName));
         byte[] data;
@@ -272,8 +281,6 @@ public class OBS {
     public OBSStatus getBuildStatus(String project, String repository,
             String architecture, String build) throws
             SAXException, IOException, ParserConfigurationException {
-        System.out.println("Getting build status...");
-//	URL format https://api.opensuse.org/build/KDE:Extra/openSUSE_13.2/x86_64/ktorrent/_status
         String resource = String.format("/build/%s/%s/%s/%s/_status",
                 project, repository, architecture, build);
         URL url = new URL(obsAuth.getApiUrl() + resource);
@@ -285,8 +292,8 @@ public class OBS {
     }
     
     public List<OBSResult> getAllBuildStatus(String project, String pkg) throws 
-            MalformedURLException, IOException, SAXException, ParserConfigurationException {
-//        URL format: https://api.opensuse.org/build/<project>/_result?package=<package>
+            MalformedURLException, IOException, SAXException, 
+            ParserConfigurationException {
         String resource = String.format("/build/%s/_result?package=%s", project, pkg);
         URL url = new URL(obsAuth.getApiUrl() + resource);
         List<OBSResult> list;
@@ -324,7 +331,6 @@ public class OBS {
             throw new MalformedURLException("Resource is empty!");
         }
         
-        System.out.println("Getting requests...");
         URL url = new URL(obsAuth.getApiUrl() + resource);
         List<OBSRequest> requests;
         try (InputStream is = obsHttp.get(url)) {
@@ -352,10 +358,11 @@ public class OBS {
         return xmlReader.getRequestCount();
     }
 
-    public OBSStatus changeRequestState(String id, String comments, boolean accepted) throws IOException,
-            SAXException, ParserConfigurationException {
+    public OBSStatus changeRequestState(String id, String comments, boolean accepted) 
+            throws IOException, SAXException, ParserConfigurationException {
         String newState = accepted ? "accepted" : "declined";
-        String resource = String.format("/request/%s?cmd=changestate&newstate=%s", id, newState);
+        String resource = String.format("/request/%s?cmd=changestate&newstate=%s", 
+                id, newState);
         URL url = new URL(obsAuth.getApiUrl() + resource);
         OBSStatus status;
         try (InputStream is = obsHttp.post(url, comments.getBytes())) {
@@ -417,7 +424,8 @@ public class OBS {
     
     public OBSPkgMetaConfig getPackageMetaConfig(String prj, String pkg) 
             throws IOException, ParserConfigurationException, SAXException {
-        URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/_meta", prj, pkg));
+        URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/_meta", 
+                prj, pkg));
         OBSPkgMetaConfig pkgMetaConfig;
         try (InputStream is = obsHttp.get(url)) {
             pkgMetaConfig = xmlReader.parsePkgMetaConfig(is);
@@ -464,7 +472,8 @@ public class OBS {
         String data = xmlWriter.createPerson(person);
         String resource = String.format("/person/%s", obsAuth.getUsername());
         OBSStatus status;
-        try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes())) {
+        try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), 
+                data.getBytes())) {
             status = xmlReader.parseBuildStatus(is);
         }
         return status;
