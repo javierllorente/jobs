@@ -691,7 +691,7 @@ public class OBSXmlReader {
     private String getAttributeValue(Node node, String item) {
         Node childNode = node.getAttributes().getNamedItem(item);
         if (childNode == null) {
-            throw new NullPointerException("Attribute " + item + " not found!");
+            throw new IllegalArgumentException("Attribute " + item + " not found!");
         }
         return childNode.getNodeValue();
     }
