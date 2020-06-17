@@ -116,9 +116,11 @@ public class OBS {
             MalformedURLException, IOException, ParserConfigurationException,
             SAXException {
         String resource = String.format("/source/%s/%s?cmd=branch", prj, pkg);
-        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), "".getBytes());
-        OBSStatus status = xmlReader.parseBranchPackage(prj, pkg, is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource),
+                "".getBytes())) {
+            status = xmlReader.parseBranchPackage(prj, pkg, is);
+        }
         return status;
     }
     
@@ -134,9 +136,10 @@ public class OBS {
             OBSXmlWriter xmlWriter = new OBSXmlWriter();
             String data = xmlWriter.createLink(srcProject, dstPackage);
             String resource = String.format("/source/%s/%s/_link", dstProject, dstPackage);
-            InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
-            revision = xmlReader.parseRevision(is);
-            is.close();
+            try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), 
+                    data.getBytes())) {
+                revision = xmlReader.parseRevision(is);
+            }
         }
         
         return revision;
@@ -147,11 +150,13 @@ public class OBS {
             throws IOException, ParserConfigurationException, SAXException, TransformerException {        
         String resource = String.format("/source/%s/%s?cmd=copy&oproject=%s&opackage=%s&comment=%s",
                 dstProject, dstPackage, srcProject, srcPackage, URLEncoder.encode(comments, "UTF-8"));
-        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), "".getBytes());
-        OBSRevision revision = xmlReader.parseRevision(is);
-        revision.setProject(dstProject);
-        revision.setPkg(dstPackage);
-        is.close();
+        OBSRevision revision;
+        try (InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), 
+                "".getBytes())) {
+            revision = xmlReader.parseRevision(is);
+            revision.setProject(dstProject);
+            revision.setPkg(dstPackage);
+        }
 
         return revision;
     }
@@ -161,9 +166,11 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createProjectMeta(prjMetaConfig);
         String resource = String.format("/source/%s/_meta", prjMetaConfig.getName());
-        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
-        OBSStatus status = xmlReader.parseBuildStatus(is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), 
+                data.getBytes())) {
+            status = xmlReader.parseBuildStatus(is);
+        }
         return status;
     }
 
@@ -172,9 +179,11 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createPackageMeta(pkgMetaConfig);
         String resource = String.format("/source/%s/%s/_meta", pkgMetaConfig.getProject(), pkgMetaConfig.getName());
-        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
-        OBSStatus status = xmlReader.parseBuildStatus(is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), 
+                data.getBytes())) {
+            status = xmlReader.parseBuildStatus(is);
+        }
         return status;
     }
     
@@ -183,9 +192,11 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String requestXml = xmlWriter.createRequest(newRequest);
         String resource = "/request?cmd=create";
-        InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), requestXml.getBytes());
-        OBSRequest request = xmlReader.parseCreateRequest(is);
-        is.close();
+        OBSRequest request;
+        try (InputStream is = obsHttp.post(new URL(obsAuth.getApiUrl() + resource), 
+                requestXml.getBytes())) {
+            request = xmlReader.parseCreateRequest(is);
+        }
         return request;
     }
     
@@ -203,9 +214,10 @@ public class OBS {
             ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/%s", 
                 prj, pkg, fileName));
-        InputStream is = obsHttp.get(url);
-        byte[] data = is.readAllBytes();
-        is.close();
+        byte[] data;
+        try (InputStream is = obsHttp.get(url)) {
+            data = is.readAllBytes();
+        }
         return data;
     }
     
@@ -214,9 +226,10 @@ public class OBS {
         String resource = String.format("/build/%s/%s/%s/%s/_log",
                 prj, repository, arch, pkg);
         URL url = new URL(obsAuth.getApiUrl() + resource);
-        InputStream is = obsHttp.get(url);
-        String buildLog = Utils.inputStreamToString(is);
-        is.close();
+        String buildLog;
+        try (InputStream is = obsHttp.get(url)) {
+            buildLog = Utils.inputStreamToString(is);
+        }
         return buildLog;
     }
 
@@ -224,9 +237,11 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s", project);
-        InputStream is = obsHttp.delete(new URL(obsAuth.getApiUrl() + resource));
-        OBSStatus status = xmlReader.parseDeleteProject(project, is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.delete(new URL(obsAuth.getApiUrl()
+                + resource))) {
+            status = xmlReader.parseDeleteProject(project, is);
+        }
         return status;
     }
 
@@ -234,9 +249,11 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s/%s", project, pkg);
-        InputStream is = obsHttp.delete(new URL(obsAuth.getApiUrl() + resource));
-        OBSStatus status = xmlReader.parseDeletePackage(project, pkg, is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.delete(new URL(obsAuth.getApiUrl()
+                + resource))) {
+            status = xmlReader.parseDeletePackage(project, pkg, is);
+        }
         return status;
     }
 
@@ -244,9 +261,11 @@ public class OBS {
             MalformedURLException, IOException, SAXException,
             ParserConfigurationException {
         String resource = String.format("/source/%s/%s/%s", project, pkg, file);
-        InputStream is = obsHttp.delete(new URL(obsAuth.getApiUrl() + resource));
-        OBSStatus status = xmlReader.parseDeleteFile(project, pkg, file, is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.delete(new URL(obsAuth.getApiUrl()
+                + resource))) {
+            status = xmlReader.parseDeleteFile(project, pkg, file, is);
+        }
         return status;
     }
 
@@ -258,9 +277,10 @@ public class OBS {
         String resource = String.format("/build/%s/%s/%s/%s/_status",
                 project, repository, architecture, build);
         URL url = new URL(obsAuth.getApiUrl() + resource);
-        InputStream is = obsHttp.get(url);
-        OBSStatus status = xmlReader.parseBuildStatus(is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.get(url)) {
+            status = xmlReader.parseBuildStatus(is);
+        }
         return status;
     }
     
@@ -306,9 +326,10 @@ public class OBS {
         
         System.out.println("Getting requests...");
         URL url = new URL(obsAuth.getApiUrl() + resource);
-        InputStream is = obsHttp.get(url);
-        List<OBSRequest> requests = xmlReader.parseRequests(is);
-        is.close();
+        List<OBSRequest> requests;
+        try (InputStream is = obsHttp.get(url)) {
+            requests = xmlReader.parseRequests(is);
+        }
         return requests;
     }
     
@@ -336,72 +357,81 @@ public class OBS {
         String newState = accepted ? "accepted" : "declined";
         String resource = String.format("/request/%s?cmd=changestate&newstate=%s", id, newState);
         URL url = new URL(obsAuth.getApiUrl() + resource);
-        InputStream is = obsHttp.post(url, comments.getBytes());
-        OBSStatus status = xmlReader.parseChangeRequestState(is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.post(url, comments.getBytes())) {
+            status = xmlReader.parseChangeRequestState(is);
+        }
         return status;
     }
 
     public String getRequestDiff(String source) throws IOException {
         URL url = new URL(obsAuth.getApiUrl() + "/source/" + source
                 + "?unified=1&tarlimit=0&cmd=diff&filelimit=0&expand=1");
-        InputStream is = obsHttp.post(url, "".getBytes());
-        String str = Utils.inputStreamToString(is);
-        is.close();
+        String str;
+        try (InputStream is = obsHttp.post(url, "".getBytes())) {
+            str = Utils.inputStreamToString(is);
+        }
         return str;
     }
 
     public List<String> getProjectList(boolean includeHomePrjs) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + "/source");
-        InputStream is = obsHttp.get(url);
-        String userHome = includeHomePrjs ? "" : "home:" + obsAuth.getUsername();
-        List<String> list = xmlReader.parseProjectList(userHome, is);
-        is.close();
+        List<String> list;
+        try (InputStream is = obsHttp.get(url)) {
+            String userHome = includeHomePrjs ? "" : "home:" + obsAuth.getUsername();
+            list = xmlReader.parseProjectList(userHome, is);
+        }
         return list;
     }
 
     public List<String> getPackageList(String projectName) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + "/source/" + projectName);
-        InputStream is = obsHttp.get(url);
-        List<String> list = xmlReader.parseList(is);
-        is.close();
+        List<String> list;
+        try (InputStream is = obsHttp.get(url)) {
+            list = xmlReader.parseList(is);
+        }
         return list;
     }
     
     public List<OBSFile> getFileList(String project, String pkg) throws IOException, 
             ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + "/source/" + project + "/" + pkg);
-        InputStream is = obsHttp.get(url);
-        List<OBSFile> list = xmlReader.parseFileList(is);
-        is.close();
+        List<OBSFile> list;
+        try (InputStream is = obsHttp.get(url)) {
+            list = xmlReader.parseFileList(is);
+        }
         return list;
     }
    
     public OBSPrjMetaConfig getProjectMetaConfig(String prj) throws IOException,
             ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/_meta", prj));
-        InputStream is = obsHttp.get(url);
-        OBSPrjMetaConfig prjMetaConfig = xmlReader.parsePrjMetaConfig(is);
-        is.close();
+        OBSPrjMetaConfig prjMetaConfig;
+        try (InputStream is = obsHttp.get(url)) {
+            prjMetaConfig = xmlReader.parsePrjMetaConfig(is);
+        }
         return prjMetaConfig;
     }
     
     public OBSPkgMetaConfig getPackageMetaConfig(String prj, String pkg) 
             throws IOException, ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/_meta", prj, pkg));
-        InputStream is = obsHttp.get(url);
-        OBSPkgMetaConfig pkgMetaConfig = xmlReader.parsePkgMetaConfig(is);
-        is.close();
+        OBSPkgMetaConfig pkgMetaConfig;
+        try (InputStream is = obsHttp.get(url)) {
+            pkgMetaConfig = xmlReader.parsePkgMetaConfig(is);
+        }
         return pkgMetaConfig;
     }
     
     public List<OBSDistribution> getDistributions() 
             throws IOException, ParserConfigurationException, SAXException {
-        InputStream is = obsHttp.get(new URL(obsAuth.getApiUrl() + "/distributions"));
-        List<OBSDistribution> distributions = xmlReader.parseDistributions(is);
-        is.close();
+        List<OBSDistribution> distributions;
+        try (InputStream is = obsHttp.get(new URL(obsAuth.getApiUrl() 
+                + "/distributions"))) {
+            distributions = xmlReader.parseDistributions(is);
+        }
         return distributions;
     }
     
@@ -409,9 +439,10 @@ public class OBS {
             IOException, ParserConfigurationException, SAXException {
         String resource = String.format("source/%s/%s/_link", prj, pkg);
         URL url = new URL(obsAuth.getApiUrl() + resource);
-        InputStream is = obsHttp.get(url);
-        OBSLink link = xmlReader.parseLink(is);
-        is.close();
+        OBSLink link;
+        try (InputStream is = obsHttp.get(url)) {
+            link = xmlReader.parseLink(is);
+        }
         return link;
     }
     
@@ -419,9 +450,10 @@ public class OBS {
             ParserConfigurationException, SAXException {
         String resource = String.format("/person/%s", obsAuth.getUsername());
         URL url = new URL(obsAuth.getApiUrl() + resource);
-        InputStream is = obsHttp.get(url);
-        OBSPerson person = xmlReader.parsePerson(is);
-        is.close();
+        OBSPerson person;
+        try (InputStream is = obsHttp.get(url)) {
+            person = xmlReader.parsePerson(is);
+        }
         return person;
     }
     
@@ -431,18 +463,20 @@ public class OBS {
         OBSXmlWriter xmlWriter = new OBSXmlWriter();
         String data = xmlWriter.createPerson(person);
         String resource = String.format("/person/%s", obsAuth.getUsername());
-        InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes());
-        OBSStatus status = xmlReader.parseBuildStatus(is);
-        is.close();
+        OBSStatus status;
+        try (InputStream is = obsHttp.put(new URL(obsAuth.getApiUrl() + resource), data.getBytes())) {
+            status = xmlReader.parseBuildStatus(is);
+        }
         return status;
     }
     
     public OBSAbout getAbout() throws MalformedURLException, IOException, 
             ParserConfigurationException, SAXException {
         URL url = new URL(obsAuth.getApiUrl() + "/about");
-        InputStream is = obsHttp.get(url);
-        OBSAbout about = xmlReader.parseAbout(is);
-        is.close();
+        OBSAbout about;
+        try (InputStream is = obsHttp.get(url)) {
+            about = xmlReader.parseAbout(is);
+        }
         return about;
     }
     
