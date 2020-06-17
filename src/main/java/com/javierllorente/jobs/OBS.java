@@ -323,12 +323,7 @@ public class OBS {
                 resource = createReqResourceStr("declined", "creator");
                 break;
             default:
-                System.out.println("RequestType not handled!");
-                break;
-        }
-        
-        if (resource==null) {
-            throw new MalformedURLException("Resource is empty!");
+                throw new IllegalArgumentException("Unknown RequestType!");
         }
         
         URL url = new URL(obsAuth.getApiUrl() + resource);
