@@ -23,6 +23,8 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.AuthenticationException;
 import javax.net.ssl.HttpsURLConnection;
 
@@ -31,6 +33,7 @@ import javax.net.ssl.HttpsURLConnection;
  * @author javier
  */
 public class OBSAuth {
+    private static final Logger logger = Logger.getLogger(OBSAuth.class.getName());
     private URL apiUrl;
     private String username;
     private String password;
@@ -91,16 +94,12 @@ public class OBSAuth {
 
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            System.out.println("Authenticator called for " + getRequestingScheme() + " type");
+            logger.log(Level.INFO, "Authenticator called for {0} type", getRequestingScheme());
             return new PasswordAuthentication(username, password.toCharArray());
         }
     }
 
-    public void authenticate() throws ProtocolException, IOException, AuthenticationException {
-        System.out.println("Authenticating...");
-        System.out.println("apiUrl: " + apiUrl);
-        System.out.println("User-Agent: " + UserAgent.FULL);
-        
+    public void authenticate() throws ProtocolException, IOException, AuthenticationException {        
         if (username.isEmpty() || password.isEmpty()) {
             throw new AuthenticationException("Empty username/password");
         }
@@ -110,14 +109,19 @@ public class OBSAuth {
         Authenticator.setDefault(new OBSAuthenticator());
         connection = (HttpsURLConnection) apiUrl.openConnection();
         connection.setRequestMethod("GET");
-        System.out.println("RequestMethod: " + connection.getRequestMethod());
         connection.addRequestProperty("User-Agent", UserAgent.FULL);
         connection.connect();
         
         responseCode = connection.getResponseCode();
-        responseMessage = connection.getResponseMessage();        
+        responseMessage = connection.getResponseMessage();
+        
         if (responseCode == HttpsURLConnection.HTTP_OK) {
             authenticated = true;
         }
+        
+        logger.log(Level.INFO, "URL: {0}, method: " + connection.getRequestMethod()
+                + ", User-Agent: " + UserAgent.FULL
+                + ", response: " + connection.getResponseCode()
+                + ", authenticated: " + authenticated, apiUrl);
     }
 }
