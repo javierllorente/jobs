@@ -109,7 +109,7 @@ public class OBSAuth {
         Authenticator.setDefault(new OBSAuthenticator());
         connection = (HttpsURLConnection) apiUrl.openConnection();
         connection.setRequestMethod("GET");
-        connection.addRequestProperty("User-Agent", UserAgent.FULL);
+        connection.setRequestProperty("User-Agent", UserAgent.FULL);
         connection.connect();
         
         responseCode = connection.getResponseCode();
