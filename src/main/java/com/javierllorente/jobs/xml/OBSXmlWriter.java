@@ -44,8 +44,8 @@ import org.w3c.dom.Element;
  */
 public class OBSXmlWriter {
 
-    DocumentBuilderFactory factory;
-    DocumentBuilder documentBuilder;
+    private DocumentBuilderFactory factory;
+    private DocumentBuilder documentBuilder;
 
     public OBSXmlWriter() throws ParserConfigurationException {
         factory = DocumentBuilderFactory.newInstance();
