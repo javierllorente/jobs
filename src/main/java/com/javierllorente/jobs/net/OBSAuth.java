@@ -94,10 +94,21 @@ public class OBSAuth {
 
     class OBSAuthenticator extends Authenticator {
 
+        private String prevPassword;
+        private String prevUsername;
+
         @Override
         public PasswordAuthentication getPasswordAuthentication() {
-            logger.log(Level.INFO, "Authenticator called for {0} type", getRequestingScheme());
-            return new PasswordAuthentication(username, password.toCharArray());
+            if (!password.equals(prevPassword) || !username.equals(prevUsername)) {
+                prevPassword = password;
+                prevUsername = username;
+                logger.log(Level.INFO, "Authenticator called for {0} type",
+                        getRequestingScheme());
+                return new PasswordAuthentication(username, password.toCharArray());
+            } else {
+                logger.log(Level.INFO, "Invalid username/password");
+                return null;
+            }
         }
     }
 
