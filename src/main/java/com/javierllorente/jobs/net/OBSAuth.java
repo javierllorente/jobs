@@ -42,7 +42,9 @@ public class OBSAuth {
     private boolean authenticated;    
 
     private OBSAuth() {
-        authenticated = false;
+        authenticated = false;                
+        System.setProperty("http.maxRedirects", "3");
+        Authenticator.setDefault(new OBSAuthenticator());
     }
     
     public static OBSAuth getInstance() {
@@ -104,20 +106,14 @@ public class OBSAuth {
             throw new AuthenticationException("Empty username/password");
         }
         
-        HttpsURLConnection connection;
-        System.setProperty("http.maxRedirects", "4");
-        Authenticator.setDefault(new OBSAuthenticator());
-        connection = (HttpsURLConnection) apiUrl.openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) apiUrl.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("User-Agent", UserAgent.FULL);
         connection.connect();
         
         responseCode = connection.getResponseCode();
-        responseMessage = connection.getResponseMessage();
-        
-        if (responseCode == HttpsURLConnection.HTTP_OK) {
-            authenticated = true;
-        }
+        responseMessage = connection.getResponseMessage();        
+        authenticated = (responseCode == HttpsURLConnection.HTTP_OK);
         
         logger.log(Level.INFO, "URL: {0}, method: " + connection.getRequestMethod()
                 + ", User-Agent: " + UserAgent.FULL
