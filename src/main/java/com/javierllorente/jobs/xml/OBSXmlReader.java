@@ -66,9 +66,6 @@ public class OBSXmlReader {
         OBSRequest request = new OBSRequest();
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             parseRequest(node, request);
         }
         return request;
@@ -84,9 +81,6 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             parseStatus(node, status);
         }
 
@@ -101,9 +95,6 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             parseStatus(node, status);
         }
 
@@ -119,9 +110,6 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             parseStatus(node, status);
         }
 
@@ -139,9 +127,6 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             parseStatus(node, status);
         }
 
@@ -155,9 +140,6 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             parseStatus(node, status);
         }
 
@@ -171,9 +153,6 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             parseStatus(node, status);
         }
 
@@ -222,11 +201,6 @@ public class OBSXmlReader {
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-//		System.out.println(node.getNodeName());
-//		Get child nodes of collection
-                node.getChildNodes();
-            }
             if (node.hasAttributes()) {
                 NamedNodeMap attributes = node.getAttributes();
                 for (int j = 0; j < attributes.getLength(); j++) {
@@ -278,10 +252,6 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
-
             if (node.getNodeName().equals("project")) {
                 if (node.hasAttributes()) {
                     String name = getAttributeValue(node, "name");
@@ -305,10 +275,7 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
-
+            
             if (node.getNodeName().equals("package")) {
                 if (node.hasAttributes()) {
                     String name = getAttributeValue(node, "name");
@@ -317,9 +284,9 @@ public class OBSXmlReader {
                     pkgMetaConfig.setProject(project);
                 }
             }
-
+            
             parseMetaConfig(node, pkgMetaConfig);
-
+            
             if (node.getNodeName().equals("url")) {
                 pkgMetaConfig.setUrl(new URL(node.getTextContent()));
             }
@@ -385,10 +352,6 @@ public class OBSXmlReader {
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
-
             if ("result".equals(node.getNodeName())) {
                 result = new OBSResult();
 
@@ -449,9 +412,6 @@ public class OBSXmlReader {
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                node.getChildNodes();
-            }
             if (node.getNodeName().equals("entry") && node.hasAttributes()) {
                 OBSFile file = new OBSFile();
                 NamedNodeMap attributes = node.getAttributes();
