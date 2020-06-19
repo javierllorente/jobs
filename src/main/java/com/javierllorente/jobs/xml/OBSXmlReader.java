@@ -32,6 +32,8 @@ import com.javierllorente.jobs.entity.OBSStatus;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -660,10 +662,10 @@ public class OBSXmlReader {
                 case "state":
                     String state = getAttributeValue(node, "name");
                     String requester = getAttributeValue(node, "who");
-                    String date = getAttributeValue(node, "when");
+                    LocalDateTime ldt = LocalDateTime.parse(getAttributeValue(node, "when"));
                     request.setState(state);
                     request.setRequester(requester);
-                    request.setDate(date);
+                    request.setDate(Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant()));
                     break;
             }
 
