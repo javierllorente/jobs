@@ -16,6 +16,8 @@
  */
 package com.javierllorente.jobs.entity;
 
+import java.util.Date;
+
 /**
  *
  * @author javier
@@ -30,7 +32,7 @@ public class OBSRequest {
     private String sourceUpdate;
     private String state;
     private String requester;
-    private String date;
+    private Date date;
     private String description;
 
     public String getId() {
@@ -117,11 +119,11 @@ public class OBSRequest {
         this.requester = requester;
     }
 
-    public String getDate() {
-        return date.replaceFirst("T", " ");
+    public Date getDate() {
+        return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
