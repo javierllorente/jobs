@@ -193,11 +193,14 @@ public class OBSXmlReader {
 
     public List<String> parseList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {        
-        List<String> list = new ArrayList<>();
+        List<String> list = null;
         NodeList nodeList = getNodeList(is);
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             switch (node.getNodeName()) {
+                case "directory":
+                    list = new ArrayList<>();
+                    break;
                 case "entry":
                     list.add(getAttributeValue(node, "name"));
                     break;
