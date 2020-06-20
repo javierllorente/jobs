@@ -192,31 +192,20 @@ public class OBSXmlReader {
     }
 
     public List<String> parseList(InputStream is) throws ParserConfigurationException,
-            SAXException, IOException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-        Document document = documentBuilder.parse(is);
+            SAXException, IOException {        
         List<String> list = new ArrayList<>();
-
-        NodeList nodeList = document.getElementsByTagName("*");
+        NodeList nodeList = getNodeList(is);
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.hasAttributes()) {
-                NamedNodeMap attributes = node.getAttributes();
-                for (int j = 0; j < attributes.getLength(); j++) {
-                    Attr attribute = (Attr) (attributes.item(j));
-//                    Get the attribute's name and value
-//                    System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    if ("entry".equals(node.getNodeName()) && "name".equals(attribute.getName())) {
-                        list.add(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    } else if ("repository".equals(node.getNodeName()) && "name".equals(attribute.getName())) {
-                        list.add(attribute.getValue());
-                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                    }
-                }
-            }              
+            switch (node.getNodeName()) {
+                case "entry":
+                    list.add(getAttributeValue(node, "name"));
+                    break;
+                case "repository":
+                    list.add(getAttributeValue(node, "name"));
+                    break;
             }
+        }
         return list;
     }
     
