@@ -204,9 +204,6 @@ public class OBSXmlReader {
                 case "entry":
                     list.add(getAttributeValue(node, "name"));
                     break;
-                case "repository":
-                    list.add(getAttributeValue(node, "name"));
-                    break;
             }
         }
         return list;
