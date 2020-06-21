@@ -335,53 +335,51 @@ public class OBSXmlReader {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(is);
-        List<OBSResult> list = new ArrayList<>();
+        List<OBSResult> list = null;
         OBSResult result = null;
 
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if ("result".equals(node.getNodeName())) {
-                result = new OBSResult();
-
-                if (node.hasAttributes()) {
-                    NamedNodeMap attributes = node.getAttributes();
-                    for (int j = 0; j < attributes.getLength(); j++) {
-                        Attr attribute = (Attr) (attributes.item(j));
-
-                        if ("result".equals(node.getNodeName())) {
-                            if (null != attribute.getName()) {
-                                switch (attribute.getName()) {
-                                    case "project":
-                                        result.setProject(attribute.getValue());
-                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                        break;
-                                    case "repository":
-                                        result.setRepository(attribute.getValue());
-                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                        break;
-                                    case "arch":
-                                        result.setArch(attribute.getValue());
-                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                        break;
-                                    case "code":
-                                        result.setCode(attribute.getValue());
-                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                        break;
-                                    case "state":
-                                        result.setState(attribute.getValue());
-                                        System.out.println(attribute.getName() + ": " + attribute.getValue());
-                                        break;
-                                    default:
-                                        break;
-                                }
+            switch (node.getNodeName()) {
+                case "resultlist":
+                    list = new ArrayList<>();
+                    break;
+                case "result":
+                    result = new OBSResult();
+                    if (node.hasAttributes()) {
+                        NamedNodeMap attributes = node.getAttributes();
+                        for (int j = 0; j < attributes.getLength(); j++) {
+                            Attr attribute = (Attr) (attributes.item(j));
+                            switch (attribute.getName()) {
+                                case "project":
+                                    result.setProject(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "repository":
+                                    result.setRepository(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "arch":
+                                    result.setArch(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "code":
+                                    result.setCode(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                case "state":
+                                    result.setState(attribute.getValue());
+                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
+                                    break;
+                                default:
+                                    break;
                             }
                         }
-
+                        list.add(result);
                     }
-                    list.add(result);
-                }
-            }
+                    break;
+            }          
 
             if (result != null) {
                 parseStatus(node, result.getStatus());
