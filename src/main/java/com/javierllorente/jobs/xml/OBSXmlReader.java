@@ -332,13 +332,10 @@ public class OBSXmlReader {
 
     public List<OBSResult> parseResultList(InputStream is) throws SAXException, IOException,
             ParserConfigurationException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-        Document document = documentBuilder.parse(is);
         List<OBSResult> list = null;
         OBSResult result = null;
+        NodeList nodeList = getNodeList(is);
 
-        NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             switch (node.getNodeName()) {
@@ -379,7 +376,7 @@ public class OBSXmlReader {
                         list.add(result);
                     }
                     break;
-            }          
+            }
 
             if (result != null) {
                 parseStatus(node, result.getStatus());
