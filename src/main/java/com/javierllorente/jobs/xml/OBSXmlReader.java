@@ -734,15 +734,19 @@ public class OBSXmlReader {
         NodeList childNodeList = node.getChildNodes();
         for (int k = 0; k < childNodeList.getLength(); k++) {
             Node childNode = childNodeList.item(k);
-            if (childNode.getNodeName().equals("path")) {
-                if (childNode.hasAttributes()) {
-                    String project = getAttributeValue(childNode, "project");
-                    repository.setProject(project);
-                    String repo = getAttributeValue(childNode, "repository");
-                    repository.setRepository(repo);
-                }
-            } else if (childNode.getNodeName().equals("arch")) {
-                repository.addArch(childNode.getTextContent());
+              
+            switch (childNode.getNodeName()) {
+                case "path":
+                    if (childNode.hasAttributes()) {
+                        String project = getAttributeValue(childNode, "project");
+                        repository.setProject(project);
+                        String repo = getAttributeValue(childNode, "repository");
+                        repository.setRepository(repo);
+                    }
+                    break;
+                case "arch":
+                    repository.addArch(childNode.getTextContent());
+                    break;
             }
         }
 
