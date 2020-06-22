@@ -239,14 +239,18 @@ public class OBSXmlReader {
 
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeName().equals("project")) {
-                if (node.hasAttributes()) {
-                    String name = getAttributeValue(node, "name");
-                    prjMetaConfig.setName(name);
-                }
-            } else if (node.getNodeName().equals("repository")) {
-                OBSRepository repository = parseRepository(node);
-                prjMetaConfig.addRepository(repository);
+
+            switch(node.getNodeName()) {
+                case "project":
+                    if (node.hasAttributes()) {
+                        String name = getAttributeValue(node, "name");
+                        prjMetaConfig.setName(name);
+                    }
+                    break;
+                case "repository":
+                    OBSRepository repository = parseRepository(node);
+                    prjMetaConfig.addRepository(repository);
+                    break;
             }
 
             parseMetaConfig(node, prjMetaConfig);
