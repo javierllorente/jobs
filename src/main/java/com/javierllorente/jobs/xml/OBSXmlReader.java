@@ -29,6 +29,7 @@ import com.javierllorente.jobs.entity.OBSRequest;
 import com.javierllorente.jobs.entity.OBSResult;
 import com.javierllorente.jobs.entity.OBSRevision;
 import com.javierllorente.jobs.entity.OBSStatus;
+import com.javierllorente.jobs.util.Utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -412,7 +413,8 @@ public class OBSXmlReader {
                                     file.setSize(attribute.getValue());
                                     break;
                                 case "mtime":
-                                    file.setLastModified(new Date(Long.parseLong(attribute.getValue()) * 1000));
+                                    file.setLastModified(Utils.unixDateToDate(
+                                            attribute.getValue()));
                                     break;
                             }
                         }
@@ -465,7 +467,7 @@ public class OBSXmlReader {
                     revision.setVersion(node.getTextContent());
                     break;
                 case "time":
-                    revision.setTime(new Date(Long.parseLong(node.getTextContent()) * 1000));
+                    revision.setTime(Utils.unixDateToDate(node.getTextContent()));
                     break;
                 case "user":
                     revision.setUser(node.getTextContent());

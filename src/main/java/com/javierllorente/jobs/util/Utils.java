@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 /**
  *
@@ -38,5 +39,9 @@ public class Utils {
             baos.write(buffer, 0, length);
         }
         return baos.toString(StandardCharsets.UTF_8.name());        
+    }
+    
+    public static Date unixDateToDate(String unixDate) {
+        return new Date(Long.parseLong(unixDate) * 1000);
     }
 }
