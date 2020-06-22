@@ -555,30 +555,33 @@ public class OBSXmlReader {
     }
 
     private void parseStatus(Node node, OBSStatus status) {
-        if ("status".equals(node.getNodeName())) {
-            if (node.hasAttributes()) {
-                NamedNodeMap attributes = node.getAttributes();
-                for (int j = 0; j < attributes.getLength(); j++) {
-                    Attr attribute = (Attr) (attributes.item(j));
-
-                    switch (attribute.getName()) {
-                        case "package":
-                            status.setPkg(attribute.getValue());
-                            System.out.println("package: " + attribute.getValue());
-                            break;
-                        case "code":
-                            status.setCode(attribute.getValue());
-                            System.out.println("code: " + attribute.getValue());
-                            break;
+        switch (node.getNodeName()) {
+            case "status":
+                if (node.hasAttributes()) {
+                    NamedNodeMap attributes = node.getAttributes();
+                    for (int j = 0; j < attributes.getLength(); j++) {
+                        Attr attribute = (Attr) (attributes.item(j));
+                        
+                        switch (attribute.getName()) {
+                            case "package":
+                                status.setPkg(attribute.getValue());
+                                System.out.println("package: " + attribute.getValue());
+                                break;
+                            case "code":
+                                status.setCode(attribute.getValue());
+                                System.out.println("code: " + attribute.getValue());
+                                break;
+                        }
                     }
                 }
-            }
-
-        } else if ("summary".equals(node.getNodeName())) {
-            status.setSummary(node.getTextContent());
-            System.out.println("summary: " + node.getTextContent());
-        } else if ("details".equals(node.getNodeName())) {
-            status.setDetails(node.getTextContent());
+                break;
+            case "summary":
+                status.setSummary(node.getTextContent());
+                System.out.println("summary: " + node.getTextContent());
+                break;
+            case "details":
+                status.setDetails(node.getTextContent());
+                break;
         }
     }
 
