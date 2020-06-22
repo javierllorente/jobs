@@ -616,10 +616,9 @@ public class OBSXmlReader {
                 case "state":
                     String state = getAttributeValue(node, "name");
                     String requester = getAttributeValue(node, "who");
-                    LocalDateTime ldt = LocalDateTime.parse(getAttributeValue(node, "when"));
                     request.setState(state);
                     request.setRequester(requester);
-                    request.setDate(Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant()));
+                    request.setDate(Utils.iso8601DateToDate(getAttributeValue(node, "when")));
                     break;
             }
 

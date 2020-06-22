@@ -20,6 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -43,5 +45,10 @@ public class Utils {
     
     public static Date unixDateToDate(String unixDate) {
         return new Date(Long.parseLong(unixDate) * 1000);
+    }
+    
+    public static Date iso8601DateToDate(String iso8601Date) {
+        LocalDateTime ldt = LocalDateTime.parse(iso8601Date);
+        return Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
     }
 }
