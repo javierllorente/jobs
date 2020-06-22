@@ -221,7 +221,7 @@ public class OBS {
     
     public byte[] downloadFile(String prj, String pkg, String fileName) throws 
             IOException, ParserConfigurationException, SAXException {
-        URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/%s", 
+        URL url = new URL(obsAuth.getApiUrl() + String.format("/source/%s/%s/%s", 
                 prj, pkg, fileName));
         byte[] data;
         try (InputStream is = obsHttp.get(url)) {
@@ -409,7 +409,7 @@ public class OBS {
    
     public OBSPrjMetaConfig getProjectMetaConfig(String prj) throws IOException,
             ParserConfigurationException, SAXException {
-        URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/_meta", prj));
+        URL url = new URL(obsAuth.getApiUrl() + String.format("/source/%s/_meta", prj));
         OBSPrjMetaConfig prjMetaConfig;
         try (InputStream is = obsHttp.get(url)) {
             prjMetaConfig = xmlReader.parsePrjMetaConfig(is);
@@ -419,7 +419,7 @@ public class OBS {
     
     public OBSPkgMetaConfig getPackageMetaConfig(String prj, String pkg) 
             throws IOException, ParserConfigurationException, SAXException {
-        URL url = new URL(obsAuth.getApiUrl() + String.format("source/%s/%s/_meta", 
+        URL url = new URL(obsAuth.getApiUrl() + String.format("/source/%s/%s/_meta", 
                 prj, pkg));
         OBSPkgMetaConfig pkgMetaConfig;
         try (InputStream is = obsHttp.get(url)) {
@@ -440,7 +440,7 @@ public class OBS {
     
     public OBSLink getLink(String prj, String pkg) throws MalformedURLException, 
             IOException, ParserConfigurationException, SAXException {
-        String resource = String.format("source/%s/%s/_link", prj, pkg);
+        String resource = String.format("/source/%s/%s/_link", prj, pkg);
         URL url = new URL(obsAuth.getApiUrl() + resource);
         OBSLink link;
         try (InputStream is = obsHttp.get(url)) {
