@@ -388,29 +388,37 @@ public class OBSXmlReader {
 
     public List<OBSFile> parseFileList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
-        List<OBSFile> list = new ArrayList<>();
+        List<OBSFile> list = null;
         NodeList nodeList = getNodeList(is);
         
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-            if (node.getNodeName().equals("entry") && node.hasAttributes()) {
-                OBSFile file = new OBSFile();
-                NamedNodeMap attributes = node.getAttributes();
-                for (int j = 0; j < attributes.getLength(); j++) {
-                    Attr attribute = (Attr) (attributes.item(j));
-                    switch (attribute.getName()) {
-                        case "name":
-                            file.setName(attribute.getValue());
-                            break;
-                        case "size":
-                            file.setSize(attribute.getValue());
-                            break;
-                        case "mtime":
-                            file.setLastModified(new Date(Long.parseLong(attribute.getValue()) * 1000));                            
-                            break;
+
+            switch (node.getNodeName()) {
+                case "directory":
+                    list = new ArrayList<>();
+                    break;
+                case "entry":
+                    if (node.hasAttributes()) {
+                        OBSFile file = new OBSFile();
+                        NamedNodeMap attributes = node.getAttributes();
+                        for (int j = 0; j < attributes.getLength(); j++) {
+                            Attr attribute = (Attr) (attributes.item(j));
+                            switch (attribute.getName()) {
+                                case "name":
+                                    file.setName(attribute.getValue());
+                                    break;
+                                case "size":
+                                    file.setSize(attribute.getValue());
+                                    break;
+                                case "mtime":
+                                    file.setLastModified(new Date(Long.parseLong(attribute.getValue()) * 1000));
+                                    break;
+                            }
+                        }
+                        list.add(file);
                     }
-                }
-                list.add(file);
+                    break;
             }
         }
         return list;
