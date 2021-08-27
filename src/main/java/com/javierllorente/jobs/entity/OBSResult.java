@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2021 Javier Llorente <javier@opensuse.org>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,27 +16,31 @@
  */
 package com.javierllorente.jobs.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author javier
  */
 public class OBSResult {
+    private String project;
     private String repository;
     private String arch;
     private String code;
     private String state;
-    private OBSStatus status;    
+    private final List<OBSStatus> statusList;
 
     public OBSResult() {
-        status = new OBSStatus();
+        statusList = new ArrayList<>();
     }
     
     public String getProject() {
-        return status.getProject();
+        return project;
     }
 
-    public void setProject(String value) {
-        status.setProject(value);
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getRepository() {
@@ -72,10 +76,14 @@ public class OBSResult {
     }
 
     public OBSStatus getStatus() {
-        return status;
+        return statusList.get(0);
+    }
+    
+    public List<OBSStatus> getStatusList() {
+        return statusList;
     }
 
-    public void setStatus(OBSStatus status) {
-        this.status = status;
-    }
+    public void addStatus(OBSStatus status) {
+        statusList.add(status);
+    }    
 }
