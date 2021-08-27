@@ -336,6 +336,7 @@ public class OBSXmlReader {
             ParserConfigurationException {
         List<OBSResult> list = null;
         OBSResult result = null;
+        OBSStatus status = null;
         NodeList nodeList = getNodeList(is);
 
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -381,7 +382,11 @@ public class OBSXmlReader {
             }
 
             if (result != null) {
-                parseStatus(node, result.getStatus());
+                if (node.getNodeName().equals("status")) {
+                    status = new OBSStatus();
+                    result.addStatus(status);
+                }
+                parseStatus(node, status);
             }
 
         }
