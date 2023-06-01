@@ -31,8 +31,12 @@ import javax.net.ssl.HttpsURLConnection;
 public class OBSHttp {
 
     private static final Logger logger = Logger.getLogger(OBSHttp.class.getName());
+    private final String acceptHeader;
+    private final String contentTypeHeader;
         
     public OBSHttp() {
+        acceptHeader = "application/xml";
+        contentTypeHeader = "application/x-www-form-urlencoded";
     }
 
     public InputStream get(URL url) throws IOException {
@@ -51,7 +55,7 @@ public class OBSHttp {
 
     public InputStream post(URL url, byte[] data) throws IOException {
         HttpsURLConnection connection = httpRequest(url, "POST");
-        connection.setRequestProperty("Content-Type", "application/xml; charset=utf-8");
+        connection.setRequestProperty("Content-Type", contentTypeHeader);
         writeData(connection, data);
         logger.info(getConnectionInfo(connection));
         InputStream is = getInputStream(connection);
@@ -73,7 +77,7 @@ public class OBSHttp {
             connection.setDoOutput(true);
         }
         connection.setRequestProperty("User-Agent", UserAgent.FULL);
-        connection.setRequestProperty("Accept", "application/xml");
+        connection.setRequestProperty("Accept", acceptHeader);
         connection.setConnectTimeout(20000);
         connection.setReadTimeout(20000);
         return connection;
