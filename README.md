@@ -80,4 +80,4 @@ Other interesting methods are acceptRequest(), declineRequest() and getRequestDi
 
 License
 ---------------
-jOBS is under the GPL v3. See gpl-3.0.txt for more information.
+jOBS is under the Apache License 2.0. See LICENSE for more information.
