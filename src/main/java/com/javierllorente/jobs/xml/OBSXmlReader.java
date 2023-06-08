@@ -346,31 +346,7 @@ public class OBSXmlReader {
                     break;
                 case "result":
                     result = new OBSResult();
-                    if (node.hasAttributes()) {
-                        NamedNodeMap attributes = node.getAttributes();
-                        for (int j = 0; j < attributes.getLength(); j++) {
-                            Attr attribute = (Attr) (attributes.item(j));
-                            switch (attribute.getName()) {
-                                case "project":
-                                    result.setProject(attribute.getValue());
-                                    break;
-                                case "repository":
-                                    result.setRepository(attribute.getValue());
-                                    break;
-                                case "arch":
-                                    result.setArch(attribute.getValue());
-                                    break;
-                                case "code":
-                                    result.setCode(attribute.getValue());
-                                    break;
-                                case "state":
-                                    result.setState(attribute.getValue());
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
+                    parseResult(node, result);
                     list.add(result);
                     break;
                 case "status":
@@ -381,6 +357,34 @@ public class OBSXmlReader {
             }
         }
         return list;
+    }
+
+    private void parseResult(Node node, OBSResult result) {
+        if (node.hasAttributes()) {
+            NamedNodeMap attributes = node.getAttributes();
+            for (int j = 0; j < attributes.getLength(); j++) {
+                Attr attribute = (Attr) (attributes.item(j));
+                switch (attribute.getName()) {
+                    case "project":
+                        result.setProject(attribute.getValue());
+                        break;
+                    case "repository":
+                        result.setRepository(attribute.getValue());
+                        break;
+                    case "arch":
+                        result.setArch(attribute.getValue());
+                        break;
+                    case "code":
+                        result.setCode(attribute.getValue());
+                        break;
+                    case "state":
+                        result.setState(attribute.getValue());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
     }
 
     public List<OBSFile> parseFileList(InputStream is) throws ParserConfigurationException,
