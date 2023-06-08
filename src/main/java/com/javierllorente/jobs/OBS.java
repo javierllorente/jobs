@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2023 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -294,6 +294,18 @@ public class OBS {
             MalformedURLException, IOException, SAXException, 
             ParserConfigurationException {
         String resource = String.format("/build/%s/_result?package=%s", project, pkg);
+        URL url = new URL(obsAuth.getApiUrl() + resource);
+        List<OBSResult> list;
+        try (InputStream is = obsHttp.get(url)) {
+            list = xmlReader.parseResultList(is);
+        }
+        return list;
+    }
+    
+    public List<OBSResult> getProjectResults(String project) throws 
+            MalformedURLException, IOException, SAXException, 
+            ParserConfigurationException {
+        String resource = String.format("/build/%s/_result", project);
         URL url = new URL(obsAuth.getApiUrl() + resource);
         List<OBSResult> list;
         try (InputStream is = obsHttp.get(url)) {
