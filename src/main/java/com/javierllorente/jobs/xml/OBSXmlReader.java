@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2023 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -353,41 +353,32 @@ public class OBSXmlReader {
                             switch (attribute.getName()) {
                                 case "project":
                                     result.setProject(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
                                     break;
                                 case "repository":
                                     result.setRepository(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
                                     break;
                                 case "arch":
                                     result.setArch(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
                                     break;
                                 case "code":
                                     result.setCode(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
                                     break;
                                 case "state":
                                     result.setState(attribute.getValue());
-                                    System.out.println(attribute.getName() + ": " + attribute.getValue());
                                     break;
                                 default:
                                     break;
                             }
                         }
-                        list.add(result);
                     }
+                    list.add(result);
+                    break;
+                case "status":
+                    status = new OBSStatus();
+                    parseStatus(node, status);
+                    result.addStatus(status);
                     break;
             }
-
-            if (result != null) {
-                if (node.getNodeName().equals("status")) {
-                    status = new OBSStatus();
-                    result.addStatus(status);
-                }
-                parseStatus(node, status);
-            }
-
         }
         return list;
     }
@@ -566,15 +557,12 @@ public class OBSXmlReader {
                     NamedNodeMap attributes = node.getAttributes();
                     for (int j = 0; j < attributes.getLength(); j++) {
                         Attr attribute = (Attr) (attributes.item(j));
-                        
                         switch (attribute.getName()) {
                             case "package":
                                 status.setPkg(attribute.getValue());
-                                System.out.println("package: " + attribute.getValue());
                                 break;
                             case "code":
                                 status.setCode(attribute.getValue());
-                                System.out.println("code: " + attribute.getValue());
                                 break;
                         }
                     }
@@ -582,7 +570,6 @@ public class OBSXmlReader {
                 break;
             case "summary":
                 status.setSummary(node.getTextContent());
-                System.out.println("summary: " + node.getTextContent());
                 break;
             case "details":
                 status.setDetails(node.getTextContent());
