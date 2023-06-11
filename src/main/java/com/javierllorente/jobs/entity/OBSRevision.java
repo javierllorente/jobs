@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020-2023 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.util.Date;
 public class OBSRevision extends OBSObject {
     
     private int rev;
+    private String srcmd5;
     private String version;
     private Date time;
     private String user;
@@ -39,6 +40,14 @@ public class OBSRevision extends OBSObject {
 
     public void setRev(int rev) {
         this.rev = rev;
+    }
+
+    public String getSrcmd5() {
+        return srcmd5;
+    }
+
+    public void setSrcmd5(String srcmd5) {
+        this.srcmd5 = srcmd5;
     }
 
     public String getVersion() {
