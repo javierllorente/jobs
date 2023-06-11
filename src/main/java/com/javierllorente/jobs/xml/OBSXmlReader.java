@@ -386,6 +386,63 @@ public class OBSXmlReader {
             }
         }
     }
+    
+    public List<OBSRevision> parseRevisionList(InputStream is) throws ParserConfigurationException,
+            SAXException, IOException {
+        List<OBSRevision> list = null;
+        NodeList nodeList = getNodeList(is);
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            switch (node.getNodeName()) {
+                case "revisionlist":
+                    list = new ArrayList<>();
+                    break;
+                case "revision":
+                    OBSRevision revision = new OBSRevision();
+                    parseRevision(node, revision);
+                    list.add(revision);
+                    break;
+            }
+        }
+
+        return list;
+    }
+    
+    private void parseRevision(Node node, OBSRevision revision) {        
+        if (node.hasAttributes()) {
+            NamedNodeMap attributes = node.getAttributes();
+            for (int j = 0; j < attributes.getLength(); j++) {
+                Attr attribute = (Attr) (attributes.item(j));
+                if (attribute.getName().equals("rev")) {
+                    revision.setRev(Integer.parseInt(attribute.getValue()));
+                }
+            }
+        }
+        
+        NodeList nodeList = node.getChildNodes();
+        
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+            switch (childNode.getNodeName()) {
+                case "srcmd5":
+                    revision.setSrcmd5(childNode.getTextContent());
+                    break;
+                case "version":
+                    revision.setVersion(childNode.getTextContent());
+                    break;
+                case "time":
+                    revision.setTime(Utils.unixDateToDate(childNode.getTextContent()));
+                    break;
+                case "user":
+                    revision.setUser(childNode.getTextContent());
+                    break;
+                case "comment":
+                    revision.setComment(childNode.getTextContent());
+                    break;
+            }
+        }
+    }
 
     public List<OBSFile> parseFileList(InputStream is) throws ParserConfigurationException,
             SAXException, IOException {
