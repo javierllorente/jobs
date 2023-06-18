@@ -22,7 +22,7 @@ package com.javierllorente.jobs.config;
 public class UserAgent {
 
     public final static String NAME = "jOBS";
-    public final static String VERSION = "0.1";
+    public final static String VERSION = "0.9";
     public final static String FULL = NAME + " " + VERSION;
     
 }
