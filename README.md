@@ -7,16 +7,26 @@ Introduction
 ---------------
 jOBS is a Java library for consuming the [Open Build Service](http://openbuildservice.org/) REST API.
 It's written in pure Java.
-WIP.
 
 **Features**
 - Getting build status
-- Getting submit requests
+- Getting incoming/outgoing/declined submit requests
 - Getting submit request diff
-- Accepting/declining submit requests
+- Accepting/declining/creating submit requests
 - Getting project list
+- Gettings project results
+- Getting revisions
 - Getting package list for a project
-- Getting project metadata
+- Getting file list
+- Getting project/package metadata
+- Branching/linking/copying/creating/deleting packages
+- Creating/deleting projects
+- Uploading/downloading/deleting files
+- Getting build log
+- Getting distributions
+- Getting links
+- Getting/update persons
+- Getting about
 
 
 Basic usage
@@ -74,8 +84,6 @@ if (obs.isAuthenticated()) {
 
 
 ```
-
-Other interesting methods are acceptRequest(), declineRequest() and getRequestDiff().
 
 
 License
