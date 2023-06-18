@@ -170,7 +170,6 @@ public class OBSXmlReader {
                 case "collection":
                     String matches = getAttributeValue(node, "matches");
                     requestCount = Integer.parseInt(matches);
-                    System.out.println("matches: " + matches);
                     break;
                 case "request":
                     request = new OBSRequest();
@@ -643,10 +642,8 @@ public class OBSXmlReader {
 
             switch (node.getNodeName()) {
                 case "request":
-                    System.out.println("Request");
                     String id = getAttributeValue(node, "id");
                     request.setId(id);
-                    System.out.println("id: " + request.getId());
                     break;
                 case "action":
                     String actionType = getAttributeValue(node, "type");
@@ -657,14 +654,12 @@ public class OBSXmlReader {
                     String sourcePackage = getAttributeValue(node, "package");
                     request.setSourceProject(sourceProject);
                     request.setSourcePackage(sourcePackage);
-                    System.out.println("source project: " + request.getSourceProject());
                     break;
                 case "target":
                     String targetProject = getAttributeValue(node, "project");
                     String targetPackage = getAttributeValue(node, "package");
                     request.setTargetProject(targetProject);
                     request.setTargetPackage(targetPackage);
-                    System.out.println("target project: " + request.getSourceProject());
                     break;
                 case "state":
                     String state = getAttributeValue(node, "name");
@@ -681,13 +676,11 @@ public class OBSXmlReader {
                 case "sourceupdate":
                     String sourceUpdate = node.getTextContent();
                     request.setSourceUpdate(sourceUpdate);
-                    System.out.println("Source update: " + request.getSourceUpdate());
                     break;
                 case "description":
                     if (node.getParentNode().getNodeName().equals("request")) {
                         String description = node.getTextContent();
                         request.setDescription(description);
-                        System.out.println("Description: " + request.getDescription());
                     }
                     break;
             }
