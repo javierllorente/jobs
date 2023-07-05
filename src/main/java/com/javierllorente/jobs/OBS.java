@@ -325,6 +325,18 @@ public class OBS {
         }
         return list;
     }
+    
+    public List<OBSRevision> getLatestRevision(String project, String pkg) throws 
+            MalformedURLException, IOException, SAXException,
+            ParserConfigurationException {
+        String resource = String.format("/source/%s/%s/_history?limit=1", project, pkg);
+        URL url = new URL(obsAuth.getApiUrl() + resource);
+        List<OBSRevision> list;
+        try (InputStream is = obsHttp.get(url)) {
+            list = xmlReader.parseRevisionList(is);
+        }
+        return list;
+    }
 
     private String createReqResourceStr(String states, String roles) {
         return String.format("/request/?view=collection&states=%s&roles=%s&user=%s",
