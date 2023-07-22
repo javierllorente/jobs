@@ -643,7 +643,9 @@ public class OBSXmlReader {
             switch (node.getNodeName()) {
                 case "request":
                     String id = getAttributeValue(node, "id");
+                    String creator = getAttributeValue(node, "creator");
                     request.setId(id);
+                    request.setCreator(creator);
                     break;
                 case "action":
                     String actionType = getAttributeValue(node, "type");
@@ -667,6 +669,7 @@ public class OBSXmlReader {
                     request.setState(state);
                     request.setRequester(requester);
                     request.setDate(Utils.iso8601DateToDate(getAttributeValue(node, "when")));
+                    request.setCreated(Utils.iso8601DateToDate(getAttributeValue(node, "created")));
                     break;
             }
 
