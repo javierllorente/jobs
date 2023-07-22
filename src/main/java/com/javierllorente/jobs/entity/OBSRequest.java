@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2023 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.Date;
  */
 public class OBSRequest {
     private String id;
+    private String creator;
     private String actionType;
     private String sourceProject;
     private String sourcePackage;
@@ -32,6 +33,7 @@ public class OBSRequest {
     private String state;
     private String requester;
     private Date date;
+    private Date created;
     private String description;
 
     public String getId() {
@@ -40,6 +42,14 @@ public class OBSRequest {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public String getActionType() {
@@ -124,6 +134,14 @@ public class OBSRequest {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public String getDescription() {
