@@ -77,11 +77,8 @@ public class OBSRequest {
     }
 
     public String getSource() {
-        if (!sourcePackage.isEmpty()) {
-            return sourceProject + "/" + sourcePackage;
-        } else {
-            return "N/A";
-        }
+        return (sourcePackage != null && !sourcePackage.isEmpty())
+                ? sourceProject + "/" + sourcePackage : "";
     }
 
     public String getTargetProject() {
