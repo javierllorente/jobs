@@ -566,6 +566,13 @@ public class OBSXmlReader {
                         person.addWatchItem(getAttributeValue(node, "name"));
                     }
                     break;
+                case "package":
+                    if (node.hasAttributes()) {
+                        String location = getAttributeValue(node, "project") 
+                                + "/" + getAttributeValue(node, "name");
+                        person.addWatchItem(location);
+                    }
+                    break;
             }
         }
 
