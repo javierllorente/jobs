@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020-2023 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ public class OBSHttp {
     public InputStream get(URL url) throws IOException {
         HttpsURLConnection connection = httpRequest(url, "GET");
         logger.info(getConnectionInfo(connection));
+        checkResponseCode(connection);
         InputStream is = getInputStream(connection);
         return is;
     }    
@@ -99,6 +100,14 @@ public class OBSHttp {
         return (connection.getResponseCode() == HttpsURLConnection.HTTP_OK)
                 ? connection.getInputStream()
                 : connection.getErrorStream();
+    }
+    
+    private void checkResponseCode(HttpsURLConnection connection) throws IOException {
+        int responseCode = connection.getResponseCode();
+        if (!(responseCode == HttpsURLConnection.HTTP_OK 
+                || responseCode == HttpsURLConnection.HTTP_CREATED)) {
+            throw new RuntimeException(connection.getResponseMessage());
+        }
     }
     
 }
