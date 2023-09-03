@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2018-2023 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -209,9 +209,17 @@ public class OBSXmlWriter {
         rootElement.appendChild(watchListElement);
         
         for (String item : person.getWatchList()) {
-            Element projectElement = document.createElement("project");
-            projectElement.setAttribute("name", item);
-            watchListElement.appendChild(projectElement);            
+            Element element;
+            if (item.contains("/")) {
+                String[] location = item.split("/");
+                element = document.createElement("package");
+                element.setAttribute("name", location[1]);
+                element.setAttribute("project", location[0]);
+            } else {
+                element = document.createElement("project");
+                element.setAttribute("name", item);
+            }
+            watchListElement.appendChild(element);
         }
         
         return documentToString(document);
