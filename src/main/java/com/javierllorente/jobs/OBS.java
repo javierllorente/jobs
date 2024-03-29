@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2024 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import com.javierllorente.jobs.entity.OBSAbout;
 import com.javierllorente.jobs.entity.OBSDistribution;
 import com.javierllorente.jobs.entity.OBSFile;
 import com.javierllorente.jobs.entity.OBSLink;
+import com.javierllorente.jobs.entity.OBSPackage;
 import com.javierllorente.jobs.entity.OBSPerson;
 import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
 import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
@@ -37,6 +38,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import javax.naming.AuthenticationException;
@@ -474,6 +476,21 @@ public class OBS {
             pkgMetaConfig = xmlReader.parsePkgMetaConfig(is);
         }
         return pkgMetaConfig;
+    }
+    
+    public List<OBSPackage> packageSearch(String pkg) throws 
+            IOException, ParserConfigurationException, SAXException {
+        List<OBSPackage> results;
+        String encodedPkg = URLEncoder.encode(pkg, 
+                StandardCharsets.UTF_8.toString())
+                .replaceAll("\\+", "%20");
+        URL url = new URL(obsAuth.getApiUrl()
+                + "/search/package?match=starts_with(@name,'" 
+                + encodedPkg + "')&limit=20");      
+        try (InputStream is = obsHttp.get(url)) {
+            results = xmlReader.parsePackageSearch(is);
+        }
+        return results;
     }
     
     public List<OBSDistribution> getDistributions() 

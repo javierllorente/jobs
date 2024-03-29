@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2023 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2024 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import com.javierllorente.jobs.entity.OBSDistribution;
 import com.javierllorente.jobs.entity.OBSFile;
 import com.javierllorente.jobs.entity.OBSLink;
 import com.javierllorente.jobs.entity.OBSMetaConfig;
+import com.javierllorente.jobs.entity.OBSPackage;
 import com.javierllorente.jobs.entity.OBSPerson;
 import com.javierllorente.jobs.entity.OBSPkgMetaConfig;
 import com.javierllorente.jobs.entity.OBSPrjMetaConfig;
@@ -256,6 +257,26 @@ public class OBSXmlReader {
         }
         return prjMetaConfig;
     }
+    
+    private void parsePackage(Node node, OBSPackage pkg) {        
+        if (node.getNodeName().equals("package")) {
+            if (node.hasAttributes()) {
+                String name = getAttributeValue(node, "name");
+                pkg.setName(name);
+                String project = getAttributeValue(node, "project");
+                pkg.setProject(project);
+            }
+        }
+        
+        switch (node.getNodeName()) {
+            case "title":
+                pkg.setTitle(node.getTextContent());
+                break;
+            case "description":
+                pkg.setDescription(node.getTextContent());
+                break;
+        }
+    }
 
     public OBSPkgMetaConfig parsePkgMetaConfig(InputStream is) throws
             ParserConfigurationException, SAXException, IOException {
@@ -281,6 +302,23 @@ public class OBSXmlReader {
             }
         }
         return pkgMetaConfig;
+    }
+    
+    public List<OBSPackage> parsePackageSearch(InputStream is) throws 
+            ParserConfigurationException, SAXException, IOException {
+                NodeList nodeList = getNodeList(is);
+        OBSPackage pkg = null;
+        List<OBSPackage> results = new ArrayList<>();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeName().equals("package")) {
+                pkg = new OBSPackage();
+                results.add(pkg);
+            }
+            parsePackage(node, pkg);
+        }
+        return results;        
     }
     
     public List<OBSDistribution> parseDistributions(InputStream is) throws 
