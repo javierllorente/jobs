@@ -354,7 +354,7 @@ public class OBS {
                 resource = createReqResourceStr("new", "maintainer");
                 break;
             case Outgoing:
-                resource = createReqResourceStr("new", "creator");
+                resource = createReqResourceStr("new,review", "creator");
                 break;
             case Declined:
                 resource = createReqResourceStr("declined", "creator");
