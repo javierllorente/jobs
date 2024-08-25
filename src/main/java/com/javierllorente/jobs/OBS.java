@@ -390,6 +390,19 @@ public class OBS {
         return xmlReader.getRequestCount();
     }
     
+    public List<OBSRequest> getProjectRequests(String project) 
+            throws IOException, MalformedURLException, SAXException, ParserConfigurationException {
+        String resource = String.format("/request/?view=collection&types=%s&states=%s&project=%s", 
+                "submit,delete,add_role,change_devel,maintenance_incident,maintenance_release,release", 
+                "new,review", project);
+        URL url = new URL(obsAuth.getApiUrl() + resource);
+        List<OBSRequest> requests;
+        try (InputStream is = obsHttp.get(url)) {
+            requests = xmlReader.parseRequests(is);
+        }
+        return requests;
+    }
+    
     public List<OBSRequest> getPackageRequests(String project, String pkg) 
             throws IOException, MalformedURLException, SAXException, ParserConfigurationException {
         String resource = String.format("/request/?view=collection&types=%s&states=%s&project=%s&package=%s", 
