@@ -704,9 +704,12 @@ public class OBSXmlReader {
                     break;
                 case "target":
                     String targetProject = getAttributeValue(node, "project");
-                    String targetPackage = getAttributeValue(node, "package");
                     request.setTargetProject(targetProject);
-                    request.setTargetPackage(targetPackage);
+                    // Target may not have package attribute (project openSUSE:Maintenance)
+                    if (node.getAttributes().getNamedItem("package") != null) {
+                        String targetPackage = getAttributeValue(node, "package");
+                        request.setTargetPackage(targetPackage);
+                    }
                     break;
                 case "state":
                     String state = getAttributeValue(node, "name");
