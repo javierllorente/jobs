@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2024 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -430,7 +430,7 @@ public class OBS {
     }
 
     public String getRequestDiff(String source) throws IOException {
-        URL url = new URL(obsAuth.getApiUrl() + "/source/" + source
+        URL url = new URL(obsAuth.getApiUrl() + "/request/" + source
                 + "?unified=1&tarlimit=0&cmd=diff&filelimit=0&expand=1");
         String str;
         try (InputStream is = obsHttp.post(url, "".getBytes())) {
