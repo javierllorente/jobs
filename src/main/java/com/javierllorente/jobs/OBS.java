@@ -113,6 +113,10 @@ public class OBS {
         return obsAuth.isAuthenticated();
     }
     
+    public void logout() {
+        obsAuth.setAuthenticated(false);
+    }
+    
     public OBSStatus branchPackage(String prj, String pkg) throws
             MalformedURLException, IOException, ParserConfigurationException,
             SAXException {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,6 +89,10 @@ public class OBSAuth {
 
     public boolean isAuthenticated() {
         return authenticated;
+    }
+    
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
     }
 
     class OBSAuthenticator extends Authenticator {
