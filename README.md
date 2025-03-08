@@ -1,7 +1,7 @@
 # jOBS
 A Java-based OBS Library
 
-Copyright (C) 2015-2023 Javier Llorente <javier@opensuse.org>
+Copyright (C) 2015-2025 Javier Llorente <javier@opensuse.org>
 
 Introduction
 ---------------
@@ -11,12 +11,14 @@ It's written in pure Java.
 **Features**
 - Getting build status
 - Getting incoming/outgoing/declined submit requests
+- Getting project/package submit requests
 - Getting submit request diff
 - Accepting/declining/creating submit requests
 - Getting project list
 - Gettings project results
 - Getting revisions
 - Getting package list for a project
+- Seaching for packages
 - Getting file list
 - Getting project/package metadata
 - Branching/linking/copying/creating/deleting packages
@@ -45,16 +47,14 @@ try {
     obs.setUsername("yourusername");
     obs.setPassword("yourpassword");
     obs.authenticate();
-} catch (MalformedURLException ex) {
-    Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
-} catch (IOException ex) {
+} catch (MalformedURLException | IOException ex) {
     Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
 }
 
 if (obs.isAuthenticated()) {
 //  Get Build Status
     try {
-        OBSBuild build = obs.getBuild("KDE:Extra", "openSUSE_13.2", 
+        OBSBuild build = obs.getBuild("KDE:Extra", "openSUSE_Leap_15.6", 
                 "x86_64", "amarok");
         System.out.println("Status: " + build.getStatus());
     } catch (SAXException | IOException | ParserConfigurationException ex) {
