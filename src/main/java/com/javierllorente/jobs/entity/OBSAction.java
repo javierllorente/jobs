@@ -18,7 +18,7 @@ package com.javierllorente.jobs.entity;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
@@ -26,51 +26,49 @@ import java.util.List;
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "action")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSAction {
     
     @XmlAttribute
-    private String name;
+    private String type;
     
-    @XmlAttribute
-    private String rebuild;
+    private OBSSource source;
+    private OBSTarget target;
     
-    OBSPath path;
-    
-    @XmlElement(name = "arch")
-    private List<String> archs;
+    @XmlElementWrapper(name = "options")
+    private List<String> sourceUpdate;
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public OBSSource getSource() {
+        return source;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
+    public void setSource(OBSSource source) {
+        this.source = source;
     }
 
-    public OBSPath getPath() {
-        return path;
+    public OBSTarget getTarget() {
+        return target;
     }
 
-    public void setPath(OBSPath path) {
-        this.path = path;
+    public void setTarget(OBSTarget target) {
+        this.target = target;
     }
 
-    public List<String> getArchs() {
-        return archs;
+    public List<String> getSourceUpdate() {
+        return sourceUpdate;
     }
 
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
+    public void setSourceUpdate(List<String> sourceUpdate) {
+        this.sourceUpdate = sourceUpdate;
     }
     
 }

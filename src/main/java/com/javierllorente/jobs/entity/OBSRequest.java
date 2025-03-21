@@ -15,25 +15,36 @@
  */
 package com.javierllorente.jobs.entity;
 
-import java.util.Date;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "request")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSRequest {
+    
+    @XmlAttribute
     private String id;
+    
+    @XmlAttribute
     private String creator;
-    private String actionType;
-    private String sourceProject;
-    private String sourcePackage;
-    private String targetProject;
-    private String targetPackage;
-    private String sourceUpdate;
-    private String state;
-    private String requester;
-    private Date date;
-    private Date created;
+    
+    private OBSAction action;
+    
+    private OBSState state;
+    
+    @XmlElement(name = "review")
+    private List<OBSReview> reviews;
+   
+    OBSHistory history;
+
     private String description;
 
     public String getId() {
@@ -52,95 +63,37 @@ public class OBSRequest {
         this.creator = creator;
     }
 
-    public String getActionType() {
-        return actionType;
+    public OBSAction getAction() {
+        return action;
     }
 
-    public void setActionType(String actionType) {
-        this.actionType = actionType;
+    public void setAction(OBSAction action) {
+        this.action = action;
     }
 
-    public String getSourceProject() {
-        return sourceProject;
-    }
-
-    public void setSourceProject(String sourceProject) {
-        this.sourceProject = sourceProject;
-    }
-
-    public String getSourcePackage() {
-        return sourcePackage;
-    }
-
-    public void setSourcePackage(String sourcePackage) {
-        this.sourcePackage = sourcePackage;
-    }
-
-    public String getSource() {
-        return (sourcePackage != null && !sourcePackage.isEmpty())
-                ? sourceProject + "/" + sourcePackage : "";
-    }
-
-    public String getTargetProject() {
-        return targetProject;
-    }
-
-    public void setTargetProject(String targetProject) {
-        this.targetProject = targetProject;
-    }
-
-    public String getTargetPackage() {
-        return targetPackage;
-    }
-
-    public void setTargetPackage(String targetPackage) {
-        this.targetPackage = targetPackage;
-    }
-    
-    public String getTarget() {
-        return targetProject +
-                (targetPackage == null ? "" : "/" + targetPackage);
-    }
-
-    public String getSourceUpdate() {
-        return sourceUpdate;
-    }
-
-    public void setSourceUpdate(String sourceUpdate) {
-        this.sourceUpdate = sourceUpdate;
-    }
-
-    public String getState() {
+    public OBSState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(OBSState state) {
         this.state = state;
     }
 
-    public String getRequester() {
-        return requester;
+    public List<OBSReview> getReviews() {
+        return reviews;
     }
 
-    public void setRequester(String requester) {
-        this.requester = requester;
+    public void setReviews(List<OBSReview> reviews) {
+        this.reviews = reviews;
     }
 
-    public Date getDate() {
-        return date;
+    public OBSHistory getHistory() {
+        return history;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+    public void setHistory(OBSHistory history) {
+        this.history = history;
+    }    
 
     public String getDescription() {
         return description;
@@ -149,4 +102,5 @@ public class OBSRequest {
     public void setDescription(String description) {
         this.description = description;
     }
+    
 }

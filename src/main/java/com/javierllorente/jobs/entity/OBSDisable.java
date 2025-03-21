@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.javierllorente.jobs.util;
+package com.javierllorente.jobs.entity;
 
-import jakarta.xml.bind.JAXB;
-import java.io.StringWriter;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author javier
  */
-public class Utils {
-
-    private Utils() {
-    }    
-
-    public static String entityToString(Object jaxbObject) {
-        StringWriter sw = new StringWriter();
-        JAXB.marshal(jaxbObject, sw);
-        return sw.toString();        
-    }
+@XmlRootElement(name = "disable")
+public class OBSDisable extends OBSEnable {
     
 }

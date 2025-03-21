@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,24 @@
  */
 package com.javierllorente.jobs.entity;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author javier
  */
-public class OBSBuild {
-    private String name;
-    private String project;
-    private String repository;
-    private String architecture;
-    private String status;
-    private String details;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+@XmlRootElement(name = "path")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class OBSPath {
+    
+    @XmlAttribute
+    String project;
+    
+    @XmlAttribute
+    String repository;
 
     public String getProject() {
         return project;
@@ -50,28 +49,5 @@ public class OBSBuild {
     public void setRepository(String repository) {
         this.repository = repository;
     }
-
-    public String getArchitecture() {
-        return architecture;
-    }
-
-    public void setArchitecture(String architecture) {
-        this.architecture = architecture;
-    }
     
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
 }

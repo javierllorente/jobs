@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2025 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,35 +17,30 @@ package com.javierllorente.jobs.entity;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import java.util.Objects;
 
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "project")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSObject {
+public class OBSProject extends OBSMetaConfig {
     
-    @XmlAttribute(name = "project")
-    protected String prj;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof OBSProject) {
+            return super.equals(obj) && name.equals(((OBSProject) obj).getName());
+        }
+        return false;
+    }
     
-    @XmlAttribute(name = "package")
-    protected String pkg;
-
-    public String getPrj() {
-        return prj;
-    }
-
-    public void setPrj(String prj) {
-        this.prj = prj;
-    }
-
-    public String getPkg() {
-        return pkg;
-    }
-
-    public void setPkg(String pkg) {
-        this.pkg = pkg;
-    }
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(name);
+        return hash;
+    }    
     
 }

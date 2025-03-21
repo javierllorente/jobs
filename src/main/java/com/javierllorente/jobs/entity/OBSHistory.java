@@ -18,59 +18,56 @@ package com.javierllorente.jobs.entity;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import java.util.List;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "history")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSHistory {
     
     @XmlAttribute
-    private String name;
+    private String who;
     
     @XmlAttribute
-    private String rebuild;
+    private XMLGregorianCalendar when;
     
-    OBSPath path;
-    
-    @XmlElement(name = "arch")
-    private List<String> archs;
+    private String description;
+    private String comment;
 
-    public String getName() {
-        return name;
+    public String getWho() {
+        return who;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setWho(String who) {
+        this.who = who;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public XMLGregorianCalendar getWhen() {
+        return when;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
+    public void setWhen(XMLGregorianCalendar when) {
+        this.when = when;
     }
 
-    public OBSPath getPath() {
-        return path;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPath(OBSPath path) {
-        this.path = path;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public List<String> getArchs() {
-        return archs;
+    public String getComment() {
+        return comment;
     }
 
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
     
 }

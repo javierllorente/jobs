@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,57 @@
  */
 package com.javierllorente.jobs.entity;
 
-import java.util.ArrayList;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlElements;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "person")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSPerson {
+    
+    @XmlAttribute(name = "userid")
+    private String userId;
+    
+    @XmlAttribute
+    private String role;
     
     private String login;
     private String email;
+    
+    @XmlElement(name = "realname")
     private String realName;
     private String state;
-    private List<String> watchList;
+    
+    @XmlElements(value = {
+        @XmlElement(name = "package", type = OBSPackage.class),
+        @XmlElement(name = "project", type = OBSProject.class)
+    })
+    @XmlElementWrapper(name = "watchlist")
+    private List<OBSMetaConfig> watchList;
 
-    public OBSPerson() {
-        watchList = new ArrayList<>();
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getLogin() {
@@ -66,20 +100,12 @@ public class OBSPerson {
         this.state = state;
     }
 
-    public List<String> getWatchList() {
+    public List<OBSMetaConfig> getWatchList() {
         return watchList;
     }
 
-    public void setWatchList(List<String> watchList) {
+    public void setWatchList(List<OBSMetaConfig> watchList) {
         this.watchList = watchList;
-    }
-    
-    public void addWatchItem(String item) {
-        watchList.add(item);
-    }
-    
-    public boolean removeWatchItem(String item) {
-         return watchList.remove(item);
     }
     
 }

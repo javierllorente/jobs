@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,29 +15,29 @@
  */
 package com.javierllorente.jobs.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import java.net.URL;
 
 /**
  *
  * @author javier
  */
-public class OBSPrjMetaConfig extends OBSMetaConfig {
-    private List<OBSRepository> repositories;
+@XmlRootElement(name = "icon")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class OBSIcon {
+    
+    @XmlAttribute
+    private URL url;
 
-    public OBSPrjMetaConfig() {
-        repositories = new ArrayList<>();
+    public URL getUrl() {
+        return url;
     }
 
-    public List<OBSRepository> getRepositories() {
-        return repositories;
-    }
-
-    public void setRepositories(List<OBSRepository> repositories) {
-        this.repositories = repositories;
+    public void setUrl(URL url) {
+        this.url = url;
     }
     
-    public void addRepository(OBSRepository repository) {
-        repositories.add(repository);
-    }
 }

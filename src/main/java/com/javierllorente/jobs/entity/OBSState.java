@@ -18,28 +18,30 @@ package com.javierllorente.jobs.entity;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import java.util.List;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "state")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSState {
     
     @XmlAttribute
     private String name;
     
     @XmlAttribute
-    private String rebuild;
+    private String who;
     
-    OBSPath path;
+    @XmlAttribute
+    private XMLGregorianCalendar when;
     
-    @XmlElement(name = "arch")
-    private List<String> archs;
+    @XmlAttribute
+    private XMLGregorianCalendar created;
+    
+    private String comment;
 
     public String getName() {
         return name;
@@ -49,28 +51,41 @@ public class OBSRepository {
         this.name = name;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public String getWho() {
+        return who;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
+    public void setWho(String who) {
+        this.who = who;
     }
 
-    public OBSPath getPath() {
-        return path;
+    public XMLGregorianCalendar getWhen() {
+        return when;
     }
 
-    public void setPath(OBSPath path) {
-        this.path = path;
+    public void setWhen(XMLGregorianCalendar when) {
+        this.when = when;
     }
 
-    public List<String> getArchs() {
-        return archs;
+    public XMLGregorianCalendar getCreated() {
+        return created;
     }
 
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
+    public void setCreated(XMLGregorianCalendar created) {
+        this.created = created;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
     
 }

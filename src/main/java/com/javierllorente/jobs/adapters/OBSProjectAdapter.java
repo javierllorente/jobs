@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.javierllorente.jobs.util;
+package com.javierllorente.jobs.adapters;
 
-import jakarta.xml.bind.JAXB;
-import java.io.StringWriter;
+import com.javierllorente.jobs.entity.OBSProject;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
  * @author javier
  */
-public class Utils {
+public class OBSProjectAdapter extends XmlAdapter<String, OBSProject> {
 
-    private Utils() {
-    }    
+    @Override
+    public OBSProject unmarshal(String name) throws Exception {
+        OBSProject project = new OBSProject();
+        project.setName(name);
+        return project;
+    }
 
-    public static String entityToString(Object jaxbObject) {
-        StringWriter sw = new StringWriter();
-        JAXB.marshal(jaxbObject, sw);
-        return sw.toString();        
+    @Override
+    public String marshal(OBSProject project) throws Exception {
+        return project.toString();
     }
     
 }

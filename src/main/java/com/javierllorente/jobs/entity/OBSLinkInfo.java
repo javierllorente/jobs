@@ -18,59 +18,58 @@ package com.javierllorente.jobs.entity;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import java.util.List;
 
 /**
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "linkinfo")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSLinkInfo extends OBSObject {
     
     @XmlAttribute
-    private String name;
+    private String srcmd5;
+            
+    @XmlAttribute
+    private String baserev;
     
     @XmlAttribute
-    private String rebuild;
+    private String xsrcmd5;
     
-    OBSPath path;
-    
-    @XmlElement(name = "arch")
-    private List<String> archs;
+    @XmlAttribute
+    private String lsrcmd5;
 
-    public String getName() {
-        return name;
+    public String getSrcmd5() {
+        return srcmd5;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSrcmd5(String srcmd5) {
+        this.srcmd5 = srcmd5;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public String getBaserev() {
+        return baserev;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
+    public void setBaserev(String baserev) {
+        this.baserev = baserev;
     }
 
-    public OBSPath getPath() {
-        return path;
+    public String getXsrcmd5() {
+        return xsrcmd5;
     }
 
-    public void setPath(OBSPath path) {
-        this.path = path;
+    public void setXsrcmd5(String xsrcmd5) {
+        this.xsrcmd5 = xsrcmd5;
     }
 
-    public List<String> getArchs() {
-        return archs;
+    public String getLsrcmd5() {
+        return lsrcmd5;
     }
 
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
-    }
+    public void setLsrcmd5(String lsrcmd5) {
+        this.lsrcmd5 = lsrcmd5;
+    }    
     
 }

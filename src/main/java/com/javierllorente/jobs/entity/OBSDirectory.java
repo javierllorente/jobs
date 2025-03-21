@@ -26,20 +26,26 @@ import java.util.List;
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "directory")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSDirectory {
     
     @XmlAttribute
     private String name;
     
     @XmlAttribute
-    private String rebuild;
+    private String rev;
     
-    OBSPath path;
+    @XmlAttribute
+    private String vrev;
     
-    @XmlElement(name = "arch")
-    private List<String> archs;
+    @XmlAttribute
+    private String srcmd5;
+    
+    private OBSLinkInfo linkInfo;
+    
+    @XmlElement(name = "entry")
+    private List<OBSEntry> entries;
 
     public String getName() {
         return name;
@@ -49,28 +55,44 @@ public class OBSRepository {
         this.name = name;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public String getRev() {
+        return rev;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
+    public void setRev(String rev) {
+        this.rev = rev;
     }
 
-    public OBSPath getPath() {
-        return path;
+    public String getVrev() {
+        return vrev;
     }
 
-    public void setPath(OBSPath path) {
-        this.path = path;
+    public void setVrev(String vrev) {
+        this.vrev = vrev;
     }
 
-    public List<String> getArchs() {
-        return archs;
+    public String getSrcmd5() {
+        return srcmd5;
     }
 
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
+    public void setSrcmd5(String srcmd5) {
+        this.srcmd5 = srcmd5;
+    }
+
+    public OBSLinkInfo getLinkInfo() {
+        return linkInfo;
+    }
+
+    public void setLinkInfo(OBSLinkInfo linkInfo) {
+        this.linkInfo = linkInfo;
+    }
+    
+    public List<OBSEntry> getEntries() {
+        return entries;
+    }
+
+    public void setEntries(List<OBSEntry> entries) {
+        this.entries = entries;
     }
     
 }

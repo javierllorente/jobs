@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2024-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,49 +15,62 @@
  */
 package com.javierllorente.jobs.entity;
 
+import com.javierllorente.jobs.adapters.OBSProjectAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.net.URI;
+import java.util.Objects;
+
 /**
  *
  * @author javier
  */
-public class OBSPackage {
+@XmlRootElement(name = "package")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class OBSPackage extends OBSMetaConfig {
+        
+    @XmlAttribute
+    @XmlJavaTypeAdapter(OBSProjectAdapter.class)
+    private OBSProject project;
     
-    private String name;
-    private String project;
-    private String title;
-    private String description;
+    @XmlElement(name = "url")
+    private URI uri;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getProject() {
+    public OBSProject getProject() {
         return project;
     }
 
-    public void setProject(String project) {
+    public void setProject(OBSProject project) {
         this.project = project;
     }
 
-    public String getTitle() {
-        return title;
+    public URI getUri() {
+        return uri;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof OBSPackage) {
+            return super.equals(obj) && project.equals(((OBSPackage) obj).getProject());
+        }
+        return false;
     }
 
-    public String getDescription() {
-        return description;
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(project + name);
+        return hash;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    
     @Override
     public String toString() {
         return project + "/" + name;

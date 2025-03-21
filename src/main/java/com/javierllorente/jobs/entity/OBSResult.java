@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2021 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2015-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,35 @@
  */
 package com.javierllorente.jobs.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "result")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSResult {
+    
+    @XmlAttribute
     private String project;
+    
+    @XmlAttribute
     private String repository;
+    
+    @XmlAttribute
     private String arch;
+    
+    @XmlAttribute
     private String code;
+    
+    @XmlAttribute
     private String state;
-    private final List<OBSStatus> statusList;
-
-    public OBSResult() {
-        statusList = new ArrayList<>();
-    }
+    
+    private OBSStatus status;
     
     public String getProject() {
         return project;
@@ -75,14 +86,11 @@ public class OBSResult {
     }
 
     public OBSStatus getStatus() {
-        return statusList.get(0);
-    }
-    
-    public List<OBSStatus> getStatusList() {
-        return statusList;
+        return status;
     }
 
-    public void addStatus(OBSStatus status) {
-        statusList.add(status);
-    }    
+    public void setStatus(OBSStatus status) {
+        this.status = status;
+    }
+    
 }

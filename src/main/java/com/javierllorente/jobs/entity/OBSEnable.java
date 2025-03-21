@@ -18,59 +18,36 @@ package com.javierllorente.jobs.entity;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import java.util.List;
 
 /**
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "enable")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSEnable {
     
     @XmlAttribute
-    private String name;
+    String arch;
     
     @XmlAttribute
-    private String rebuild;
-    
-    OBSPath path;
-    
-    @XmlElement(name = "arch")
-    private List<String> archs;
+    String repository;
 
-    public String getName() {
-        return name;
+    public String getArch() {
+        return arch;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setArch(String arch) {
+        this.arch = arch;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public String getRepository() {
+        return repository;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
-    }
-
-    public OBSPath getPath() {
-        return path;
-    }
-
-    public void setPath(OBSPath path) {
-        this.path = path;
-    }
-
-    public List<String> getArchs() {
-        return archs;
-    }
-
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
     
 }

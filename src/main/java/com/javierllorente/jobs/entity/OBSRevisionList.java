@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,41 +15,29 @@
  */
 package com.javierllorente.jobs.entity;
 
-import java.util.Date;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 /**
  *
  * @author javier
  */
-public class OBSFile {
-    private String name;
-    private String size;
-    private Date lastModified;
+@XmlRootElement(name = "revisionlist")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class OBSRevisionList {
+    
+    @XmlElement(name = "revision")
+    private List<OBSRevision> revisions;   
 
-    public OBSFile() {
+    public List<OBSRevision> getRevisions() {
+        return revisions;
     }
 
-    public String getName() {
-        return name;
+    public void setRevisions(List<OBSRevision> revisions) {
+        this.revisions = revisions;
     }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
-    }
+    
 }

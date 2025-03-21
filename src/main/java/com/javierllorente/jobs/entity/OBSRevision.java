@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2023 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,24 +15,37 @@
  */
 package com.javierllorente.jobs.entity;
 
+import com.javierllorente.jobs.adapters.UnixDateAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.Date;
 
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "revision")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSRevision extends OBSObject {
     
+    @XmlAttribute
     private int rev;
+    
+    @XmlAttribute
+    private int vrev;
+    
     private String srcmd5;
     private String version;
+    
+    @XmlJavaTypeAdapter(UnixDateAdapter.class)
     private Date time;
+    
     private String user;
     private String comment;
-    private String file;
-
-    public OBSRevision() {
-    }    
+    private String file;  
 
     public int getRev() {
         return rev;
@@ -40,6 +53,14 @@ public class OBSRevision extends OBSObject {
 
     public void setRev(int rev) {
         this.rev = rev;
+    }
+
+    public int getVrev() {
+        return vrev;
+    }
+
+    public void setVrev(int vrev) {
+        this.vrev = vrev;
     }
 
     public String getSrcmd5() {
@@ -89,4 +110,5 @@ public class OBSRevision extends OBSObject {
     public void setFile(String file) {
         this.file = file;
     }
+    
 }

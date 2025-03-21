@@ -103,7 +103,7 @@ public class OBSTest {
     public void testGetPackageList() throws Exception {
         System.out.println("getPackageList");
         String projectName = "KDE:Extra";
-        List<String> result = obs.getPackageList(projectName);
+        List<String> result = obs.getPackages(projectName);
         assertNotNull(result);
 
     }

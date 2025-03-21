@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,46 @@
  */
 package com.javierllorente.jobs.entity;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "distribution")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSDistribution {
     
+    @XmlAttribute
     private String vendor;
+    
+    @XmlAttribute
     private String version;
+    
+    @XmlAttribute
     private String id;
+    
     private String name;
     private String project;
+    
+    @XmlElement(name = "reponame")
     private String repoName;
+    
     private String repository;
+    
     private URL link;
-    private List<URL> icons;
-    private List<String> archs;
-
-    public OBSDistribution() {
-        icons = new ArrayList<>();
-        archs = new ArrayList<>();
-    }
+    
+    @XmlElement(name = "icon")
+    private List<OBSIcon> icons;
+    
+    @XmlElement(name = "architecture")
+    private List<String> architectures;
 
     public String getVendor() {
         return vendor;
@@ -105,28 +120,20 @@ public class OBSDistribution {
         this.link = link;
     }
 
-    public List<URL> getIcons() {
+    public List<OBSIcon> getIcons() {
         return icons;
     }
 
-    public void setIcons(List<URL> icons) {
+    public void setIcons(List<OBSIcon> icons) {
         this.icons = icons;
     }
-    
-    public void addIcon(URL icon) {
-        icons.add(icon);
+
+    public List<String> getArchitectures() {
+        return architectures;
     }
 
-    public List<String> getArchs() {
-        return archs;
-    }
-
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
-    }
-    
-    public void addArch(String arch) {
-        archs.add(arch);
+    public void setArchitectures(List<String> architectures) {
+        this.architectures = architectures;
     }
     
 }

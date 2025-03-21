@@ -26,51 +26,40 @@ import java.util.List;
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "collection")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSCollection {
     
     @XmlAttribute
-    private String name;
+    String matches;
     
-    @XmlAttribute
-    private String rebuild;
+    @XmlElement(name = "request")
+    private List<OBSRequest> requests;
     
-    OBSPath path;
-    
-    @XmlElement(name = "arch")
-    private List<String> archs;
+    @XmlElement(name = "package")
+    private List<OBSPackage> packages;
 
-    public String getName() {
-        return name;
+    public String getMatches() {
+        return matches;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMatches(String matches) {
+        this.matches = matches;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public List<OBSRequest> getRequests() {
+        return requests;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
+    public void setRequests(List<OBSRequest> requests) {
+        this.requests = requests;
     }
 
-    public OBSPath getPath() {
-        return path;
+    public List<OBSPackage> getPackages() {
+        return packages;
     }
 
-    public void setPath(OBSPath path) {
-        this.path = path;
+    public void setPackages(List<OBSPackage> packages) {
+        this.packages = packages;
     }
-
-    public List<String> getArchs() {
-        return archs;
-    }
-
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
-    }
-    
 }

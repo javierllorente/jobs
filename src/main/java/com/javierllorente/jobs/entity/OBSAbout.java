@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,23 @@
  */
 package com.javierllorente.jobs.entity;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "link")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSAbout {
     
     private String title;
     private String description;
     private String revision;
     private String lastDeployment;
-
-    public OBSAbout() {
-    }
+    private String commit;
 
     public String getTitle() {
         return title;
@@ -59,6 +63,14 @@ public class OBSAbout {
 
     public void setLastDeployment(String lastDeployment) {
         this.lastDeployment = lastDeployment;
-    }    
+    }
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
+    }
     
 }

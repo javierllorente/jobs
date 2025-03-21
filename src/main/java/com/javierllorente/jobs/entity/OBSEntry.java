@@ -15,32 +15,35 @@
  */
 package com.javierllorente.jobs.entity;
 
+import com.javierllorente.jobs.adapters.UnixDateAdapter;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import java.util.List;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Date;
 
 /**
  *
  * @author javier
  */
-@XmlRootElement(name = "repository")
+@XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OBSRepository {
+public class OBSEntry {
     
     @XmlAttribute
     private String name;
+
+    @XmlAttribute
+    private String md5;
     
     @XmlAttribute
-    private String rebuild;
+    private String size;
     
-    OBSPath path;
+    @XmlAttribute
+    @XmlJavaTypeAdapter(UnixDateAdapter.class)
+    private Date mtime;    
     
-    @XmlElement(name = "arch")
-    private List<String> archs;
-
     public String getName() {
         return name;
     }
@@ -49,28 +52,28 @@ public class OBSRepository {
         this.name = name;
     }
 
-    public String getRebuild() {
-        return rebuild;
+    public String getMd5() {
+        return md5;
     }
 
-    public void setRebuild(String rebuild) {
-        this.rebuild = rebuild;
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 
-    public OBSPath getPath() {
-        return path;
+    public String getSize() {
+        return size;
     }
 
-    public void setPath(OBSPath path) {
-        this.path = path;
+    public void setSize(String size) {
+        this.size = size;
+    }    
+
+    public Date getMtime() {
+        return mtime;
     }
 
-    public List<String> getArchs() {
-        return archs;
-    }
-
-    public void setArchs(List<String> archs) {
-        this.archs = archs;
+    public void setMtime(Date mtime) {
+        this.mtime = mtime;
     }
     
 }

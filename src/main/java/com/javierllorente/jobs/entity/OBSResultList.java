@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,29 @@
  */
 package com.javierllorente.jobs.entity;
 
-import java.net.URL;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
 /**
  *
  * @author javier
  */
-public class OBSPkgMetaConfig extends OBSMetaConfig {
-    private String project;
-    private URL url;
+@XmlRootElement(name = "resultlist")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class OBSResultList {
+    
+    @XmlElement(name = "result")
+    private List<OBSResult> results;
 
-    public OBSPkgMetaConfig() {
+    public List<OBSResult> getResults() {
+        return results;
     }
 
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public URL getUrl() {
-        return url;
-    }
-
-    public void setUrl(URL url) {
-        this.url = url;
+    public void setResults(List<OBSResult> results) {
+        this.results = results;
     }
     
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.javierllorente.jobs.util;
+package com.javierllorente.jobs.adapters;
 
-import jakarta.xml.bind.JAXB;
-import java.io.StringWriter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+import java.util.Date;
 
 /**
  *
  * @author javier
  */
-public class Utils {
+public class UnixDateAdapter extends XmlAdapter<String, Date> {
 
-    private Utils() {
-    }    
+    @Override
+    public Date unmarshal(String vt) throws Exception {
+        return (vt == null) ? null : new Date(Long.parseLong(vt) * 1000);
+    }
 
-    public static String entityToString(Object jaxbObject) {
-        StringWriter sw = new StringWriter();
-        JAXB.marshal(jaxbObject, sw);
-        return sw.toString();        
+    @Override
+    public String marshal(Date bt) throws Exception {
+        return (bt == null) ? null : Long.toString(bt.getTime() / 1000);
     }
     
 }

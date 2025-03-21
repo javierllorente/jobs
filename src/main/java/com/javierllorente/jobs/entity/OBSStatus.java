@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2018-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,25 @@
  */
 package com.javierllorente.jobs.entity;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author javier
  */
+@XmlRootElement(name = "status")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSStatus extends OBSObject {
     
+    @XmlAttribute
     private String code;
+    
     private String summary;
     private String details;
-
-    public OBSStatus() {
-    }
-    
+        
     public String getCode() {
         return code;
     }

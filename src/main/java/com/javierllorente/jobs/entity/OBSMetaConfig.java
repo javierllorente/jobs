@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 Javier Llorente <javier@opensuse.org>
+ * Copyright (C) 2020-2025 Javier Llorente <javier@opensuse.org>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,31 +15,71 @@
  */
 package com.javierllorente.jobs.entity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlElements;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  *
  * @author javier
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OBSMetaConfig {
-    private String name;
+    
+    @XmlAttribute
+    protected String name;
+    
     private String title;
     private String description;
-    private Map<String, List<String>> persons;
-    private Map<String, List<String>> groups;
     
-    private Map<String, Boolean> buildFlag;
-    private Map<String, Boolean> publishFlag;
-    private Map<String, Boolean> useForBuildFlag;
-    private Map<String, Boolean> debugInfoFlag;
-
-    public OBSMetaConfig() {
-        persons = new HashMap<>();
-        groups = new HashMap<>();
-    }
+    @XmlElement(name = "person")
+    private List<OBSPerson> persons;
+    
+    @XmlElement(name = "group")
+    private List<OBSGroup> groups;
+    
+    @XmlElements(value = {
+        @XmlElement(name = "enable", nillable = true, type = OBSEnable.class),
+        @XmlElement(name = "disable", nillable = true, type = OBSDisable.class)
+    })
+    @XmlElementWrapper(name = "lock")
+    private List<OBSEnable> locks;
+    
+    @XmlElements(value = {
+        @XmlElement(name = "enable", nillable = true, type = OBSEnable.class),
+        @XmlElement(name = "disable", nillable = true, type = OBSDisable.class)
+    })
+    @XmlElementWrapper(name = "build")
+    private List<OBSEnable> builds;
+    
+    @XmlElements(value = {
+        @XmlElement(name = "enable", nillable = true, type = OBSEnable.class),
+        @XmlElement(name = "disable", nillable = true, type = OBSDisable.class)
+    })
+    @XmlElementWrapper(name = "publish")
+    private List<OBSEnable> publishes;
+    
+    @XmlElements(value = {
+        @XmlElement(name = "enable", nillable = true, type = OBSEnable.class),
+        @XmlElement(name = "disable", nillable = true, type = OBSDisable.class)
+    })
+    @XmlElementWrapper(name = "debuginfo")
+    private List<OBSEnable> debugInfos;
+    
+    @XmlElements(value = {
+        @XmlElement(name = "enable", nillable = true, type = OBSEnable.class),
+        @XmlElement(name = "disable", nillable = true, type = OBSDisable.class)
+    })
+    @XmlElementWrapper(name = "useforbuild")
+    private List<OBSEnable> useForBuilds;
+    
+    @XmlElement(name = "repository")
+    private List<OBSRepository> repositories;
 
     public String getName() {
         return name;
@@ -65,74 +105,88 @@ public class OBSMetaConfig {
         this.description = description;
     }
 
-    public Map<String, List<String>> getPersons() {
+    public List<OBSPerson> getPersons() {
         return persons;
     }
-    
-    public void setPersons(Map<String, List<String>> persons) {
+
+    public void setPersons(List<OBSPerson> persons) {
         this.persons = persons;
     }
-    
-    public List<String> getRoles(String userId) {
-        return persons.get(userId);
-    }
-    
-    public void putPerson(String userId, String role) {
-        List roles = persons.get(userId);
-        if (roles == null) {
-            roles = new ArrayList();
-        }
-        roles.add(role);
-        persons.put(userId, roles);
-    }
 
-    public Map<String, List<String>> getGroups() {
+    public List<OBSGroup> getGroups() {
         return groups;
     }
 
-    public void setGroups(Map<String, List<String>> groups) {
+    public void setGroups(List<OBSGroup> groups) {
         this.groups = groups;
     }
+
+    public List<OBSEnable> getLocks() {
+        return locks;
+    }
+
+    public void setLocks(List<OBSEnable> locks) {
+        this.locks = locks;
+    }
+
+    public List<OBSEnable> getBuilds() {
+        return builds;
+    }
+
+    public void setBuilds(List<OBSEnable> builds) {
+        this.builds = builds;
+    }
+
+    public List<OBSEnable> getPublishes() {
+        return publishes;
+    }
+
+    public void setPublishes(List<OBSEnable> publishes) {
+        this.publishes = publishes;
+    }
+
+    public List<OBSEnable> getDebugInfos() {
+        return debugInfos;
+    }
+
+    public void setDebugInfos(List<OBSEnable> debugInfos) {
+        this.debugInfos = debugInfos;
+    }
+
+    public List<OBSEnable> getUseForBuilds() {
+        return useForBuilds;
+    }
+
+    public void setUseForBuilds(List<OBSEnable> useForBuilds) {
+        this.useForBuilds = useForBuilds;
+    }
+
+    public List<OBSRepository> getRepositories() {
+        return repositories;
+    }
+
+    public void setRepositories(List<OBSRepository> repositories) {
+        this.repositories = repositories;
+    }
     
-    public void putGroup(String groupId, String role) {
-        List roles = groups.get(groupId);
-        if (roles == null) {
-            roles = new ArrayList();
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj.getClass() == getClass()) {
+            return name.equals(((OBSMetaConfig) obj).getName());
         }
-        roles.add(role);
-        groups.put(groupId, roles);
+        return false;
     }
-
-    public Map<String, Boolean> getBuildFlag() {
-        return buildFlag;
-    }
-
-    public void setBuildFlag(Map<String, Boolean> buildFlag) {
-        this.buildFlag = buildFlag;
-    }
-
-    public Map<String, Boolean> getPublishFlag() {
-        return publishFlag;
-    }
-
-    public void setPublishFlag(Map<String, Boolean> publishFlag) {
-        this.publishFlag = publishFlag;
-    }
-
-    public Map<String, Boolean> getUseForBuildFlag() {
-        return useForBuildFlag;
-    }
-
-    public void setUseForBuildFlag(Map<String, Boolean> useForBuildFlag) {
-        this.useForBuildFlag = useForBuildFlag;
-    }
-
-    public Map<String, Boolean> getDebugInfoFlag() {
-        return debugInfoFlag;
-    }
-
-    public void setDebugInfoFlag(Map<String, Boolean> debugInfoFlag) {
-        this.debugInfoFlag = debugInfoFlag;
+    
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(name);
+        return hash;
+    }    
+    
+    @Override
+    public String toString() {
+        return name;
     }
     
 }
