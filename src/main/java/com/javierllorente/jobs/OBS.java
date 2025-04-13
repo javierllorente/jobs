@@ -30,6 +30,7 @@ import com.javierllorente.jobs.entity.OBSRevisionList;
 import com.javierllorente.jobs.entity.OBSStatus;
 import com.javierllorente.jobs.net.OBSHttp;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.logging.Logger;
 
@@ -113,7 +114,7 @@ public class OBS {
         return obsHttp.uploadFile(prj, pkg, file);
     }
 
-    public File downloadFile(String prj, String pkg, String fileName) {
+    public InputStream downloadFile(String prj, String pkg, String fileName) {
         return obsHttp.downloadFile(prj, pkg, fileName);
     }
     

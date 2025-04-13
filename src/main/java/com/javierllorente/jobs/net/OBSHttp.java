@@ -38,6 +38,7 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.File;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -257,7 +258,7 @@ public class OBSHttp {
         return response.readEntity(OBSRevision.class);
     }
     
-    public File downloadFile(String prj, String pkg, String fileName) {
+    public InputStream downloadFile(String prj, String pkg, String fileName) {
         Response response = target
                 .path(String.format("/source/%s/%s/%s", prj, pkg, fileName))
                 .request()
@@ -266,7 +267,7 @@ public class OBSHttp {
         handleErrors(response);
         
         response.bufferEntity();
-        return response.readEntity(File.class);        
+        return response.readEntity(InputStream.class);        
     }
     
     public OBSDirectory getProjects() {
