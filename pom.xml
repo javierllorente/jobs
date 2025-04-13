@@ -5,11 +5,31 @@
     <artifactId>jobs</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
+    <name>jOBS</name>
+    <description>A Java-based OBS library</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.test.skip>true</maven.test.skip>
     </properties>
+    <developers>
+        <developer>
+            <name>Javier Llorente</name>
+            <email>javier@opensuse.org</email>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>manual</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <connection>scm:git:https://github.com/javierllorente/jobs</connection>
+        <tag>HEAD</tag>
+        <url>https://github.com/javierllorente/jobs</url>
+    </scm>
     <build>
         <plugins>
             <plugin>
