@@ -5,7 +5,8 @@ Copyright (C) 2015-2025 Javier Llorente <javier@opensuse.org>
 
 Introduction
 ---------------
-jOBS is a Java library for consuming the [Open Build Service](http://openbuildservice.org/) REST API.
+jOBS is a Java library for consuming the [Open Build Service](http://openbuildservice.org/) REST API. 
+It is powered by [Jersey](https://eclipse-ee4j.github.io/jersey/).
 
 **Features**
 - Getting build status
