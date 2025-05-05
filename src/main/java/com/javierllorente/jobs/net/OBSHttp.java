@@ -57,20 +57,20 @@ import org.glassfish.jersey.logging.LoggingFeature;
 public class OBSHttp {
 
     private static final Logger logger = Logger.getLogger(OBSHttp.class.getName());
-    private Client client;
+    private final Client client;
     private WebTarget target;
     private String username;
     private String password;
-    boolean authenticated;
-    
+    private boolean authenticated;
+
     private enum RequestType {
         Incoming,
         Outgoing,
         Declined
     }
-        
+
     public OBSHttp() {
-        authenticated = false;
+        this.authenticated = false;
         ClientConfig config = new ClientConfig()
                 .connectorProvider(new Apache5ConnectorProvider())
                 .property(ClientProperties.CONNECT_TIMEOUT, 20000)
@@ -79,13 +79,13 @@ public class OBSHttp {
                         Level.INFO,
                         LoggingFeature.Verbosity.HEADERS_ONLY,
                         8192));
-        client = ClientBuilder.newBuilder().withConfig(config).build();
+        this.client = ClientBuilder.newBuilder().withConfig(config).build();
     }
-    
+
      public OBSHttp(URI apiURI) {
         this();
         target = client.target(apiURI);
-    }    
+    }
 
     public URI getApiUri() {
         return target.getUri();
@@ -106,7 +106,7 @@ public class OBSHttp {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public boolean isAuthenticated() {
         return authenticated;
     }
@@ -114,8 +114,8 @@ public class OBSHttp {
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
     }
-    
-    private void handleErrors(final Response response) {        
+
+    private void handleErrors(final Response response) {
         switch (response.getStatusInfo().getFamily()) {
             case CLIENT_ERROR:
                 throw new ClientErrorException(response);
@@ -123,11 +123,11 @@ public class OBSHttp {
                 throw new ServerErrorException(response);
         }
     }
-    
+
     public void authenticate() {
         HttpAuthenticationFeature authenticationFeature = HttpAuthenticationFeature.basicBuilder().build();
         target.register(authenticationFeature);
-        
+
         try (Response response = target.request()
                 .header("User-Agent", UserAgent.FULL)
                 .accept(MediaType.APPLICATION_XML_TYPE)
@@ -135,11 +135,11 @@ public class OBSHttp {
                 .property(HTTP_AUTHENTICATION_BASIC_PASSWORD, password)
                 .get()) {
             authenticated = (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL);
-            
+
             handleErrors(response);
         }
     }
-    
+
     public OBSStatus branchPackage(String prj, String pkg) {
         Response response = target
                 .path(String.format("/source/%s/%s", prj, pkg))
@@ -149,30 +149,29 @@ public class OBSHttp {
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .post(Entity.text(""));
         handleErrors(response);
-        
+
         response.bufferEntity();
-        return response.readEntity(OBSStatus.class);        
+        return response.readEntity(OBSStatus.class);
     }
-    
-    public OBSRevision linkPackage(String sourceProject, String sourcePackage, 
+
+    public OBSRevision linkPackage(String sourceProject, String sourcePackage,
             String targetProject) {
         OBSRevision revision = null;
         OBSPackage pkg = getPackageMetaConfig(sourceProject, sourcePackage);
         OBSProject project = new OBSProject();
         project.setName(targetProject);
         pkg.setProject(project);
-        String targetPackage = sourcePackage;
-        
+
         OBSStatus status = createPackage(pkg);
         OBSLink link;
         if (status.getCode().equals("ok")) {
             link = new OBSLink();
             link.setPrj(sourceProject);
-            link.setPkg(targetPackage);
-            
+            link.setPkg(sourcePackage);
+
             Response response = target
-                    .path(String.format("/source/%s/%s/_link", 
-                            targetProject, targetPackage))
+                    .path(String.format("/source/%s/%s/_link",
+                            targetProject, sourcePackage))
                     .request()
                     .header("User-Agent", UserAgent.FULL)
                     .accept(MediaType.APPLICATION_XML_TYPE)
@@ -180,11 +179,11 @@ public class OBSHttp {
             handleErrors(response);
 
             response.bufferEntity();
-            revision = response.readEntity(OBSRevision.class);        
+            revision = response.readEntity(OBSRevision.class);
         }
-        return revision;        
+        return revision;
     }
-    
+
     public OBSRevision copyPackage(String sourceProject, String sourcePackage,
             String targetProject, String targetPackage, String comments) {
         Response response = target
@@ -216,7 +215,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSStatus.class);
     }
-    
+
     public OBSStatus createPackage(OBSPackage pkg) {
         Response response = target
                 .path(String.format("/source/%s/%s/_meta",
@@ -230,7 +229,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSStatus.class);
     }
-    
+
     public OBSRequest createRequest(OBSRequest request) {
         Response response = target
                 .path("/request")
@@ -244,7 +243,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSRequest.class);
     }
-    
+
     public OBSRevision uploadFile(String prj, String pkg, File file) {
         Response response = target
                 .path(String.format("/source/%s/%s/%s", prj, pkg, file.getName()))
@@ -257,7 +256,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSRevision.class);
     }
-    
+
     public InputStream downloadFile(String prj, String pkg, String fileName) {
         Response response = target
                 .path(String.format("/source/%s/%s/%s", prj, pkg, fileName))
@@ -265,11 +264,11 @@ public class OBSHttp {
                 .header("User-Agent", UserAgent.FULL)
                 .get();
         handleErrors(response);
-        
+
         response.bufferEntity();
-        return response.readEntity(InputStream.class);        
+        return response.readEntity(InputStream.class);
     }
-    
+
     public OBSDirectory getProjects() {
         Response response = target
                 .path("/source")
@@ -278,11 +277,11 @@ public class OBSHttp {
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get();
         handleErrors(response);
-        
+
         response.bufferEntity();
-        return response.readEntity(OBSDirectory.class);        
+        return response.readEntity(OBSDirectory.class);
     }
-    
+
     public OBSDirectory getPackages(String project) {
         Response response = target
                 .path("/source/" + project)
@@ -290,12 +289,12 @@ public class OBSHttp {
                 .header("User-Agent", UserAgent.FULL)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get();
-        handleErrors(response);       
-        
+        handleErrors(response);
+
         response.bufferEntity();
-        return response.readEntity(OBSDirectory.class);        
+        return response.readEntity(OBSDirectory.class);
     }
-    
+
     public OBSLink getLink(String prj, String pkg) {
         Response response = target
                 .path(String.format("/source/%s/%s/_link", prj, pkg))
@@ -304,11 +303,11 @@ public class OBSHttp {
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get();
         handleErrors(response);
-        
-        response.bufferEntity();        
+
+        response.bufferEntity();
         return response.readEntity(OBSLink.class);
     }
-    
+
     public OBSPerson getPerson() {
         Response response = target
                 .path("/person/" + username)
@@ -317,11 +316,11 @@ public class OBSHttp {
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get();
         handleErrors(response);
-        
-        response.bufferEntity();        
+
+        response.bufferEntity();
         return response.readEntity(OBSPerson.class);
     }
-    
+
     public OBSStatus updatePerson(OBSPerson person) {
         Response response = target
                 .path("/person/" + username)
@@ -331,10 +330,10 @@ public class OBSHttp {
                 .put(Entity.xml(person));
         handleErrors(response);
 
-        response.bufferEntity();        
+        response.bufferEntity();
         return response.readEntity(OBSStatus.class);
     }
-    
+
     public OBSProject getProjectMetaConfig(String prj) {
         Response response = target
                 .path(String.format("/source/%s/_meta", prj))
@@ -342,12 +341,12 @@ public class OBSHttp {
                 .header("User-Agent", UserAgent.FULL)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get();
-        handleErrors(response);       
-        
+        handleErrors(response);
+
         response.bufferEntity();
-        return response.readEntity(OBSProject.class);        
+        return response.readEntity(OBSProject.class);
     }
-    
+
     public OBSPackage getPackageMetaConfig(String prj, String pkg) {
         Response response = target
                 .path(String.format("/source/%s/%s/_meta", prj, pkg))
@@ -355,16 +354,16 @@ public class OBSHttp {
                 .header("User-Agent", UserAgent.FULL)
                 .accept(MediaType.APPLICATION_XML_TYPE)
                 .get();
-        handleErrors(response);       
-        
+        handleErrors(response);
+
         response.bufferEntity();
-        return response.readEntity(OBSPackage.class);        
+        return response.readEntity(OBSPackage.class);
     }
-    
-    public OBSStatus getBuildStatus(String project, String repository, 
+
+    public OBSStatus getBuildStatus(String project, String repository,
             String architecture, String build) {
         Response response = target
-                .path(String.format("/build/%s/%s/%s/%s/_status", 
+                .path(String.format("/build/%s/%s/%s/%s/_status",
                         project, repository, architecture, build))
                 .request()
                 .header("User-Agent", UserAgent.FULL)
@@ -375,7 +374,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSStatus.class);
     }
-    
+
     public OBSResultList getPackageResults(String prj, String pkg) {
         Response response = target
                 .path(String.format("/build/%s/_result", prj))
@@ -389,7 +388,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSResultList.class);
     }
-    
+
     public OBSResultList getProjectResults(String prj) {
         Response response = target
                 .path(String.format("/build/%s/_result", prj))
@@ -415,7 +414,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSRevisionList.class);
     }
-     
+
     public OBSRevisionList getLatestRevision(String prj, String pkg) {
         Response response = target
                 .path(String.format("/source/%s/%s/_history", prj, pkg))
@@ -429,12 +428,12 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSRevisionList.class);
     }
-    
+
     private OBSCollection getRequests(RequestType type) {
-        
+
         String states;
         String roles;
-        
+
         switch (type) {
             case Incoming -> {
                 states = "new";
@@ -450,7 +449,7 @@ public class OBSHttp {
             }
             default -> throw new IllegalArgumentException("Unknown RequestType!");
         }
-        
+
         Response response = target
                 .path("/request")
                 .queryParam("view", "collection")
@@ -466,19 +465,19 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSCollection.class);
     }
-    
+
     public OBSCollection getIncomingRequests() {
         return getRequests(RequestType.Incoming);
     }
-    
+
     public OBSCollection getOutgoingRequests() {
         return getRequests(RequestType.Outgoing);
     }
-    
+
     public OBSCollection getDeclinedRequests() {
         return getRequests(RequestType.Declined);
     }
-    
+
     public OBSCollection getProjectRequests(String project) {
         Response response = target
                 .path("/request")
@@ -495,7 +494,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSCollection.class);
     }
-    
+
     public OBSCollection getPackageRequests(String prj, String pkg) {
         Response response = target
                 .path("/request")
@@ -527,7 +526,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSStatus.class);
     }
-    
+
     public String getRequestDiff(String id) {
         Response response = target
                 .path("/request/" + id)
@@ -540,10 +539,10 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(String.class);
     }
-    
+
     public String getBuildLog(String prj, String repository, String arch, String pkg) {
         Response response = target
-                .path(String.format("/build/%s/%s/%s/%s/_log", 
+                .path(String.format("/build/%s/%s/%s/%s/_log",
                         prj, repository, arch, pkg))
                 .request()
                 .header("User-Agent", UserAgent.FULL)
@@ -553,7 +552,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(String.class);
     }
-    
+
     public OBSDirectory getFiles(String prj, String pkg) {
         Response response = target
                 .path(String.format("/source/%s/%s/", prj, pkg))
@@ -565,8 +564,8 @@ public class OBSHttp {
 
         response.bufferEntity();
         return response.readEntity(OBSDirectory.class);
-    }    
-    
+    }
+
     public OBSCollection packageSearch(String pkg) {
         Response response = target
                 .path("/search/package")
@@ -581,7 +580,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSCollection.class);
     }
-    
+
     public OBSDistributions getDistributions() {
         Response response = target
                 .path("/distributions")
@@ -594,7 +593,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSDistributions.class);
     }
-    
+
     public OBSAbout getAbout() {
         Response response = target
                 .path("/about")
@@ -607,7 +606,7 @@ public class OBSHttp {
         response.bufferEntity();
         return response.readEntity(OBSAbout.class);
     }
-    
+
     public OBSStatus delete(String resource) {
         Response response = target
                 .path(resource)
