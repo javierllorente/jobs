@@ -70,7 +70,7 @@ public class OBSHttp {
     }
 
     public OBSHttp() {
-        this.authenticated = false;
+        authenticated = false;
         ClientConfig config = new ClientConfig()
                 .connectorProvider(new Apache5ConnectorProvider())
                 .property(ClientProperties.CONNECT_TIMEOUT, 20000)
@@ -79,7 +79,7 @@ public class OBSHttp {
                         Level.INFO,
                         LoggingFeature.Verbosity.HEADERS_ONLY,
                         8192));
-        this.client = ClientBuilder.newBuilder().withConfig(config).build();
+        client = ClientBuilder.newBuilder().withConfig(config).build();
     }
 
      public OBSHttp(URI apiURI) {
