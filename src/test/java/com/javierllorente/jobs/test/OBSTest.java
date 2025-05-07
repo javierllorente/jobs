@@ -19,28 +19,31 @@ import com.javierllorente.jobs.OBS;
 import com.javierllorente.jobs.entity.OBSEntry;
 import com.javierllorente.jobs.entity.OBSProject;
 import com.javierllorente.jobs.entity.OBSStatus;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.net.URI;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- *
  * @author javier
  */
 public class OBSTest {
-    
+
     private static OBS obs;
     final static String API_URI = "https://api.opensuse.org/";
-    
+
     public OBSTest() {
-    }    
-    
-    @BeforeClass
+    }
+
+    @BeforeAll
     public static void setUpClass() throws Exception {
         obs = new OBS();
         URI apiUri = new URI(API_URI);
@@ -49,16 +52,16 @@ public class OBSTest {
         obs.setPassword("");
         obs.authenticate();
     }
-    
-    @AfterClass
+
+    @AfterAll
     public static void tearDownClass() {
     }
-    
-    @Before
+
+    @BeforeEach
     public void setUp() throws Exception {
     }
-    
-    @After
+
+    @AfterEach
     public void tearDown() {
     }
 
@@ -103,5 +106,4 @@ public class OBSTest {
         OBSProject prjMetaConfig = obs.getProjectMetaConfig("KDE:Extra");
         assertFalse(prjMetaConfig.getName().isEmpty());
     }
-    
 }
